@@ -314,11 +314,36 @@ async function callClaude(prompt, maxTok = 2000, temp = 0) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      jobDescription: S.jobDesc,
+      resumeText: S.resumeText,
       prompt,
       max_tokens: maxTok,
       temperature: temp
     })
   });
+
+  const raw = await r.text();
+
+  let data;
+  try {
+    data = raw ? JSON.parse(raw) : {};
+  } catch {
+    data = { error: raw || `Server error ${r.status}` };
+  }
+
+  if (!r.ok) {
+    const message =
+      data?.error?.message ||
+      data?.error ||
+      data?.details?.error?.message ||
+      raw ||
+      `Server error ${r.status}`;
+
+    throw new Error(message);
+  }
+
+  return data?.result || '';
+}
 
   const raw = await r.text();
 
