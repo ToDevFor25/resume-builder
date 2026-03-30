@@ -309,18 +309,38 @@ const S={
   result:null,saved:JSON.parse(localStorage.getItem('ro_saved')||'[]')
 };
 
-async function callClaude(prompt,maxTok=2000,temp=0){
-  const r=await fetch('/api/optimize',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt,max_tokens:maxTok,temperature:temp})
+async function callClaude(prompt, maxTok = 2000, temp = 0) {
+  const r = await fetch('/api/optimize', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      prompt,
+      max_tokens: maxTok,
+      temperature: temp
+    })
   });
-  if(!r.ok){
-    const e=await r.json();
-    throw new Error(e.error||'Server error '+r.status);
+
+  const raw = await r.text();
+
+  let data;
+  try {
+    data = raw ? JSON.parse(raw) : {};
+  } catch {
+    data = { error: raw || `Server error ${r.status}` };
   }
-  const d=await r.json();
-  return d.result;
+
+  if (!r.ok) {
+    const message =
+      data?.error?.message ||
+      data?.error ||
+      data?.details?.error?.message ||
+      raw ||
+      `Server error ${r.status}`;
+
+    throw new Error(message);
+  }
+
+  return data?.result || '';
 }
 
 function showPage(n){
