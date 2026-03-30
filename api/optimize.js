@@ -1,11 +1,16 @@
 module.exports = async function handler(req, res) {
-  // Allow only POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { jobDescription, resumeText } = req.body || {};
+    const {
+      jobDescription,
+      resumeText,
+      prompt,
+      max_tokens,
+      temperature
+    } = req.body || {};
 
     if (!jobDescription || !resumeText) {
       return res.status(400).json({
@@ -21,26 +26,18 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const prompt = `
-You are an expert executive resume writer.
+    const finalPrompt =
+      prompt ||
+      `You are an expert executive resume writer.
 
-Task:
-Rewrite and optimize the candidate's resume for the job description provided.
-
-Rules:
-- Keep the output truthful.
-- Do not invent experience.
-- Improve alignment to the role.
-- Preserve strong executive tone.
-- Use concise, high-impact bullets.
-- Return plain text only.
+Rewrite and optimize the candidate's resume for the job description below.
+Keep everything truthful and do not invent experience.
 
 JOB DESCRIPTION:
 ${jobDescription}
 
 CURRENT RESUME:
-${resumeText}
-`;
+${resumeText}`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -51,11 +48,12 @@ ${resumeText}
       },
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000,
+        max_tokens: max_tokens || 2000,
+        temperature: temperature ?? 0,
         messages: [
           {
             role: 'user',
-            content: prompt
+            content: finalPrompt
           }
         ]
       })
@@ -70,8 +68,7 @@ ${resumeText}
       });
     }
 
-    const output =
-      data?.content?.[0]?.text || 'No output returned from Anthropic.';
+    const output = data?.content?.[0]?.text || '';
 
     return res.status(200).json({ result: output });
   } catch (error) {
