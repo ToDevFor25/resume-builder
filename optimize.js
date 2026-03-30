@@ -2,6 +2,10 @@
 // The Anthropic API key lives here via environment variable.
 // It is never sent to the client.
 
+export const config = {
+  api: { bodyParser: true },
+};
+
 export default async function handler(req, res) {
   // Only accept POST
   if (req.method !== 'POST') {
@@ -13,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'API key not configured on server' });
   }
 
-  const { prompt, max_tokens = 2000, temperature = 0 } = req.body;
+  const { prompt, max_tokens = 2000, temperature = 0 } = req.body || {};
 
   if (!prompt || typeof prompt !== 'string') {
     return res.status(400).json({ error: 'prompt is required' });
