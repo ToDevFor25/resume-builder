@@ -38,9 +38,9 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: 'Anthropic API error',
-        details: data
-      });
+  error: JSON.stringify(data),
+  details: data
+});
     }
 
     const result =
