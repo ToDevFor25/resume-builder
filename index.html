@@ -404,34 +404,11 @@ function parseResume(text){
   return{header,summary:{id:'sum_001',text:summary.join(' ')},competencies:comps,roles:roles.slice(0,5),education:edu,certifications:certs};
 }
 
-function cleanJobDescription(raw){
-  // Remove lines that are pure LinkedIn/Indeed/job-board UI noise
-  const noisePatterns=[
-    /^(easy apply|save|share|show more|promoted|actively reviewing|matches your job|your profile matches|show match|help me update|tailor my resume|create cover letter|people you can reach|show all|job match is|beta|is this information)/i,
-    /^(want to learn more about this role|click our .* logo|follow our linkedin|jobot logo)/i,
-    /^(this jobot job is hosted by|are you a fit\?|easy apply now|sending us your resume)/i,
-    /^(remote|full.time|part.time|contract|reposted|over \d+ applicants|applicants|ago)/i,
-    /linkedin\.com|indeed\.com|glassdoor\.com/i,
-    /^\s*[·•]\s*$/,
-    /^(salary:|compensation:|travel:|location:)\s*$/i,
-  ];
-  const lines=raw.split('\n');
-  const cleaned=lines.filter(line=>{
-    const t=line.trim();
-    if(!t)return false;
-    if(t.length<3)return false;
-    return !noisePatterns.some(p=>p.test(t));
-  });
-  // Collapse runs of blank lines, trim result
-  return cleaned.join('\n').replace(/\n{3,}/g,'\n\n').trim();
-}
-
 async function generate(){
   const rawJd=document.getElementById('jd').value.trim();
   if(!S.resumeText){toast('Upload your resume first.');return;}
   if(!rawJd){toast('Paste the job description.');return;}
-  const jd=cleanJobDescription(rawJd);
-  if(jd.length<100){toast('Job description seems too short — paste the full listing including responsibilities and requirements.');return;}
+  const jd=rawJd;
   S.jobDesc=jd;
   resetPipe();resetLoader();showLoader();
 
@@ -444,8 +421,8 @@ async function generate(){
     // Step 2: Job Analysis
     setTitle('Analyzing job requirements');tick(2,600);
     const jaRaw=await callClaude(
-      `You are analyzing a job posting. The text may contain recruiter boilerplate, LinkedIn UI text, salary info, and other noise. Extract ONLY the actual job requirements and role details.\n\nReturn JSON only:\n{"job_title":"string — the actual role title","seniority_level":"Director|VP|SVP|C-Suite","department":"string","top_themes":["3-5 core themes of the role"],"required_keywords":["keywords that must appear in resume"],"must_have_signals":["critical experience signals e.g. P&L ownership, multi-site, HEDIS"],"likely_gaps_for_director_to_vp":["what a Director typically lacks for this VP role"],"tone_of_role":"operational|strategic|clinical|commercial"}\n\nJOB POSTING TEXT:\n${jd.substring(0,3000)}`,
-      800,0
+      `A user has copied and pasted text from a job posting page. The text may include job board UI, navigation, recruiter boilerplate, "Easy Apply" buttons, LinkedIn interface text, salary details, company descriptions, and the actual job content all mixed together.\n\nYour job is to ignore all the noise and extract only the real job information.\n\nIf you can identify a real job role in this text, return this JSON:\n{"job_title":"the actual role title","seniority_level":"Director|VP|SVP|C-Suite|Manager|Other","department":"e.g. Operations, Clinical, Finance","top_themes":["3-5 core themes of what this role actually does"],"required_keywords":["specific keywords a resume must contain to match"],"must_have_signals":["critical experience e.g. P&L ownership, multi-site leadership, HEDIS, value-based care"],"likely_gaps_for_director_to_vp":["what a Director-level candidate typically lacks for this VP role"],"tone_of_role":"operational|strategic|clinical|commercial|hybrid"}\n\nIf you cannot find any real job information in the text, still return valid JSON with your best guesses and empty arrays where truly unknown. Never return anything other than valid JSON.\n\nPASTED TEXT:\n${jd.substring(0,4000)}`,
+      1000,0
     );
     try{S.jobAnalysis=JSON.parse(jaRaw);}
     catch{S.jobAnalysis={job_title:'Target Role',seniority_level:'VP',top_themes:[],required_keywords:[],must_have_signals:[],likely_gaps_for_director_to_vp:[],tone_of_role:'operational'};}
