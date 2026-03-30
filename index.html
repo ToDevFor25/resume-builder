@@ -194,12 +194,12 @@ textarea:focus{border-color:var(--gold);}
         <div class="card" style="margin-bottom:1rem;">
           <div class="card-title">📄 Resume</div>
           <div class="card-sub">DOCX, PDF, or TXT. Parsed in your browser — never uploaded to any server.</div>
-          <div class="upload-zone" id="uz" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
-            <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
-            <div class="upload-icon">📎</div>
-            <strong>Drop resume here or click to browse</strong>
-            <p>DOCX · PDF · TXT · RTF</p>
-          </div>
+          <div class="upload-zone" id="uz" onclick="document.getElementById('rf').click()" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
+  <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)" style="display:none;"/>
+  <div class="upload-icon">📎</div>
+  <strong>Drop resume here or click to browse</strong>
+  <p>DOCX · PDF · TXT · RTF</p>
+</div>
           <div id="file-ok" style="display:none" class="file-ok">✅ <span id="fname">file</span></div>
         </div>
         <div class="card">
