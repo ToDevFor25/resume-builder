@@ -1,311 +1,15 @@
-<!DOCTYPE html> 
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Resume Optimizer — Executive Tailoring Engine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<style>
-:root{
-  --ink:#0c0b0a;--paper:#f8f5f0;--cream:#f0ebe2;--gold:#b8943a;--gold-lt:#e8d5a0;
-  --gold-pale:#faf4e6;--sage:#3d5c35;--steel:#2d3d50;--mist:#8a96a4;
-  --border:#ddd8cf;--surface:#fff;--radius:6px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6;}
-::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--cream);} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
-
-nav{background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(184,148,58,.2);}
-.logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.02em;}
-.logo span{color:var(--gold);}
-.nav-r{display:flex;align-items:center;gap:1.5rem;}
-.nav-r a{color:var(--mist);font-size:.78rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:color .2s;text-decoration:none;}
-.nav-r a:hover{color:#fff;}
-.nav-pill{background:var(--gold);color:var(--ink)!important;padding:.32rem .9rem;border-radius:3px;font-weight:600!important;}
-
-
-.page{display:none;} .page.active{display:block;}
-
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:.6rem 1.4rem;border-radius:4px;font-size:.82rem;opacity:0;transition:all .28s;z-index:500;pointer-events:none;white-space:nowrap;border-left:3px solid var(--gold);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-.loader{display:none;position:fixed;inset:0;background:rgba(12,11,10,.92);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
-.loader.show{display:flex;}
-.spinner{width:42px;height:42px;border:2.5px solid rgba(184,148,58,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loader-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;color:#fff;}
-.lsteps{display:flex;flex-direction:column;gap:.3rem;margin-top:.4rem;}
-.lstep{display:flex;align-items:center;gap:.55rem;font-size:.76rem;color:rgba(255,255,255,.35);transition:color .4s;}
-.lstep.on{color:rgba(255,255,255,.9);}
-.ldot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .4s;flex-shrink:0;}
-.lstep.on .ldot{background:var(--gold);}
-
-.dash{max-width:1060px;margin:0 auto;padding:2rem;}
-.dash-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
-.dash-top h2{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;}
-.dash-top p{font-size:.8rem;color:#777;margin-top:.15rem;}
-.dtabs{display:flex;border-bottom:1.5px solid var(--border);margin-bottom:1.5rem;}
-.dtab{padding:.6rem 1.2rem;border:none;background:none;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;color:var(--mist);border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all .2s;}
-.dtab.on{color:var(--ink);border-bottom-color:var(--gold);font-weight:600;}
-
-.pipeline{display:flex;align-items:center;gap:0;margin-bottom:1.5rem;overflow-x:auto;}
-.pipe-step{display:flex;align-items:center;gap:.4rem;padding:.35rem .8rem;font-size:.72rem;font-weight:500;color:var(--mist);border:1px solid var(--border);background:var(--surface);white-space:nowrap;}
-.pipe-step:first-child{border-radius:3px 0 0 3px;} .pipe-step:last-child{border-radius:0 3px 3px 0;} .pipe-step+.pipe-step{border-left:none;}
-.pipe-step.done{background:var(--gold-pale);border-color:var(--gold-lt);color:#7a5c1e;}
-.pipe-step.active{background:var(--ink);border-color:var(--ink);color:var(--gold);font-weight:600;}
-.pipe-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;flex-shrink:0;}
-.pipe-step.done .pipe-dot,.pipe-step.active .pipe-dot{opacity:1;}
-.pipe-step.active .pipe-dot{background:var(--gold);}
-
-.card{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:1.4rem;}
-.card-title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;margin-bottom:.18rem;}
-.card-sub{font-size:.72rem;color:#999;margin-bottom:1rem;}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
-@media(max-width:760px){.two-col{grid-template-columns:1fr;}}
-
-.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:1.75rem 1.25rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--paper);position:relative;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:var(--gold-pale);}
-.upload-icon{font-size:1.6rem;margin-bottom:.4rem;}
-.upload-zone strong{font-size:.85rem;} .upload-zone p{font-size:.75rem;color:#999;margin-top:.18rem;}
-.file-ok{display:flex;align-items:center;gap:.5rem;margin-top:.6rem;padding:.55rem .85rem;background:#eef7eb;border:1px solid #b8d9b0;border-radius:var(--radius);font-size:.8rem;color:var(--sage);font-weight:500;}
-
-textarea{width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Outfit',sans-serif;font-size:.83rem;background:var(--paper);resize:vertical;min-height:140px;outline:none;transition:border-color .2s;line-height:1.65;}
-textarea:focus{border-color:var(--gold);}
-.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.6rem;}
-.opt-g label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);margin-bottom:.25rem;}
-.opt-g select{width:100%;padding:.48rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Outfit',sans-serif;font-size:.8rem;background:var(--paper);outline:none;cursor:pointer;}
-.opt-g select:focus{border-color:var(--gold);}
-.tgl-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--cream);font-size:.8rem;}
-.tgl-row:last-child{border-bottom:none;}
-.tgl{width:32px;height:18px;background:var(--border);border-radius:9px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
-.tgl.on{background:var(--gold);} .tgl::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left .2s;} .tgl.on::after{left:16px;}
-.notice{display:flex;align-items:flex-start;gap:.45rem;padding:.6rem .85rem;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);font-size:.75rem;color:var(--steel);margin-bottom:.85rem;line-height:1.5;}
-
-
-
-.gen-btn{width:100%;padding:.85rem;background:var(--ink);color:var(--gold);border:none;border-radius:var(--radius);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;cursor:pointer;margin-top:1.1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;letter-spacing:.02em;}
-.gen-btn:hover{background:var(--steel);}
-
-.results-grid{display:grid;grid-template-columns:260px 1fr;gap:1.1rem;}
-@media(max-width:840px){.results-grid{grid-template-columns:1fr;}}
-.score-card{background:var(--ink);color:#fff;border-radius:8px;padding:1.4rem;text-align:center;}
-.score-card h3{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:700;margin-bottom:.15rem;}
-.score-card p{font-size:.7rem;opacity:.45;margin-bottom:.9rem;}
-.score-ring{width:86px;height:86px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1rem;}
-.score-num{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--gold);line-height:1;}
-.score-lbl{font-size:.58rem;opacity:.45;letter-spacing:.1em;text-transform:uppercase;}
-.signal{display:flex;align-items:flex-start;gap:.4rem;padding:.38rem 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.73rem;line-height:1.45;text-align:left;}
-.signal:last-child{border-bottom:none;}
-.sdot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0;}
-.s-g{background:#5caa5c;} .s-y{background:var(--gold);} .s-r{background:#d46060;}
-.rtabs{display:flex;border-bottom:1.5px solid var(--border);margin-bottom:1rem;}
-.rtab{padding:.52rem 1.1rem;background:none;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;color:var(--mist);border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all .2s;}
-.rtab.on{color:var(--ink);border-bottom-color:var(--gold);font-weight:600;}
-.resume-view{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:1.75rem;font-size:.865rem;line-height:1.78;min-height:360px;}
-.resume-view h1{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;border-bottom:2px solid var(--gold);padding-bottom:.35rem;margin-bottom:.35rem;}
-.resume-view h2{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);margin:1rem 0 .35rem;}
-.resume-view ul{padding-left:1.1rem;margin-top:.2rem;}
-.resume-view li{margin-bottom:.22rem;font-size:.865rem;}
-.resume-view .jt{font-weight:600;font-size:.88rem;} .resume-view .jm{font-size:.76rem;color:var(--mist);margin-bottom:.3rem;}
-.diff-item{border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:.8rem;overflow:hidden;}
-.diff-head{padding:.45rem .85rem;background:var(--cream);font-size:.72rem;font-weight:600;color:var(--steel);}
-.diff-before{padding:.6rem .85rem;background:#fff5f5;color:#8b2020;font-size:.8rem;line-height:1.6;border-bottom:1px solid var(--border);text-decoration:line-through;opacity:.85;}
-.diff-after{padding:.6rem .85rem;background:#f0f7ee;color:#2a5a24;font-size:.8rem;line-height:1.6;}
-.diff-why{padding:.4rem .85rem;background:var(--paper);font-size:.7rem;color:var(--mist);border-top:1px solid var(--border);font-style:italic;}
-.flag-item{background:#fff8e6;border:1px solid var(--gold-lt);border-radius:var(--radius);padding:.7rem .9rem;margin-bottom:.6rem;}
-.flag-item h4{font-size:.78rem;font-weight:600;color:#7a5c1e;margin-bottom:.2rem;}
-.flag-item p{font-size:.75rem;color:var(--steel);margin-bottom:.5rem;line-height:1.5;}
-.flag-btns{display:flex;gap:.4rem;}
-.flag-btn{padding:.3rem .7rem;border:1px solid var(--border);border-radius:3px;font-size:.72rem;font-weight:600;cursor:pointer;background:var(--surface);transition:all .15s;font-family:'Outfit',sans-serif;}
-.flag-btn.approve:hover{background:#eef7eb;border-color:#b8d9b0;color:var(--sage);}
-.flag-btn.reject:hover{background:#fff5f5;border-color:#f5c4c4;color:#8b2020;}
-.dl-bar{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.1rem;}
-.dl-btn{display:flex;align-items:center;gap:.4rem;padding:.52rem 1rem;border:1.5px solid var(--border);border-radius:3px;background:var(--surface);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s;color:var(--ink);}
-.dl-btn:hover{border-color:var(--gold);}
-.dl-btn.prim{background:var(--ink);color:#fff;border-color:var(--ink);}
-.dl-btn.prim:hover{background:var(--steel);}
-.ja-preview{background:var(--ink);color:#fff;border-radius:8px;padding:1.1rem 1.25rem;margin-top:.65rem;}
-.ja-preview h4{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:700;color:var(--gold);margin-bottom:.5rem;}
-.ja-tag{display:inline-block;background:rgba(184,148,58,.15);border:1px solid rgba(184,148,58,.3);color:var(--gold-lt);font-size:.68rem;padding:.18rem .55rem;border-radius:2px;margin:.15rem;}
-.ja-label{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.65rem;margin-bottom:.2rem;font-weight:600;}
-.ja-gap{font-size:.75rem;color:rgba(255,255,255,.65);padding:.2rem 0;border-bottom:1px solid rgba(255,255,255,.07);}
-.ja-gap:last-child{border-bottom:none;}
-.kw-tag{display:inline-block;background:#fff5f5;border:1px solid #f5c4c4;color:#8b2020;font-size:.68rem;padding:.18rem .55rem;border-radius:2px;margin:.15rem;}
-.saved-item{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);margin-bottom:.6rem;gap:1rem;flex-wrap:wrap;}
-.saved-item h4{font-weight:600;font-size:.85rem;} .saved-item p{font-size:.72rem;color:#999;margin-top:.1rem;}
-.saved-acts{display:flex;gap:.4rem;}
-.tiny{padding:.28rem .65rem;border:1.5px solid var(--border);border-radius:3px;font-size:.72rem;font-weight:600;cursor:pointer;background:var(--paper);transition:all .15s;font-family:'Outfit',sans-serif;}
-.tiny:hover{border-color:var(--gold);}
-.empty{text-align:center;padding:2.5rem;color:#bbb;}
-.empty .big{font-size:2rem;margin-bottom:.5rem;}
-.empty h3{font-family:'Cormorant Garamond',serif;color:var(--ink);margin-bottom:.3rem;font-size:1rem;}
-.empty p{font-size:.8rem;max-width:300px;margin:0 auto;}
-</style>
-</head>
-<body>
-
-<div class="toast" id="toast"></div>
-
-<div class="loader" id="loader">
-  <div class="spinner"></div>
-  <div class="loader-title" id="loader-title">Analyzing resume</div>
-  <div class="lsteps">
-    <div class="lstep" id="ls1"><div class="ldot"></div>Parsing resume structure</div>
-    <div class="lstep" id="ls2"><div class="ldot"></div>Analyzing job requirements</div>
-    <div class="lstep" id="ls3"><div class="ldot"></div>Building rewrite plan</div>
-    <div class="lstep" id="ls4"><div class="ldot"></div>Rewriting for executive positioning</div>
-    <div class="lstep" id="ls5"><div class="ldot"></div>Validating — checking for hallucinations</div>
-    <div class="lstep" id="ls6"><div class="ldot"></div>Scoring and finalizing</div>
-  </div>
-</div>
-
-<nav>
-  <div class="logo" onclick="showPage('dashboard')">Resume<span>Optimizer</span></div>
-  <div class="nav-r">
-    <a onclick="showPage('dashboard')">Optimizer</a>
-    <a onclick="showPage('saved')">Saved</a>
-  </div>
-</nav>
-
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="dash">
-    <div class="dash-top">
-      <div><h2>Resume Optimizer</h2><p>Executive tailoring engine — four-prompt AI pipeline</p></div>
-      <div style="display:inline-flex;align-items:center;gap:.4rem;background:var(--gold-pale);border:1px solid var(--gold-lt);color:#7a5c1e;font-size:.72rem;font-weight:600;padding:.28rem .75rem;border-radius:3px;">✦ Free Trial · 5 credits</div>
-    </div>
-
-
-    <!-- PIPELINE INDICATOR -->
-    <div class="pipeline">
-      <div class="pipe-step" id="ps1"><div class="pipe-dot"></div>Parse</div>
-      <div class="pipe-step" id="ps2"><div class="pipe-dot"></div>Analyze job</div>
-      <div class="pipe-step" id="ps3"><div class="pipe-dot"></div>Plan</div>
-      <div class="pipe-step" id="ps4"><div class="pipe-dot"></div>Generate</div>
-      <div class="pipe-step" id="ps5"><div class="pipe-dot"></div>Validate</div>
-      <div class="pipe-step" id="ps6"><div class="pipe-dot"></div>Results</div>
-    </div>
-
-    <div class="two-col">
-      <div>
-        <div class="card" style="margin-bottom:1rem;">
-          <div class="card-title">📄 Resume</div>
-          <div class="card-sub">DOCX, PDF, or TXT. Parsed in your browser — never uploaded to any server.</div>
-          <div class="upload-zone" id="uz" onclick="document.getElementById('rf').click()" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
-  <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)" style="display:none;"/>
-  <div class="upload-icon">📎</div>
-  <strong>Drop resume here or click to browse</strong>
-  <p>DOCX · PDF · TXT · RTF</p>
-</div>
-          <div id="file-ok" style="display:none" class="file-ok">✅ <span id="fname">file</span></div>
-        </div>
-        <div class="card">
-          <div class="card-title">💼 Job Description</div>
-          <div class="card-sub">Paste the full listing. More detail = better match.</div>
-          <textarea id="jd" placeholder="Paste the job description here...&#10;&#10;Example: We are seeking a Vice President of Clinical Operations to lead our multi-site health system. The ideal candidate brings P&amp;L ownership, HEDIS quality improvement experience, and a track record of value-based care transformation across complex health systems..."></textarea>
-          <div id="ja-display" style="display:none;"></div>
-        </div>
-      </div>
-      <div>
-        <div class="card" style="margin-bottom:1rem;">
-          <div class="card-title">⚙️ Settings</div>
-          <div class="card-sub">Fine-tune the transformation.</div>
-          <div class="opts-grid">
-            <div class="opt-g"><label>Rewrite Intensity</label><select id="opt-i"><option>Conservative</option><option selected>Balanced</option><option>Aggressive</option></select></div>
-            <div class="opt-g"><label>Positioning</label><select id="opt-p"><option>Auto-detect</option><option>Director → VP</option><option>VP → SVP</option><option>Manager → Director</option></select></div>
-            <div class="opt-g"><label>Format output</label><select id="opt-f"><option selected>Preserve formatting</option><option>ATS clean only</option></select></div>
-            <div class="opt-g"><label>Page length</label><select id="opt-pg"><option>1 Page</option><option selected>2 Pages</option><option>Auto</option></select></div>
-          </div>
-          <div style="margin-top:.9rem;">
-            <div class="tgl-row"><span>Preserve all job titles and dates</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="tgl-row"><span>Inject ATS keywords from job description</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="tgl-row"><span>Add executive summary if missing</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="tgl-row"><span>Elevate action verb language</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">🔒 Trust & Safety</div>
-          <div class="card-sub">Hard rules enforced on every output.</div>
-          <div class="notice">The AI will <strong>never invent</strong> companies, titles, dates, degrees, certifications, or metrics. Anything uncertain is flagged as <em>Needs Confirmation</em> for your review.</div>
-        </div>
-      </div>
-    </div>
-
-    <button class="gen-btn" onclick="generate()">✦ Run Optimization Pipeline</button>
-  </div>
-</div>
-
-<!-- RESULTS -->
-<div class="page" id="page-results">
-  <div class="dash">
-    <div class="dash-top">
-      <div><h2>Optimization Results</h2><p>Review every change, download both versions, resolve any flags.</p></div>
-      <button class="dl-btn" onclick="showPage('dashboard')">← Back</button>
-    </div>
-    <div class="pipeline" style="margin-bottom:1.5rem;">
-      <div class="pipe-step done"><div class="pipe-dot"></div>Parse</div>
-      <div class="pipe-step done"><div class="pipe-dot"></div>Analyze job</div>
-      <div class="pipe-step done"><div class="pipe-dot"></div>Plan</div>
-      <div class="pipe-step done"><div class="pipe-dot"></div>Generate</div>
-      <div class="pipe-step done"><div class="pipe-dot"></div>Validate</div>
-      <div class="pipe-step active"><div class="pipe-dot"></div>Results</div>
-    </div>
-    <div class="results-grid">
-      <div>
-        <div class="score-card">
-          <h3>Job Match Score</h3><p>Alignment with target role</p>
-          <div class="score-ring"><div class="score-num" id="sc-num">—</div><div class="score-lbl">match</div></div>
-          <div id="signals"></div>
-        </div>
-        <div class="card" style="margin-top:1rem;">
-          <div class="card-title" style="font-size:.88rem;">Missing Keywords</div>
-          <div id="missing-kw" style="margin-top:.5rem;font-size:.8rem;color:#999;">None detected.</div>
-        </div>
-        <div class="card" style="margin-top:.85rem;">
-          <div class="card-title" style="font-size:.88rem;">🚩 Needs Confirmation</div>
-          <div id="flags-display" style="margin-top:.5rem;font-size:.78rem;color:#777;">✅ All content verified.</div>
-        </div>
-      </div>
-      <div>
-        <div class="rtabs">
-          <button class="rtab on" onclick="showRTab('tailored',this)">Tailored Resume</button>
-          <button class="rtab" onclick="showRTab('ats',this)">ATS Version</button>
-          <button class="rtab" onclick="showRTab('diff',this)">Before / After</button>
-          <button class="rtab" onclick="showRTab('gaps',this)">Gap Analysis</button>
-        </div>
-        <div id="rt-tailored"><div class="resume-view" id="rv-tailored"></div></div>
-        <div id="rt-ats" style="display:none;"><div class="resume-view" id="rv-ats"></div></div>
-        <div id="rt-diff" style="display:none;"><div id="rv-diff"></div></div>
-        <div id="rt-gaps" style="display:none;"><div id="rv-gaps"></div></div>
-        <div class="dl-bar">
-          <button class="dl-btn prim" onclick="dlResume('rtf')">⬇ Download DOCX</button>
-          <button class="dl-btn" onclick="dlResume('ats')">⬇ Download ATS Version</button>
-          <button class="dl-btn" onclick="dlResume('txt')">⬇ Download TXT</button>
-          <button class="dl-btn" onclick="saveResume()">💾 Save to Dashboard</button>
-        </div>
-        <p style="font-size:.68rem;color:var(--mist);margin-top:.5rem;">Downloads are RTF (opens perfectly in Word/Pages) and TXT. Pixel-perfect DOCX reconstruction requires the full Python backend — see the developer handoff kit.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SAVED -->
-<div class="page" id="page-saved">
-  <div class="dash">
-    <div class="dash-top"><div><h2>Saved Resumes</h2><p>Your optimization history — stored in this browser.</p></div></div>
-    <div id="saved-list"></div>
-  </div>
-</div>
-
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const S={
-  resumeText:'',resumeFile:'',jobDesc:'',
-  parsedResume:null,jobAnalysis:null,rewritePlan:null,
-  result:null,saved:JSON.parse(localStorage.getItem('ro_saved')||'[]')
+  resumeText:'',
+  resumeFile:'',
+  jobDesc:'',
+  parsedResume:null,
+  jobAnalysis:null,
+  rewritePlan:null,
+  result:null,
+  saved:JSON.parse(localStorage.getItem('ro_saved')||'[]')
 };
 
 async function callClaude(prompt, maxTok = 2000, temp = 0) {
@@ -313,6 +17,659 @@ async function callClaude(prompt, maxTok = 2000, temp = 0) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      jobDescription: S.jobDesc,
+      resumeText: S.resumeText,
+      prompt,
+      max_tokens: maxTok,
+      temperature: temp
+    })
+  });
+
+  const raw = await r.text();
+
+  let data;
+  try {
+    data = raw ? JSON.parse(raw) : {};
+  } catch {
+    data = { error: raw || `Server error ${r.status}` };
+  }
+
+  if (!r.ok) {
+    const message =
+      data?.error?.message ||
+      data?.error ||
+      data?.details?.error?.message ||
+      raw ||
+      `Server error ${r.status}`;
+
+    throw new Error(message);
+  }
+
+  return data?.result || '';
+}
+
+function showPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  if(n==='saved') renderSaved();
+}
+
+function showRTab(t,el){
+  ['tailored','ats','diff','gaps'].forEach(x=>{
+    document.getElementById('rt-'+x).style.display = x===t ? 'block' : 'none';
+  });
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+let tt;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(tt);
+  tt=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+function onDrop(e){
+  e.preventDefault();
+  e.stopPropagation();
+  onDragLeave();
+  const f = e.dataTransfer?.files?.[0];
+  if (f) processFile(f);
+}
+
+function onDragOver(e){
+  e.preventDefault();
+  e.stopPropagation();
+  document.getElementById('uz').classList.add('drag');
+}
+
+function onDragLeave(){
+  document.getElementById('uz').classList.remove('drag');
+}
+
+function onFile(e){
+  const f = e.target?.files?.[0];
+  if (f) processFile(f);
+}
+
+async function processFile(f){
+  try {
+    S.resumeFile = f.name;
+    document.getElementById('fname').textContent = f.name;
+    document.getElementById('file-ok').style.display = 'flex';
+
+    const ext = f.name.split('.').pop().toLowerCase();
+
+    if(ext==='txt' || ext==='rtf'){
+      S.resumeText = await f.text();
+    } else if(ext==='docx'){
+      try{
+        const ab = await f.arrayBuffer();
+        const r = await mammoth.extractRawText({ arrayBuffer: ab });
+        S.resumeText = r.value || '';
+      } catch(err){
+        console.error(err);
+        S.resumeText = '[Could not parse DOCX — try saving as TXT first]';
+      }
+    } else if(ext==='pdf'){
+      try{
+        const ab = await f.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+        let t = '';
+        for(let i=1;i<=pdf.numPages;i++){
+          const pg = await pdf.getPage(i);
+          const c = await pg.getTextContent();
+          t += c.items.map(x=>x.str).join(' ') + '\n';
+        }
+        S.resumeText = t;
+      } catch(err){
+        console.error(err);
+        S.resumeText = '[Could not parse PDF]';
+      }
+    } else {
+      S.resumeText = '';
+      toast('Unsupported file type.');
+      return;
+    }
+
+    setPipe(1,'done');
+    toast('Resume loaded.');
+  } catch (err) {
+    console.error(err);
+    toast('Could not load file.');
+  }
+}
+
+function setPipe(n,s){
+  document.getElementById('ps'+n).className='pipe-step'+(s==='done'?' done':s==='active'?' active':'');
+}
+
+function resetPipe(){
+  for(let i=1;i<=6;i++) document.getElementById('ps'+i).className='pipe-step';
+}
+
+function showLoader(){
+  document.getElementById('loader').classList.add('show');
+}
+
+function hideLoader(){
+  document.getElementById('loader').classList.remove('show');
+}
+
+function setTitle(t){
+  document.getElementById('loader-title').textContent=t;
+}
+
+async function tick(n,d=2000){
+  await wait(d);
+  document.getElementById('ls'+n).classList.add('on');
+}
+
+function wait(ms){
+  return new Promise(r=>setTimeout(r,ms));
+}
+
+function resetLoader(){
+  for(let i=1;i<=6;i++) document.getElementById('ls'+i).classList.remove('on');
+}
+
+function parseResume(text){
+  const lines=text.split('\n').filter(l=>l.trim());
+  const roles=[];
+  let cur=null;
+  let bid=0;
+  let rid=0;
+  const summary=[];
+  const comps=[];
+  const edu=[];
+  const certs=[];
+  let sec='header';
+  const header={id:'hdr_001',text:lines.slice(0,3).join(' ')};
+
+  for(const line of lines){
+    const l=line.trim();
+    if(!l) continue;
+
+    if(/^(SUMMARY|PROFESSIONAL SUMMARY|PROFILE|OBJECTIVE)/i.test(l)){sec='summary';continue;}
+    if(/^(CORE COMPETENCIES|COMPETENCIES|SKILLS|KEY SKILLS)/i.test(l)){sec='comps';continue;}
+    if(/^(EXPERIENCE|PROFESSIONAL EXPERIENCE|WORK HISTORY)/i.test(l)){sec='exp';continue;}
+    if(/^(EDUCATION|ACADEMIC)/i.test(l)){sec='edu';continue;}
+    if(/^(CERTIFICATIONS?|LICENSES?|CREDENTIALS?)/i.test(l)){sec='certs';continue;}
+
+    if(sec==='summary'){
+      summary.push(l);
+    } else if(sec==='comps'){
+      comps.push({id:`cmp_${String(comps.length+1).padStart(3,'0')}`,text:l});
+    } else if(sec==='edu'){
+      edu.push({id:`edu_${String(edu.length+1).padStart(3,'0')}`,text:l});
+    } else if(sec==='certs'){
+      certs.push({id:`cert_${String(certs.length+1).padStart(3,'0')}`,text:l});
+    } else if(sec==='exp'){
+      if(l.startsWith('•')||l.startsWith('-')||l.startsWith('–')){
+        if(cur){
+          bid++;
+          cur.bullets.push({
+            id:`rol_${String(rid).padStart(3,'0')}_blt_${String(bid).padStart(3,'0')}`,
+            text:l.replace(/^[•\-–]\s*/,'')
+          });
+        }
+      } else if(l.match(/\d{4}/) && cur){
+        if(!cur.dates) cur.dates=l;
+      } else if(l.length<100){
+        if(cur && cur.bullets.length>0 && !roles.find(r=>r.id===cur.id)) roles.push(cur);
+        rid++;
+        bid=0;
+        cur={id:`rol_${String(rid).padStart(3,'0')}`,title:l,company:'',dates:'',bullets:[]};
+      }
+    }
+  }
+
+  if(cur && cur.bullets.length>0 && !roles.find(r=>r.id===cur.id)) roles.push(cur);
+
+  return {
+    header,
+    summary:{id:'sum_001',text:summary.join(' ')},
+    competencies:comps,
+    roles:roles.slice(0,5),
+    education:edu,
+    certifications:certs
+  };
+}
+
+async function generate(){
+  const jd=document.getElementById('jd').value.trim();
+
+  if(!S.resumeText){
+    toast('Upload your resume first.');
+    return;
+  }
+
+  if(!jd){
+    toast('Paste the job description.');
+    return;
+  }
+
+  S.jobDesc=jd;
+  resetPipe();
+  resetLoader();
+  showLoader();
+
+  try{
+    setTitle('Analyzing resume structure');
+    tick(1,300);
+    S.parsedResume=parseResume(S.resumeText);
+    setPipe(1,'done');
+    setPipe(2,'active');
+
+    setTitle('Analyzing job requirements');
+    tick(2,600);
+    const jaRaw=await callClaude(
+      `Analyze this job description. Return JSON only:
+{"job_title":"string","seniority_level":"Director|VP|SVP","top_themes":["3-5 themes"],"required_keywords":["must-have keywords"],"must_have_signals":["P&L","multi-site","HEDIS etc"],"likely_gaps_for_director_to_vp":["gaps list"],"tone_of_role":"operational|strategic|clinical"}
+JOB:
+${jd.substring(0,2000)}`,
+      600,0
+    );
+
+    try{
+      S.jobAnalysis=JSON.parse(jaRaw);
+    } catch {
+      S.jobAnalysis={
+        job_title:'Target Role',
+        seniority_level:'VP',
+        top_themes:[],
+        required_keywords:[],
+        must_have_signals:[],
+        likely_gaps_for_director_to_vp:[],
+        tone_of_role:'operational'
+      };
+    }
+
+    renderJA(S.jobAnalysis);
+    setPipe(2,'done');
+    setPipe(3,'active');
+
+    setTitle('Building rewrite plan');
+    tick(3,600);
+    const planRaw=await callClaude(
+      `Create a rewrite plan. Never suggest inventing facts.
+RESUME: ${JSON.stringify(S.parsedResume).substring(0,1800)}
+JOB: ${JSON.stringify(S.jobAnalysis).substring(0,600)}
+Settings: intensity=${document.getElementById('opt-i').value}, positioning=${document.getElementById('opt-p').value}
+Return JSON: {"summary_action":"rewrite|preserve","summary_strategy":"string","bullets_to_rewrite":[{"bullet_id":"string","rewrite_strategy":"string","keywords_to_inject":["string"]}],"bullets_to_preserve":["ids"],"keywords_to_inject_globally":["string"],"gaps":[{"signal":"string","severity":"high|medium|low","mitigation":"string"}],"executive_positioning_notes":"string"}`,
+      1000,0
+    );
+
+    try{
+      S.rewritePlan=JSON.parse(planRaw);
+    } catch {
+      S.rewritePlan={
+        summary_action:'rewrite',
+        summary_strategy:'Elevate to VP positioning',
+        bullets_to_rewrite:[],
+        bullets_to_preserve:[],
+        keywords_to_inject_globally:[],
+        gaps:[],
+        executive_positioning_notes:'Elevate language throughout'
+      };
+    }
+
+    setPipe(3,'done');
+    setPipe(4,'active');
+
+    setTitle('Rewriting for executive positioning');
+    tick(4,500);
+    const genRaw=await callClaude(
+      `Execute this rewrite plan. NEVER invent facts, companies, titles, dates, degrees, or metrics not in the original.
+Executive verb upgrades: "Managed"→"Directed", "Responsible for"→"Accountable for", "Helped"→"Drove", "Supported"→"Architected", "Worked with"→"Aligned", "Participated"→"Shaped and executed"
+ORIGINAL: ${JSON.stringify(S.parsedResume).substring(0,2000)}
+JOB: ${JSON.stringify(S.jobAnalysis).substring(0,500)}
+PLAN: ${JSON.stringify(S.rewritePlan).substring(0,500)}
+Return JSON: {"preserve_output":{"summary":"string","competencies":["list"],"roles":[{"role_id":"string","bullets":[{"bullet_id":"string","text":"string","changed":true,"change_reason":"string"}]}]},"ats_output":{"summary":"string","competencies":["list"],"roles":[{"role_id":"string","company":"MUST match original","title":"MUST match original","dates":"MUST match original","bullets":["plain text"]}]},"fit_analysis":{"match_score":0,"score_rationale":"string","key_strengths":["string"],"gaps":[{"signal":"string","severity":"high|medium|low","recommendation":"string"}],"missing_keywords":["string"],"executive_readiness":"string"},"change_log":[{"element_id":"string","section":"string","before":"string","after":"string","reason":"string"}],"needs_confirmation":[{"element_id":"string","issue":"string","question_for_user":"string"}]}`,
+      4000,0.3
+    );
+
+    let result;
+    try{
+      result=JSON.parse(genRaw);
+    } catch {
+      result={
+        preserve_output:{
+          summary:S.parsedResume.summary.text,
+          competencies:S.parsedResume.competencies.map(c=>c.text),
+          roles:S.parsedResume.roles.map(r=>({
+            role_id:r.id,
+            bullets:r.bullets.map(b=>({
+              bullet_id:b.id,
+              text:b.text,
+              changed:false,
+              change_reason:''
+            }))
+          }))
+        },
+        ats_output:{summary:'',competencies:[],roles:[]},
+        fit_analysis:{
+          match_score:70,
+          score_rationale:'Analysis complete.',
+          key_strengths:[],
+          gaps:[],
+          missing_keywords:[],
+          executive_readiness:'Review complete.'
+        },
+        change_log:[],
+        needs_confirmation:[]
+      };
+    }
+
+    setPipe(4,'done');
+    setPipe(5,'active');
+
+    setTitle('Validating — checking for hallucinations');
+    tick(5,500);
+    const violations=validate(result,S.parsedResume);
+    violations.forEach(v=>{
+      if(v.severity==='blocker'){
+        revert(result,v.element_id,S.parsedResume);
+      } else {
+        if(!result.needs_confirmation) result.needs_confirmation=[];
+        result.needs_confirmation.push({
+          element_id:v.element_id,
+          issue:v.issue,
+          question_for_user:'Please verify: '+v.issue
+        });
+      }
+    });
+
+    setPipe(5,'done');
+    setPipe(6,'active');
+    tick(6,300);
+
+    S.result=result;
+    hideLoader();
+    renderResults(result);
+    showPage('results');
+
+  } catch(e){
+    console.error(e);
+    hideLoader();
+    toast('Error: '+e.message);
+  }
+}
+
+function validate(result,original){
+  const violations=[];
+
+  if(result.ats_output && result.ats_output.roles){
+    result.ats_output.roles.forEach(role=>{
+      const orig=original.roles.find(r=>r.id===role.role_id);
+      if(!orig) return;
+
+      if(role.company && orig.company && orig.company.length>2 && role.company.toLowerCase()!==orig.company.toLowerCase()){
+        violations.push({
+          element_id:role.role_id,
+          type:'company_changed',
+          severity:'blocker',
+          issue:`Company changed: "${orig.company}" → "${role.company}"`
+        });
+      }
+
+      if(role.title && orig.title && orig.title.length>2 && role.title.toLowerCase()!==orig.title.toLowerCase()){
+        violations.push({
+          element_id:role.role_id,
+          type:'title_changed',
+          severity:'blocker',
+          issue:`Title changed: "${orig.title}" → "${role.title}"`
+        });
+      }
+    });
+  }
+
+  return violations;
+}
+
+function revert(result,id,original){
+  if(result.ats_output && result.ats_output.roles){
+    result.ats_output.roles.forEach(r=>{
+      if(r.role_id===id){
+        const o=original.roles.find(x=>x.id===id);
+        if(o){
+          r.company=o.company;
+          r.title=o.title;
+          r.dates=o.dates;
+        }
+      }
+    });
+  }
+}
+
+function renderJA(ja){
+  const el=document.getElementById('ja-display');
+  el.style.display='block';
+  el.innerHTML=`<div class="ja-preview"><h4>${ja.job_title||'Role'} <span style="font-size:.7rem;opacity:.5;font-family:'Outfit',sans-serif;font-weight:400;">${ja.seniority_level||''}</span></h4><div class="ja-label">Top Themes</div>${(ja.top_themes||[]).map(t=>`<span class="ja-tag">${t}</span>`).join('')}<div class="ja-label">Must-Have Signals</div>${(ja.must_have_signals||[]).map(s=>`<div class="ja-gap">→ ${s}</div>`).join('')||'<div class="ja-gap" style="opacity:.4">None identified</div>'}<div class="ja-label">Likely Gaps (Director→VP)</div>${(ja.likely_gaps_for_director_to_vp||[]).map(g=>`<div class="ja-gap" style="color:rgba(255,200,100,.75);">⚠ ${g}</div>`).join('')||'<div class="ja-gap" style="opacity:.4">None identified</div>'}</div>`;
+}
+
+function renderResults(r){
+  const fa=r.fit_analysis||{};
+  document.getElementById('sc-num').textContent=(fa.match_score||'—')+'%';
+
+  document.getElementById('signals').innerHTML=
+    (fa.key_strengths||[]).map(s=>`<div class="signal"><div class="sdot s-g"></div>${s}</div>`).join('')+
+    (fa.gaps||[]).filter(g=>g.severity==='medium').map(g=>`<div class="signal"><div class="sdot s-y"></div>${g.signal}</div>`).join('')+
+    (fa.gaps||[]).filter(g=>g.severity==='high').map(g=>`<div class="signal"><div class="sdot s-r"></div>${g.signal}</div>`).join('');
+
+  const kw=fa.missing_keywords||[];
+  document.getElementById('missing-kw').innerHTML=kw.length
+    ? kw.map(k=>`<span class="kw-tag">${k}</span>`).join('')
+    : `<span style="color:var(--sage);font-size:.78rem;">✅ No missing keywords</span>`;
+
+  document.getElementById('rv-tailored').innerHTML=buildTailored(r.preserve_output,r.change_log);
+  document.getElementById('rv-ats').innerHTML=buildAts(r.ats_output);
+
+  const cl=r.change_log||[];
+  document.getElementById('rv-diff').innerHTML=cl.length
+    ? cl.map(d=>`<div class="diff-item"><div class="diff-head">📝 ${d.section}</div><div class="diff-before">${esc(d.before)}</div><div class="diff-after">${esc(d.after)}</div><div class="diff-why">💡 ${d.reason}</div></div>`).join('')
+    : '<div class="notice">No changes logged.</div>';
+
+  const gaps=fa.gaps||[];
+  document.getElementById('rv-gaps').innerHTML=
+    `<div style="margin-bottom:1rem;font-size:.82rem;font-style:italic;color:var(--steel);">${fa.executive_readiness||''}</div>` +
+    (gaps.length
+      ? gaps.map(g=>`<div style="border:1.5px solid var(--border);border-radius:6px;padding:.85rem 1rem;margin-bottom:.65rem;"><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;"><div style="width:8px;height:8px;border-radius:50%;background:${g.severity==='high'?'#d46060':g.severity==='medium'?'var(--gold)':'#5caa5c'};flex-shrink:0;"></div><strong style="font-size:.82rem;">${g.signal}</strong><span style="font-size:.68rem;color:var(--mist);text-transform:uppercase;letter-spacing:.05em;margin-left:.25rem;">${g.severity}</span></div><p style="font-size:.78rem;color:var(--steel);line-height:1.55;">${g.recommendation}</p></div>`).join('')
+      : '<div class="notice">No significant gaps identified.</div>');
+
+  const flags=r.needs_confirmation||[];
+  document.getElementById('flags-display').innerHTML=flags.length
+    ? flags.map(f=>`<div class="flag-item"><h4>⚠ ${f.element_id}</h4><p>${f.question_for_user||f.issue}</p><div class="flag-btns"><button class="flag-btn approve" onclick="resolveFlag(this,'Confirmed')">✓ Confirm</button><button class="flag-btn reject" onclick="resolveFlag(this,'Removed')">✗ Remove</button></div></div>`).join('')
+    : '<span style="font-size:.78rem;color:var(--sage);">✅ All content verified against your original resume.</span>';
+}
+
+function resolveFlag(btn,status){
+  btn.closest('.flag-item').style.opacity='.4';
+  btn.closest('.flag-btns').innerHTML=`<span style="font-size:.75rem;color:${status==='Confirmed'?'var(--sage)':'#d46060'};">${status==='Confirmed'?'✓ Confirmed':'✗ Removed'}</span>`;
+  toast(status==='Confirmed'?'Content confirmed.':'Content removed from output.');
+}
+
+function buildTailored(po,cl){
+  if(!po) return '<p style="color:#aaa;font-style:italic;">No output generated.</p>';
+
+  const name=S.parsedResume?.header?.text?.split(' ').slice(0,3).join(' ')||'Your Name';
+  let h=`<h1>${name}</h1>`;
+
+  if(po.summary) h+=`<h2>Summary</h2><p style="line-height:1.75;">${po.summary}</p>`;
+  if(po.competencies?.length) h+=`<h2>Core Competencies</h2><ul>${po.competencies.map(c=>`<li>${c}</li>`).join('')}</ul>`;
+
+  if(po.roles?.length){
+    h+=`<h2>Professional Experience</h2>`;
+    po.roles.forEach(role=>{
+      const orig=S.parsedResume?.roles?.find(r=>r.id===role.role_id);
+      h+=`<div class="jt">${orig?.title||''}</div><div class="jm">${orig?.company||''}${orig?.dates?' · '+orig.dates:''}</div><ul>`;
+      (role.bullets||[]).forEach(b=>{
+        h+=`<li style="${b.changed?'background:#faf4e6;border-left:3px solid var(--gold);padding-left:.4rem;margin-left:-.4rem;':''}">${b.text}</li>`;
+      });
+      h+=`</ul>`;
+    });
+  }
+
+  return h;
+}
+
+function buildAts(ao){
+  if(!ao) return '<p style="color:#aaa;font-style:italic;">No ATS output generated.</p>';
+
+  const name=S.parsedResume?.header?.text?.split(' ').slice(0,3).join(' ')||'Your Name';
+  let h=`<h1>${name}</h1>`;
+
+  if(ao.summary) h+=`<h2>PROFESSIONAL SUMMARY</h2><p>${ao.summary}</p>`;
+  if(ao.competencies?.length) h+=`<h2>CORE COMPETENCIES</h2><p>${ao.competencies.join(' | ')}</p>`;
+
+  if(ao.roles?.length){
+    h+=`<h2>PROFESSIONAL EXPERIENCE</h2>`;
+    ao.roles.forEach(r=>{
+      h+=`<div class="jt">${r.title||''}</div><div class="jm">${r.company||''}${r.dates?' · '+r.dates:''}</div><ul>${(r.bullets||[]).map(b=>`<li>${b}</li>`).join('')}</ul>`;
+    });
+  }
+
+  return h;
+}
+
+function dlResume(fmt){
+  if(!S.result){
+    toast('No result to download.');
+    return;
+  }
+
+  const po=S.result.preserve_output;
+  const ao=S.result.ats_output;
+  const src=fmt==='ats'?ao:po;
+  const name=(S.parsedResume?.header?.text?.split(' ').slice(0,2).join('-')||'Resume');
+  let text=name.replace(/-/g,' ')+'\n\n';
+
+  if(src?.summary) text+='PROFESSIONAL SUMMARY\n'+src.summary+'\n\n';
+  if(src?.competencies?.length) text+='CORE COMPETENCIES\n'+src.competencies.join(' | ')+'\n\n';
+
+  text+='PROFESSIONAL EXPERIENCE\n';
+  (src?.roles||[]).forEach(r=>{
+    const orig=S.parsedResume?.roles?.find(x=>x.id===r.role_id);
+    text+=(r.title||orig?.title||'')+'\n'+(r.company||orig?.company||'')+(r.dates||orig?.dates?' | '+(r.dates||orig?.dates):'')+'\n';
+    (r.bullets||[]).forEach(b=>{
+      text+='• '+(typeof b==='string'?b:b.text)+'\n';
+    });
+    text+='\n';
+  });
+
+  if(fmt==='txt'||fmt==='ats'){
+    dl(new Blob([text],{type:'text/plain'}),`${name}-${fmt==='ats'?'ATS':'optimized'}.txt`);
+  } else {
+    const rtf=`{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0\\froman Georgia;}}\\widowctrl\\f0\\fs22 ${text.replace(/\\/g,'\\\\').replace(/\{/g,'\\{').replace(/\}/g,'\\}').replace(/\n/g,'\\par ')}}`;
+    dl(new Blob([rtf],{type:'application/rtf'}),`${name}-optimized.rtf`);
+  }
+}
+
+function dl(blob,name){
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=u;
+  a.download=name;
+  a.click();
+  URL.revokeObjectURL(u);
+}
+
+function esc(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function saveResume(){
+  if(!S.result){
+    toast('Nothing to save.');
+    return;
+  }
+
+  S.saved.unshift({
+    id:Date.now(),
+    name:S.resumeFile||'Resume',
+    job:(S.jobDesc||'').substring(0,55)+'…',
+    date:new Date().toLocaleDateString(),
+    score:S.result.fit_analysis?.match_score||0,
+    result:S.result,
+    parsedResume:S.parsedResume
+  });
+
+  try{
+    localStorage.setItem('ro_saved',JSON.stringify(S.saved.slice(0,20)));
+  }catch{}
+
+  toast('Saved to dashboard.');
+}
+
+function renderSaved(){
+  const el=document.getElementById('saved-list');
+  if(!S.saved.length){
+    el.innerHTML='<div class="empty"><div class="big">📂</div><h3>No saved resumes yet</h3><p>Generate an optimized resume to get started.</p></div>';
+    return;
+  }
+
+  el.innerHTML=S.saved.map(s=>`<div class="saved-item"><div><h4>${s.name}</h4><p>${s.job} · ${s.date} · Match: ${s.score}%</p></div><div class="saved-acts"><button class="tiny" onclick="loadSaved(${s.id})">View</button><button class="tiny" onclick="delSaved(${s.id})">🗑</button></div></div>`).join('');
+}
+
+function loadSaved(id){
+  const s=S.saved.find(x=>x.id===id);
+  if(!s) return;
+  S.result=s.result;
+  S.parsedResume=s.parsedResume;
+  renderResults(s.result);
+  showPage('results');
+}
+
+function delSaved(id){
+  S.saved=S.saved.filter(x=>x.id!==id);
+  try{
+    localStorage.setItem('ro_saved',JSON.stringify(S.saved));
+  }catch{}
+  renderSaved();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const uploadZone = document.getElementById('uz');
+  const resumeInput = document.getElementById('rf');
+
+  if (uploadZone && resumeInput) {
+    uploadZone.addEventListener('click', () => {
+      resumeInput.click();
+    });
+
+    uploadZone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadZone.classList.add('drag');
+    });
+
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+      uploadZone.classList.add('drag');
+    });
+
+    uploadZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadZone.classList.remove('drag');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadZone.classList.remove('drag');
+      const files = e.dataTransfer?.files;
+      if (files && files.length > 0) {
+        processFile(files[0]);
+      }
+    });
+  }
+});
+</script>    body: JSON.stringify({
       jobDescription: S.jobDesc,
       resumeText: S.resumeText,
       prompt,
