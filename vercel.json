@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/reconstruct.py": {
-      "runtime": "python3.9"
-    }
-  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/app", "destination": "/app.html" }
