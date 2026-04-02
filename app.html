@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <style>
 :root{
   --ink:#0c0b0a;--paper:#f8f5f0;--cream:#f0ebe2;--gold:#b8943a;--gold-lt:#e8d5a0;
@@ -513,7 +513,7 @@ async function dlDocx(){
     Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle,
     LevelFormat, TabStopType, WidthType, TableRow, TableCell, Table,
     ShadingType, VerticalAlign
-  } = docx;
+  } = window.docx;
 
   const bulletNum={config:[{reference:'bullets',levels:[{level:0,format:LevelFormat.BULLET,text:'\u2022',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:480,hanging:240},spacing:{after:0,line:240}}}}]}]};
 
