@@ -284,7 +284,7 @@ async function callClaude(prompt, maxTok=4000, temp=0.3){
 }
 
 async function callReconstruct(docxB64, rewrittenSections){
-  const r=await fetch('/api/reconstruct',{
+  const r=await fetch('https://docx-reconstruct-production.up.railway.app/reconstruct',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({docx_base64:docxB64, rewritten_sections:rewrittenSections})
