@@ -405,17 +405,18 @@ ${jd.substring(0,3000)}`,
 
     let rewriteResult;
     try{
-      // Aggressively strip any markdown or extra text Claude may have added
-      let clean=rewriteRaw.trim();
-      // Remove markdown fences
-      clean=clean.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
-      // Find the first { and last } to extract just the JSON object
-      const first=clean.indexOf('{');
-      const last=clean.lastIndexOf('}');
-      if(first>=0&&last>first)clean=clean.substring(first,last+1);
-      rewriteResult=JSON.parse(clean);
+      // Claude's response comes back as {"result": "...json string..."} 
+      // so we need to parse the inner string too
+      let raw=rewriteRaw.trim();
+      // First parse strips markdown/fences
+      raw=raw.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+      const first=raw.indexOf('{');
+      const last=raw.lastIndexOf('}');
+      if(first>=0&&last>first)raw=raw.substring(first,last+1);
+      const parsed=JSON.parse(raw);
+      // If the result is itself a JSON string, parse it again
+      rewriteResult=typeof parsed==='string'?JSON.parse(parsed):parsed;
     }catch(e){
-      // Last resort — try to extract what we can from the raw text
       console.error('Rewrite parse error:',e.message,'Raw:',rewriteRaw.substring(0,200));
       throw new Error('AI response could not be parsed. Please try again — this sometimes happens with long resumes.');
     }
@@ -452,12 +453,13 @@ ${jd.substring(0,2000)}`,
 
     let scoreResult;
     try{
-      let clean2=scoreRaw.trim();
-      clean2=clean2.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
-      const first=clean2.indexOf('{');
-      const last=clean2.lastIndexOf('}');
-      if(first>=0&&last>first)clean2=clean2.substring(first,last+1);
-      scoreResult=JSON.parse(clean2);
+      let raw2=scoreRaw.trim();
+      raw2=raw2.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+      const first=raw2.indexOf('{');
+      const last=raw2.lastIndexOf('}');
+      if(first>=0&&last>first)raw2=raw2.substring(first,last+1);
+      const parsed2=JSON.parse(raw2);
+      scoreResult=typeof parsed2==='string'?JSON.parse(parsed2):parsed2;
     }catch(e){
       // Non-fatal — use defaults
       scoreResult={match_score:0,score_rationale:'',key_strengths:[],gaps:[],missing_keywords:[],executive_readiness:'',needs_confirmation:[]};
