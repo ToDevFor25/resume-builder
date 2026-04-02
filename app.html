@@ -377,7 +377,7 @@ async function generate(){
     // ── CALL 1: Rewrite the resume ──────────────────────────────────────────
     setTitle('Rewriting resume for target role');
     const rewriteRaw=await callClaude(
-      `You are a senior executive resume writer. Rewrite the resume below to target the job description.
+      `You are a senior executive resume writer. Rewrite the resume below to target the job description. Do NOT ask any questions. Do NOT request more information. Always complete the full rewrite using whatever information is provided.
 
 CRITICAL RULES:
 - NEVER change any company name, job title, date, degree, university, or certification
@@ -385,6 +385,7 @@ CRITICAL RULES:
 - PRESERVE the exact structure and section order of the original resume
 - REWRITE bullets, summary, and competencies to use the job's language and keywords
 - Rewrite intensity: ${intensity} | Positioning: ${positioning}
+- Always complete the full rewrite — never ask for clarification
 
 Return a JSON object with exactly two keys:
 {
@@ -392,7 +393,7 @@ Return a JSON object with exactly two keys:
   "rewritten_sections": {"exact original paragraph text": "rewritten version", ...}
 }
 
-For rewritten_sections: keys = EXACT original paragraph text, values = rewritten text.
+For rewritten_sections: keys = EXACT original paragraph text copied character-for-character, values = rewritten text.
 Only include paragraphs that actually changed. Return ONLY valid JSON, no markdown fences.
 
 ORIGINAL RESUME:
@@ -481,18 +482,22 @@ ${jd.substring(0,2000)}`,
     setPipe(4,'done');setPipe(5,'active');
 
     // Step 3: Reconstruct DOCX if we have the original
-    if(S.resumeDocxB64 && result.rewritten_sections){
+    if(S.resumeDocxB64 && result.rewritten_sections && Object.keys(result.rewritten_sections).length>0){
       setTitle('Reconstructing your document');
       tick(5,400);
       try{
         const reconstructResult=await callReconstruct(S.resumeDocxB64, result.rewritten_sections);
         if(reconstructResult.docx_base64){
           S.rewrittenDocxB64=reconstructResult.docx_base64;
+          console.log('Reconstruction successful, replaced',reconstructResult.replaced_count,'paragraphs');
+        }else{
+          console.warn('Reconstruction returned no docx_base64');
         }
       }catch(e){
-        // Reconstruction failed — not fatal, user can still download TXT
         console.warn('DOCX reconstruction failed:', e.message);
       }
+    }else{
+      console.log('Skipping reconstruction — docx:',!!S.resumeDocxB64,'sections:',Object.keys(result.rewritten_sections||{}).length);
     }
 
     hideLoader();
