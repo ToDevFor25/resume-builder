@@ -4,3 +4,9 @@
     { "source": "/app", "destination": "/app.html" }
   ]
 }
+{
+  "rewrites": [
+    { "source": "/app", "destination": "/app.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" }
+  ]
+}
