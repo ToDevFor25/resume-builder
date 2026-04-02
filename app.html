@@ -400,15 +400,24 @@ ${S.resumeText}
 
 JOB DESCRIPTION:
 ${jd.substring(0,3000)}`,
-      8000, 0.3
+      8192, 0.3
     );
 
     let rewriteResult;
     try{
-      const clean=rewriteRaw.replace(/^```json\n?/,'').replace(/\n?```$/,'').trim();
+      // Aggressively strip any markdown or extra text Claude may have added
+      let clean=rewriteRaw.trim();
+      // Remove markdown fences
+      clean=clean.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+      // Find the first { and last } to extract just the JSON object
+      const first=clean.indexOf('{');
+      const last=clean.lastIndexOf('}');
+      if(first>=0&&last>first)clean=clean.substring(first,last+1);
       rewriteResult=JSON.parse(clean);
     }catch(e){
-      throw new Error('Could not parse rewrite response. Please try again.');
+      // Last resort — try to extract what we can from the raw text
+      console.error('Rewrite parse error:',e.message,'Raw:',rewriteRaw.substring(0,200));
+      throw new Error('AI response could not be parsed. Please try again — this sometimes happens with long resumes.');
     }
 
     setPipe(2,'done');setPipe(3,'done');setPipe(4,'active');
@@ -443,7 +452,11 @@ ${jd.substring(0,2000)}`,
 
     let scoreResult;
     try{
-      const clean2=scoreRaw.replace(/^```json\n?/,'').replace(/\n?```$/,'').trim();
+      let clean2=scoreRaw.trim();
+      clean2=clean2.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+      const first=clean2.indexOf('{');
+      const last=clean2.lastIndexOf('}');
+      if(first>=0&&last>first)clean2=clean2.substring(first,last+1);
       scoreResult=JSON.parse(clean2);
     }catch(e){
       // Non-fatal — use defaults
