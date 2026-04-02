@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
 <style>
 :root{
   --ink:#0c0b0a;--paper:#f8f5f0;--cream:#f0ebe2;--gold:#b8943a;--gold-lt:#e8d5a0;
@@ -70,6 +71,17 @@ textarea:focus{border-color:var(--gold);}
 .notice{display:flex;align-items:flex-start;gap:.45rem;padding:.6rem .85rem;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);font-size:.75rem;color:var(--steel);margin-bottom:.85rem;line-height:1.5;}
 .gen-btn{width:100%;padding:.85rem;background:var(--ink);color:var(--gold);border:none;border-radius:var(--radius);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;cursor:pointer;margin-top:1.1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;letter-spacing:.02em;}
 .gen-btn:hover{background:var(--steel);}
+
+/* Template picker */
+.tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.75rem;}
+@media(max-width:600px){.tpl-grid{grid-template-columns:1fr;}}
+.tpl-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.75rem;cursor:pointer;transition:all .2s;text-align:center;}
+.tpl-card:hover{border-color:var(--gold);}
+.tpl-card.active{border-color:var(--gold);background:var(--gold-pale);}
+.tpl-icon{font-size:1.4rem;margin-bottom:.3rem;}
+.tpl-name{font-size:.82rem;font-weight:600;color:var(--ink);}
+.tpl-desc{font-size:.7rem;color:var(--mist);margin-top:.1rem;}
+
 .results-grid{display:grid;grid-template-columns:260px 1fr;gap:1.1rem;}
 @media(max-width:840px){.results-grid{grid-template-columns:1fr;}}
 .score-card{background:var(--ink);color:#fff;border-radius:8px;padding:1.4rem;text-align:center;}
@@ -88,18 +100,12 @@ textarea:focus{border-color:var(--gold);}
 .resume-view{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:1.75rem;font-size:.875rem;line-height:1.78;min-height:200px;white-space:pre-wrap;font-family:'Outfit',sans-serif;}
 .kw-tag{display:inline-block;background:#fff5f5;border:1px solid #f5c4c4;color:#8b2020;font-size:.68rem;padding:.18rem .55rem;border-radius:2px;margin:.15rem;}
 .flag-item{background:#fff8e6;border:1px solid var(--gold-lt);border-radius:var(--radius);padding:.7rem .9rem;margin-bottom:.6rem;}
-.flag-item h4{font-size:.78rem;font-weight:600;color:#7a5c1e;margin-bottom:.2rem;}
-.flag-item p{font-size:.75rem;color:var(--steel);margin-bottom:.5rem;line-height:1.5;}
-.flag-btns{display:flex;gap:.4rem;}
-.flag-btn{padding:.3rem .7rem;border:1px solid var(--border);border-radius:3px;font-size:.72rem;font-weight:600;cursor:pointer;background:var(--surface);transition:all .15s;font-family:'Outfit',sans-serif;}
-.flag-btn.approve:hover{background:#eef7eb;border-color:#b8d9b0;color:var(--sage);}
-.flag-btn.reject:hover{background:#fff5f5;border-color:#f5c4c4;color:#8b2020;}
+.flag-item p{font-size:.75rem;color:var(--steel);line-height:1.5;}
 .dl-bar{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.1rem;}
 .dl-btn{display:flex;align-items:center;gap:.4rem;padding:.52rem 1rem;border:1.5px solid var(--border);border-radius:3px;background:var(--surface);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s;color:var(--ink);}
 .dl-btn:hover{border-color:var(--gold);}
 .dl-btn.prim{background:var(--ink);color:#fff;border-color:var(--ink);}
 .dl-btn.prim:hover{background:var(--steel);}
-.dl-btn:disabled{opacity:.4;cursor:not-allowed;}
 .saved-item{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);margin-bottom:.6rem;gap:1rem;flex-wrap:wrap;}
 .saved-item h4{font-weight:600;font-size:.85rem;} .saved-item p{font-size:.72rem;color:#999;margin-top:.1rem;}
 .saved-acts{display:flex;gap:.4rem;}
@@ -123,7 +129,7 @@ textarea:focus{border-color:var(--gold);}
     <div class="lstep" id="ls2"><div class="ldot"></div>Analyzing job requirements</div>
     <div class="lstep" id="ls3"><div class="ldot"></div>Rewriting for target role</div>
     <div class="lstep" id="ls4"><div class="ldot"></div>Scoring and gap analysis</div>
-    <div class="lstep" id="ls5"><div class="ldot"></div>Reconstructing your document</div>
+    <div class="lstep" id="ls5"><div class="ldot"></div>Building your document</div>
   </div>
 </div>
 
@@ -139,7 +145,7 @@ textarea:focus{border-color:var(--gold);}
 <div class="page active" id="page-dashboard">
   <div class="dash">
     <div class="dash-top">
-      <div><h2>Resume Optimizer</h2><p>Paste your resume and a job description. Get a tailored version that mirrors your original formatting exactly.</p></div>
+      <div><h2>Resume Optimizer</h2><p>Paste your resume and a job description. Get a tailored, formatted resume ready to send.</p></div>
       <div style="display:inline-flex;align-items:center;gap:.4rem;background:var(--gold-pale);border:1px solid var(--gold-lt);color:#7a5c1e;font-size:.72rem;font-weight:600;padding:.28rem .75rem;border-radius:3px;">✦ Free Beta · 5 credits</div>
     </div>
     <div class="pipeline">
@@ -153,7 +159,7 @@ textarea:focus{border-color:var(--gold);}
       <div>
         <div class="card" style="margin-bottom:1rem;">
           <div class="card-title">📄 Resume</div>
-          <div class="card-sub">DOCX gives the best output — formatting is preserved exactly. PDF and TXT also work.</div>
+          <div class="card-sub">Upload your existing resume. We extract the content and rewrite it — you choose the output format.</div>
           <div class="upload-zone" id="uz" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
             <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
             <div class="upload-icon">📎</div>
@@ -169,6 +175,27 @@ textarea:focus{border-color:var(--gold);}
         </div>
       </div>
       <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <div class="card-title">🎨 Output Template</div>
+          <div class="card-sub">Choose how your resume will look. All templates produce a real DOCX file.</div>
+          <div class="tpl-grid">
+            <div class="tpl-card active" id="tpl-executive" onclick="setTemplate('executive')">
+              <div class="tpl-icon">📋</div>
+              <div class="tpl-name">Executive</div>
+              <div class="tpl-desc">Classic serif · Senior roles</div>
+            </div>
+            <div class="tpl-card" id="tpl-modern" onclick="setTemplate('modern')">
+              <div class="tpl-icon">⚡</div>
+              <div class="tpl-name">Modern</div>
+              <div class="tpl-desc">Two-column · Stands out</div>
+            </div>
+            <div class="tpl-card" id="tpl-ats" onclick="setTemplate('ats')">
+              <div class="tpl-icon">🤖</div>
+              <div class="tpl-name">ATS Clean</div>
+              <div class="tpl-desc">Single column · Max compatibility</div>
+            </div>
+          </div>
+        </div>
         <div class="card" style="margin-bottom:1rem;">
           <div class="card-title">⚙️ Settings</div>
           <div class="card-sub">Fine-tune the transformation.</div>
@@ -189,7 +216,7 @@ textarea:focus{border-color:var(--gold);}
         <div class="card">
           <div class="card-title">🔒 Trust & Safety</div>
           <div class="card-sub">Hard rules enforced on every output.</div>
-          <div class="notice">The AI will <strong>never invent</strong> companies, titles, dates, degrees, certifications, or metrics not in your original resume. Your document stays fully defensible.</div>
+          <div class="notice">The AI will <strong>never invent</strong> companies, titles, dates, degrees, certifications, or metrics not in your original resume.</div>
         </div>
       </div>
     </div>
@@ -201,7 +228,7 @@ textarea:focus{border-color:var(--gold);}
 <div class="page" id="page-results">
   <div class="dash">
     <div class="dash-top">
-      <div><h2>Optimization Results</h2><p>Review the rewrite, download your tailored resume, check the gap analysis.</p></div>
+      <div><h2>Optimization Results</h2><p>Review the rewrite, download your formatted resume, check the gap analysis.</p></div>
       <button class="dl-btn" onclick="showPage('dashboard')">← Back</button>
     </div>
     <div class="pipeline" style="margin-bottom:1.5rem;">
@@ -235,16 +262,11 @@ textarea:focus{border-color:var(--gold);}
         <div id="rt-preview"><div class="resume-view" id="rv-preview"></div></div>
         <div id="rt-gaps" style="display:none;"><div id="rv-gaps"></div></div>
         <div class="dl-bar">
-          <button class="dl-btn prim" id="dl-docx-btn" onclick="dlDocx()" disabled>⬇ Download DOCX</button>
+          <button class="dl-btn prim" onclick="dlDocx()">⬇ Download DOCX</button>
           <button class="dl-btn" onclick="dlTxt()">⬇ Download TXT</button>
           <button class="dl-btn" onclick="saveResume()">💾 Save</button>
         </div>
-        <p id="docx-note" style="font-size:.68rem;color:var(--mist);margin-top:.5rem;display:none;">
-          ✅ DOCX ready — formatting preserved from your original file.
-        </p>
-        <p id="docx-unavail" style="font-size:.68rem;color:var(--mist);margin-top:.5rem;">
-          Upload a DOCX file to enable formatted download with your original formatting preserved.
-        </p>
+        <p style="font-size:.68rem;color:var(--mist);margin-top:.5rem;" id="tpl-note"></p>
       </div>
     </div>
   </div>
@@ -262,38 +284,43 @@ textarea:focus{border-color:var(--gold);}
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const S={
-  resumeText:'',
-  resumeFile:'',
-  resumeDocxB64:null,   // base64 of original DOCX — for reconstruction
-  jobDesc:'',
+  resumeText:'',resumeFile:'',jobDesc:'',
+  selectedTemplate:'executive',
   result:null,
-  rewrittenDocxB64:null, // base64 of reconstructed DOCX from Python
+  parsedData:null,
   saved:JSON.parse(localStorage.getItem('ro_saved')||'[]')
 };
 
-// ── API CALLS ────────────────────────────────────────────────────────────────
-async function callClaude(prompt, maxTok=4000, temp=0.3){
+// ── TEMPLATE SELECTION ───────────────────────────────────────────────────────
+function setTemplate(t){
+  S.selectedTemplate=t;
+  ['executive','modern','ats'].forEach(x=>{
+    document.getElementById('tpl-'+x).classList.toggle('active',x===t);
+  });
+}
+
+// ── API ──────────────────────────────────────────────────────────────────────
+async function callClaude(prompt,maxTok=4000,temp=0.3){
   const r=await fetch('/api/optimize',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt, max_tokens:maxTok, temperature:temp})
+    body:JSON.stringify({prompt,max_tokens:maxTok,temperature:temp})
   });
   if(!r.ok){const e=await r.json();throw new Error(e.error||'Server error '+r.status);}
   const d=await r.json();
   return d.result;
 }
 
-async function callReconstruct(docxB64, rewrittenSections){
-  const r=await fetch('https://docx-reconstruct-production.up.railway.app/reconstruct',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({docx_base64:docxB64, rewritten_sections:rewrittenSections})
-  });
-  if(!r.ok){const e=await r.json();throw new Error(e.error||'Reconstruct error '+r.status);}
-  return await r.json();
+function parseJSON(raw){
+  let s=raw.trim();
+  s=s.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+  const a=s.indexOf('{'), b=s.lastIndexOf('}');
+  if(a>=0&&b>a)s=s.substring(a,b+1);
+  const p=JSON.parse(s);
+  return typeof p==='string'?JSON.parse(p):p;
 }
 
-// ── UI HELPERS ───────────────────────────────────────────────────────────────
+// ── UI ───────────────────────────────────────────────────────────────────────
 function showPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+n).classList.add('active');
@@ -320,26 +347,14 @@ function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files
 function onDragOver(e){e.preventDefault();document.getElementById('uz').classList.add('drag');}
 function onDragLeave(){document.getElementById('uz').classList.remove('drag');}
 function onFile(e){if(e.target.files[0])processFile(e.target.files[0]);}
-
 async function processFile(f){
   S.resumeFile=f.name;
-  S.resumeDocxB64=null;
   document.getElementById('fname').textContent=f.name;
   document.getElementById('file-ok').style.display='flex';
   const ext=f.name.split('.').pop().toLowerCase();
-
   if(ext==='docx'){
-    try{
-      const ab=await f.arrayBuffer();
-      // Store base64 for reconstruction
-      const bytes=new Uint8Array(ab);
-      let bin='';
-      bytes.forEach(b=>bin+=String.fromCharCode(b));
-      S.resumeDocxB64=btoa(bin);
-      // Also extract text for Claude
-      const r=await mammoth.extractRawText({arrayBuffer:ab});
-      S.resumeText=r.value;
-    }catch{S.resumeText='[Could not parse DOCX]';}
+    try{const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});S.resumeText=r.value;}
+    catch{S.resumeText='[Could not parse DOCX]';}
   }else if(ext==='txt'||ext==='rtf'){
     S.resumeText=await f.text();
   }else if(ext==='pdf'){
@@ -360,148 +375,92 @@ async function generate(){
   if(!S.resumeText){toast('Upload your resume first.');return;}
   if(!jd){toast('Paste the job description.');return;}
   S.jobDesc=jd;
-  S.rewrittenDocxB64=null;
   resetPipe();resetLoader();showLoader();
 
   try{
-    // Step 1: Upload done
     setPipe(1,'done');setPipe(2,'active');
-
-    // Step 2: Analyze job + Rewrite in one prompt
-    setTitle('Analyzing job and rewriting resume');
-    tick(1,200);tick(2,800);
-
     const intensity=document.getElementById('opt-i').value;
     const positioning=document.getElementById('opt-p').value;
 
-    // ── CALL 1: Rewrite the resume ──────────────────────────────────────────
+    // ── CALL 1: Rewrite ──────────────────────────────────────────────────────
     setTitle('Rewriting resume for target role');
+    tick(1,200);tick(2,800);
+
     const rewriteRaw=await callClaude(
-      `You are a senior executive resume writer. Rewrite the resume below to target the job description. Do NOT ask any questions. Do NOT request more information. Always complete the full rewrite using whatever information is provided.
+      `You are a senior executive resume writer. Rewrite the resume below to target the job description. Do NOT ask questions. Always complete the full rewrite immediately.
 
-CRITICAL RULES:
-- NEVER change any company name, job title, date, degree, university, or certification
-- NEVER invent metrics, accomplishments, or experiences not in the original
-- PRESERVE the exact structure and section order of the original resume
-- REWRITE bullets, summary, and competencies to use the job's language and keywords
+RULES:
+- NEVER change company names, job titles, dates, degrees, or certifications
+- NEVER invent facts, metrics, or experiences not in the original
+- PRESERVE exact structure and all roles from the original
+- REWRITE summary, competencies, and every bullet to match the job's language and keywords
 - Rewrite intensity: ${intensity} | Positioning: ${positioning}
-- Always complete the full rewrite — never ask for clarification
 
-Return a JSON object with exactly two keys:
+Return JSON with exactly these keys — no markdown fences:
 {
-  "rewritten_resume_text": "The complete rewritten resume as plain text, same structure as original",
-  "rewritten_sections": {"exact original paragraph text": "rewritten version", ...}
+  "name": "candidate full name with credentials",
+  "contact": "contact line",
+  "summary": "rewritten executive summary paragraph",
+  "competencies": "competency1 • competency2 • competency3 ...",
+  "roles": [
+    {
+      "title": "EXACT original job title",
+      "company": "EXACT original company name",
+      "dates": "EXACT original dates",
+      "context": "markets/scope line if present, else empty string",
+      "bullets": ["rewritten bullet 1", "rewritten bullet 2", ...]
+    }
+  ],
+  "education": ["degree line 1", "degree line 2"],
+  "rewritten_resume_text": "complete resume as plain text for preview"
 }
-
-For rewritten_sections: keys = EXACT original paragraph text copied character-for-character, values = rewritten text.
-Only include paragraphs that actually changed. Return ONLY valid JSON, no markdown fences.
 
 ORIGINAL RESUME:
 ${S.resumeText}
 
 JOB DESCRIPTION:
-${jd.substring(0,3000)}`,
+${jd.substring(0,3500)}`,
       8192, 0.3
     );
 
     let rewriteResult;
-    try{
-      // Claude's response comes back as {"result": "...json string..."} 
-      // so we need to parse the inner string too
-      let raw=rewriteRaw.trim();
-      // First parse strips markdown/fences
-      raw=raw.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
-      const first=raw.indexOf('{');
-      const last=raw.lastIndexOf('}');
-      if(first>=0&&last>first)raw=raw.substring(first,last+1);
-      const parsed=JSON.parse(raw);
-      // If the result is itself a JSON string, parse it again
-      rewriteResult=typeof parsed==='string'?JSON.parse(parsed):parsed;
-    }catch(e){
-      console.error('Rewrite parse error:',e.message,'Raw:',rewriteRaw.substring(0,200));
-      throw new Error('AI response could not be parsed. Please try again — this sometimes happens with long resumes.');
-    }
+    try{ rewriteResult=parseJSON(rewriteRaw); }
+    catch(e){ throw new Error('Could not parse AI response. Please try again.'); }
 
+    S.parsedData=rewriteResult;
     setPipe(2,'done');setPipe(3,'done');setPipe(4,'active');
-    tick(3,200);
+    tick(3,200);tick(4,600);
 
-    // ── CALL 2: Score and gap analysis ──────────────────────────────────────
+    // ── CALL 2: Score ────────────────────────────────────────────────────────
     setTitle('Scoring and analyzing gaps');
-    tick(4,600);
     const scoreRaw=await callClaude(
-      `Analyze how well this resume matches the job description.
-
-Return a JSON object with exactly these keys:
+      `Analyze how well this resume matches the job. Return JSON only — no markdown:
 {
   "match_score": 0-100,
   "score_rationale": "one sentence",
   "key_strengths": ["up to 5 strengths"],
-  "gaps": [{"signal": "gap name", "severity": "high|medium|low", "recommendation": "what to do"}],
-  "missing_keywords": ["keyword1", "keyword2"],
-  "executive_readiness": "one sentence assessment",
-  "needs_confirmation": ["anything uncertain"]
+  "gaps": [{"signal": "gap", "severity": "high|medium|low", "recommendation": "advice"}],
+  "missing_keywords": ["kw1", "kw2"],
+  "executive_readiness": "one sentence"
 }
 
-Return ONLY valid JSON, no markdown fences.
-
-RESUME:
-${rewriteResult.rewritten_resume_text?.substring(0,3000)||S.resumeText.substring(0,3000)}
-
-JOB:
-${jd.substring(0,2000)}`,
+RESUME: ${(rewriteResult.rewritten_resume_text||'').substring(0,2500)}
+JOB: ${jd.substring(0,2000)}`,
       2000, 0
     );
 
     let scoreResult;
-    try{
-      let raw2=scoreRaw.trim();
-      raw2=raw2.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
-      const first=raw2.indexOf('{');
-      const last=raw2.lastIndexOf('}');
-      if(first>=0&&last>first)raw2=raw2.substring(first,last+1);
-      const parsed2=JSON.parse(raw2);
-      scoreResult=typeof parsed2==='string'?JSON.parse(parsed2):parsed2;
-    }catch(e){
-      // Non-fatal — use defaults
-      scoreResult={match_score:0,score_rationale:'',key_strengths:[],gaps:[],missing_keywords:[],executive_readiness:'',needs_confirmation:[]};
-    }
+    try{ scoreResult=parseJSON(scoreRaw); }
+    catch(e){ scoreResult={match_score:0,score_rationale:'',key_strengths:[],gaps:[],missing_keywords:[],executive_readiness:''}; }
 
-    // Merge both results
-    const result={
-      rewritten_resume_text: rewriteResult.rewritten_resume_text||'',
-      rewritten_sections: rewriteResult.rewritten_sections||{},
-      ...scoreResult
-    };
-
-    S.result=result;
-    setPipe(2,'done');setPipe(3,'done');setPipe(4,'active');
-    tick(3,200);tick(4,600);
-    setTitle('Scoring and finalizing');
-
-    await wait(1200);
+    S.result={...rewriteResult,...scoreResult};
     setPipe(4,'done');setPipe(5,'active');
-
-    // Step 3: Reconstruct DOCX if we have the original
-    if(S.resumeDocxB64 && result.rewritten_sections && Object.keys(result.rewritten_sections).length>0){
-      setTitle('Reconstructing your document');
-      tick(5,400);
-      try{
-        const reconstructResult=await callReconstruct(S.resumeDocxB64, result.rewritten_sections);
-        if(reconstructResult.docx_base64){
-          S.rewrittenDocxB64=reconstructResult.docx_base64;
-          console.log('Reconstruction successful, replaced',reconstructResult.replaced_count,'paragraphs');
-        }else{
-          console.warn('Reconstruction returned no docx_base64');
-        }
-      }catch(e){
-        console.warn('DOCX reconstruction failed:', e.message);
-      }
-    }else{
-      console.log('Skipping reconstruction — docx:',!!S.resumeDocxB64,'sections:',Object.keys(result.rewritten_sections||{}).length);
-    }
+    tick(5,400);
+    setTitle('Building your document');
+    await wait(800);
 
     hideLoader();
-    renderResults(result);
+    renderResults(S.result);
     showPage('results');
 
   }catch(e){
@@ -512,79 +471,160 @@ ${jd.substring(0,2000)}`,
 
 // ── RENDER RESULTS ───────────────────────────────────────────────────────────
 function renderResults(r){
-  // Score
-  const score=r.match_score||0;
-  document.getElementById('sc-num').textContent=score>0?(score+'%'):'—';
-
-  // Signals
-  const strengths=(r.key_strengths||[]);
-  const gaps=(r.gaps||[]);
+  document.getElementById('sc-num').textContent=(r.match_score||0)>0?(r.match_score+'%'):'—';
   document.getElementById('signals').innerHTML=[
-    ...strengths.slice(0,4).map(s=>`<div class="signal"><div class="sdot s-g"></div>${s}</div>`),
-    ...gaps.filter(g=>g.severity==='high').slice(0,3).map(g=>`<div class="signal"><div class="sdot s-r"></div>${g.signal}</div>`)
+    ...(r.key_strengths||[]).slice(0,4).map(s=>`<div class="signal"><div class="sdot s-g"></div>${s}</div>`),
+    ...(r.gaps||[]).filter(g=>g.severity==='high').slice(0,2).map(g=>`<div class="signal"><div class="sdot s-r"></div>${g.signal}</div>`)
   ].join('');
 
-  // Missing keywords
   const kw=r.missing_keywords||[];
-  const kwCard=document.getElementById('kw-card');
   if(kw.length){
-    kwCard.style.display='block';
+    document.getElementById('kw-card').style.display='block';
     document.getElementById('missing-kw').innerHTML=kw.map(k=>`<span class="kw-tag">${k}</span>`).join('');
   }
 
-  // Needs confirmation flags
-  const flags=r.needs_confirmation||[];
-  const flagsCard=document.getElementById('flags-card');
-  if(flags.length){
-    flagsCard.style.display='block';
-    document.getElementById('flags-display').innerHTML=flags.map(f=>
-      `<div class="flag-item"><h4>⚠ Needs Review</h4><p>${f}</p></div>`
-    ).join('');
-  }
+  document.getElementById('rv-preview').textContent=r.rewritten_resume_text||'';
 
-  // Rewritten resume preview
-  document.getElementById('rv-preview').textContent=r.rewritten_resume_text||'No output generated.';
-
-  // Gap analysis
-  const gapItems=gaps.length
-    ?gaps.map(g=>`<div style="border:1.5px solid var(--border);border-radius:6px;padding:.85rem 1rem;margin-bottom:.65rem;">
-        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
-          <div style="width:8px;height:8px;border-radius:50%;background:${g.severity==='high'?'#d46060':g.severity==='medium'?'var(--gold)':'#5caa5c'};flex-shrink:0;"></div>
-          <strong style="font-size:.82rem;">${g.signal}</strong>
-          <span style="font-size:.68rem;color:var(--mist);text-transform:uppercase;letter-spacing:.05em;">${g.severity}</span>
-        </div>
-        <p style="font-size:.78rem;color:var(--steel);line-height:1.55;">${g.recommendation}</p>
-      </div>`).join('')
-    :'<div class="notice">No significant gaps identified.</div>';
-
+  const gaps=r.gaps||[];
   document.getElementById('rv-gaps').innerHTML=
     (r.executive_readiness?`<div style="margin-bottom:1rem;font-size:.82rem;font-style:italic;color:var(--steel);">${r.executive_readiness}</div>`:'')
-    +gapItems;
+    +(gaps.length?gaps.map(g=>`<div style="border:1.5px solid var(--border);border-radius:6px;padding:.85rem 1rem;margin-bottom:.65rem;">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
+        <div style="width:8px;height:8px;border-radius:50%;background:${g.severity==='high'?'#d46060':g.severity==='medium'?'var(--gold)':'#5caa5c'};flex-shrink:0;"></div>
+        <strong style="font-size:.82rem;">${g.signal}</strong>
+        <span style="font-size:.68rem;color:var(--mist);text-transform:uppercase;">${g.severity}</span>
+      </div>
+      <p style="font-size:.78rem;color:var(--steel);line-height:1.55;">${g.recommendation}</p>
+    </div>`).join(''):'<div class="notice">No significant gaps identified.</div>');
 
-  // DOCX download button
-  const dlBtn=document.getElementById('dl-docx-btn');
-  const docxNote=document.getElementById('docx-note');
-  const docxUnavail=document.getElementById('docx-unavail');
-
-  if(S.rewrittenDocxB64){
-    dlBtn.disabled=false;
-    docxNote.style.display='block';
-    docxUnavail.style.display='none';
-  }else{
-    dlBtn.disabled=true;
-    docxNote.style.display='none';
-    docxUnavail.style.display='block';
-  }
+  const tplNames={executive:'Executive (Classic Serif)',modern:'Modern (Two-Column)',ats:'ATS Clean (Single Column)'};
+  document.getElementById('tpl-note').textContent=`Template: ${tplNames[S.selectedTemplate]||S.selectedTemplate}`;
 }
 
-// ── DOWNLOADS ────────────────────────────────────────────────────────────────
-function dlDocx(){
-  if(!S.rewrittenDocxB64){toast('No DOCX available.');return;}
+// ── DOCX GENERATION ──────────────────────────────────────────────────────────
+async function dlDocx(){
+  if(!S.parsedData){toast('No result to download.');return;}
+  const d=S.parsedData;
+
+  // Ensure roles array exists
+  if(!d.roles||!d.roles.length){toast('No role data to build DOCX. Try downloading TXT.');return;}
+
+  const {
+    Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle,
+    LevelFormat, TabStopType, WidthType, TableRow, TableCell, Table,
+    ShadingType, VerticalAlign
+  } = docx;
+
+  const bulletNum={config:[{reference:'bullets',levels:[{level:0,format:LevelFormat.BULLET,text:'\u2022',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:480,hanging:240},spacing:{after:0,line:240}}}}]}]};
+
+  let doc;
+  const tpl=S.selectedTemplate;
+
+  if(tpl==='executive'){
+    const F='Book Antiqua', F2='Cambria';
+    const p=(text,opts={})=>new Paragraph({alignment:opts.align||AlignmentType.LEFT,spacing:{before:opts.before||0,after:opts.after||0,line:240},border:opts.border||{},tabStops:opts.tabs||[],children:opts.runs||[new TextRun({text,font:opts.font||F,size:opts.sz||20,bold:opts.bold||false,italics:opts.italic||false,smallCaps:opts.sc||false,color:opts.color||undefined,characterSpacing:opts.cs||0})]});
+    const secHead=(t)=>p(t,{font:F,bold:true,sc:true,sz:22,cs:20,before:120,after:60,border:{bottom:{style:BorderStyle.SINGLE,size:8,space:1,color:'000000'}}});
+    const bul=(t)=>new Paragraph({numbering:{reference:'bullets',level:0},alignment:AlignmentType.BOTH,spacing:{after:0,line:240},children:[new TextRun({text:t,font:F,size:20})]});
+    const empty=()=>p('',{after:0});
+
+    const ch=[
+      p(d.name,{font:F2,bold:true,sz:28,cs:10,align:AlignmentType.CENTER,after:0}),
+      p(d.contact,{font:F2,sz:20,align:AlignmentType.CENTER,after:60,border:{bottom:{style:BorderStyle.SINGLE,size:4,space:1,color:'000000'}}}),
+      empty(),
+      secHead('Executive Summary'),
+      p(d.summary,{align:AlignmentType.BOTH,after:0}),
+      empty(),
+      secHead('Core Competencies'),
+      p(d.competencies,{align:AlignmentType.BOTH,after:0}),
+      secHead('Professional Experience'),
+    ];
+    d.roles.forEach(r=>{
+      ch.push(new Paragraph({spacing:{before:80,after:0,line:240},tabStops:[{type:TabStopType.RIGHT,position:9072}],children:[new TextRun({text:r.title,font:F,bold:true,size:21}),new TextRun({text:'\t'+(r.dates||''),font:F,size:20})]}));
+      ch.push(p(r.company,{italic:true,after:40}));
+      if(r.context)ch.push(p(r.context,{after:20}));
+      (r.bullets||[]).forEach(b=>ch.push(bul(b)));
+      ch.push(empty());
+    });
+    ch.push(secHead('Education & Credentials'));
+    (d.education||[]).forEach(e=>ch.push(p(e,{after:0})));
+
+    doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:720,right:1080,bottom:720,left:1080}}},children:ch}]});
+
+  }else if(tpl==='modern'){
+    const FL='Calibri',FR='Calibri';
+    const SW=2700,MW=6660;
+    const bn={style:BorderStyle.NONE,size:0,space:0,color:'FFFFFF'};
+    const sp=(t,color)=>new Paragraph({spacing:{before:100,after:30,line:240},children:[new TextRun({text:t.toUpperCase(),font:FL,bold:true,size:16,color:color||'4A9FD4',characterSpacing:30})]});
+    const sb=(t)=>new Paragraph({spacing:{after:20,line:240},children:[new TextRun({text:t,font:FL,size:17,color:'CCD6E0'})]});
+    const mh=(t)=>new Paragraph({spacing:{before:100,after:40,line:240},border:{bottom:{style:BorderStyle.SINGLE,size:4,space:1,color:'4A9FD4'}},children:[new TextRun({text:t.toUpperCase(),font:FR,bold:true,size:17,color:'1A2B3C',characterSpacing:25})]});
+    const mb=(t)=>new Paragraph({alignment:AlignmentType.BOTH,spacing:{after:0,line:240},children:[new TextRun({text:t,font:FR,size:18})]});
+    const mbul=(t)=>new Paragraph({numbering:{reference:'bullets',level:0},spacing:{after:0,line:240},children:[new TextRun({text:t,font:FR,size:17})]});
+    const empty=()=>new Paragraph({spacing:{after:0,line:200},children:[]});
+
+    const sidebar=[
+      new Paragraph({spacing:{after:20,line:240},children:[new TextRun({text:(d.name||'').split(',')[0],font:FL,bold:true,size:22,color:'FFFFFF'})]}),
+      new Paragraph({spacing:{after:80,line:240},children:[new TextRun({text:(d.name||'').includes(',')?(d.name).split(',').slice(1).join(',').trim():'',font:FL,size:17,color:'90AEC6'})]}),
+      sp('Contact'),
+      ...(d.contact||'').split('|').map(c=>sb(c.trim())),
+      sp('Competencies'),
+      ...(d.competencies||'').split('•').filter(c=>c.trim()).slice(0,8).map(c=>sb(c.trim())),
+      sp('Education'),
+      ...(d.education||[]).map(e=>sb(e.length>45?e.substring(0,45)+'...':e))
+    ];
+
+    const main=[mh('Professional Summary'),mb(d.summary||''),empty(),mh('Professional Experience')];
+    (d.roles||[]).forEach(r=>{
+      main.push(new Paragraph({spacing:{before:80,after:0,line:240},tabStops:[{type:TabStopType.RIGHT,position:MW-200}],children:[new TextRun({text:r.title,font:FR,bold:true,size:19}),new TextRun({text:'\t'+(r.dates||''),font:FR,size:16,color:'888888'})]}));
+      main.push(new Paragraph({spacing:{after:30,line:240},children:[new TextRun({text:r.company,font:FR,size:17,color:'4A9FD4'})]}));
+      if(r.context)main.push(mb(r.context));
+      (r.bullets||[]).forEach(b=>main.push(mbul(b)));
+      main.push(empty());
+    });
+
+    const modernTable=new Table({
+      width:{size:SW+MW,type:WidthType.DXA},
+      columnWidths:[SW,MW],
+      rows:[new TableRow({children:[
+        new TableCell({width:{size:SW,type:WidthType.DXA},shading:{fill:'1A2B3C',type:ShadingType.CLEAR},margins:{top:200,bottom:200,left:180,right:180},borders:{top:bn,bottom:bn,left:bn,right:bn},children:sidebar}),
+        new TableCell({width:{size:MW,type:WidthType.DXA},margins:{top:200,bottom:200,left:220,right:160},borders:{top:bn,bottom:bn,left:bn,right:bn},children:main})
+      ]})]
+    });
+    doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:560,right:720,bottom:560,left:720}}},children:[modernTable]}]});
+
+  }else{
+    // ATS Clean
+    const F='Arial';
+    const p=(text,opts={})=>new Paragraph({spacing:{before:opts.before||0,after:opts.after||60,line:240},shading:opts.shade?{fill:'F0F0F0',type:ShadingType.CLEAR}:undefined,tabStops:opts.tabs||[],children:opts.runs||[new TextRun({text,font:F,size:opts.sz||18,bold:opts.bold||false,color:opts.color||undefined,characterSpacing:opts.cs||0})]});
+    const secHead=(t)=>p(t.toUpperCase(),{sz:18,bold:true,cs:20,before:160,after:60,shade:true});
+    const bul=(t)=>new Paragraph({numbering:{reference:'bullets',level:0},spacing:{after:0,line:240},children:[new TextRun({text:t,font:F,size:18})]});
+    const empty=()=>p('',{after:60});
+
+    const ch=[
+      p(d.name,{sz:28,bold:true,after:40}),
+      p(d.contact,{sz:18,color:'555555',after:120}),
+      secHead('Professional Summary'),
+      p(d.summary,{after:60}),
+      secHead('Core Competencies'),
+      p((d.competencies||'').replace(/•/g,'|'),{after:60}),
+      secHead('Professional Experience'),
+    ];
+    (d.roles||[]).forEach(r=>{
+      ch.push(new Paragraph({spacing:{before:80,after:0,line:240},tabStops:[{type:TabStopType.RIGHT,position:9072}],children:[new TextRun({text:r.title,font:F,bold:true,size:19}),new TextRun({text:'\t'+(r.dates||''),font:F,size:18})]}));
+      ch.push(p(r.company,{color:'555555',after:40}));
+      if(r.context)ch.push(p(r.context,{after:20}));
+      (r.bullets||[]).forEach(b=>ch.push(bul(b)));
+      ch.push(empty());
+    });
+    ch.push(secHead('Education & Credentials'));
+    (d.education||[]).forEach(e=>ch.push(p(e,{after:0})));
+
+    doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1080,right:1080,bottom:1080,left:1080}}},children:ch}]});
+  }
+
+  // Generate and download
+  const blob=await Packer.toBlob(doc);
   const name=(S.resumeFile||'resume').replace(/\.[^.]+$/,'');
-  const bin=atob(S.rewrittenDocxB64);
-  const bytes=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
-  dl(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),`${name}-tailored.docx`);
+  dl(blob,`${name}-tailored-${tpl}.docx`);
 }
 
 function dlTxt(){
@@ -592,48 +632,26 @@ function dlTxt(){
   const name=(S.resumeFile||'resume').replace(/\.[^.]+$/,'');
   dl(new Blob([S.result.rewritten_resume_text],{type:'text/plain'}),`${name}-tailored.txt`);
 }
-
 function dl(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
 
 // ── SAVED ────────────────────────────────────────────────────────────────────
 function saveResume(){
   if(!S.result){toast('Nothing to save.');return;}
-  S.saved.unshift({
-    id:Date.now(),name:S.resumeFile||'Resume',
-    job:(S.jobDesc||'').substring(0,55)+'…',
-    date:new Date().toLocaleDateString(),
-    score:S.result.match_score||0,
-    result:S.result,
-    docxB64:S.rewrittenDocxB64
-  });
+  S.saved.unshift({id:Date.now(),name:S.resumeFile||'Resume',job:(S.jobDesc||'').substring(0,55)+'…',date:new Date().toLocaleDateString(),score:S.result.match_score||0,result:S.result,parsedData:S.parsedData,template:S.selectedTemplate});
   try{localStorage.setItem('ro_saved',JSON.stringify(S.saved.slice(0,20)));}catch{}
   toast('Saved to dashboard.');
 }
 function renderSaved(){
   const el=document.getElementById('saved-list');
   if(!S.saved.length){el.innerHTML='<div class="empty"><div class="big">📂</div><h3>No saved resumes yet</h3><p>Run an optimization to get started.</p></div>';return;}
-  el.innerHTML=S.saved.map(s=>`
-    <div class="saved-item">
-      <div><h4>${s.name}</h4><p>${s.job} · ${s.date} · Match: ${s.score}%</p></div>
-      <div class="saved-acts">
-        <button class="tiny" onclick="loadSaved(${s.id})">View</button>
-        <button class="tiny" onclick="delSaved(${s.id})">🗑</button>
-      </div>
-    </div>`).join('');
+  el.innerHTML=S.saved.map(s=>`<div class="saved-item"><div><h4>${s.name}</h4><p>${s.job} · ${s.date} · Match: ${s.score}%</p></div><div class="saved-acts"><button class="tiny" onclick="loadSaved(${s.id})">View</button><button class="tiny" onclick="delSaved(${s.id})">🗑</button></div></div>`).join('');
 }
 function loadSaved(id){
-  const s=S.saved.find(x=>x.id===id);
-  if(!s)return;
-  S.result=s.result;
-  S.rewrittenDocxB64=s.docxB64||null;
-  renderResults(s.result);
-  showPage('results');
+  const s=S.saved.find(x=>x.id===id);if(!s)return;
+  S.result=s.result;S.parsedData=s.parsedData;S.selectedTemplate=s.template||'executive';
+  renderResults(s.result);showPage('results');
 }
-function delSaved(id){
-  S.saved=S.saved.filter(x=>x.id!==id);
-  try{localStorage.setItem('ro_saved',JSON.stringify(S.saved));}catch{}
-  renderSaved();
-}
+function delSaved(id){S.saved=S.saved.filter(x=>x.id!==id);try{localStorage.setItem('ro_saved',JSON.stringify(S.saved));}catch{}renderSaved();}
 </script>
 </body>
 </html>
