@@ -374,62 +374,88 @@ async function generate(){
     const intensity=document.getElementById('opt-i').value;
     const positioning=document.getElementById('opt-p').value;
 
+    // ── CALL 1: Rewrite the resume ──────────────────────────────────────────
+    setTitle('Rewriting resume for target role');
     const rewriteRaw=await callClaude(
-      `You are a senior executive resume writer. A user has uploaded their resume and a job description.
+      `You are a senior executive resume writer. Rewrite the resume below to target the job description.
 
-Your task:
-1. Read the original resume carefully — every section, every role, every bullet, every date, every title
-2. Read the job description — extract the real role requirements, ignore any boilerplate or UI noise
-3. Rewrite the COMPLETE resume to target this specific job
-
-CRITICAL RULES — you must follow these exactly:
+CRITICAL RULES:
 - NEVER change any company name, job title, date, degree, university, or certification
 - NEVER invent metrics, accomplishments, or experiences not in the original
-- NEVER add roles that don't exist in the original
 - PRESERVE the exact structure and section order of the original resume
-- REWRITE every bullet point to use the job's language, keywords, and themes
-- REWRITE the summary/objective to lead with the target role's priorities
-- REWRITE the competencies/skills to match the job's required keywords
-- Rewrite intensity: ${intensity}
-- Career positioning: ${positioning}
-- Flag anything uncertain as [NEEDS CONFIRMATION]
+- REWRITE bullets, summary, and competencies to use the job's language and keywords
+- Rewrite intensity: ${intensity} | Positioning: ${positioning}
 
-OUTPUT FORMAT:
-Return a JSON object with exactly these keys:
-
+Return a JSON object with exactly two keys:
 {
-  "rewritten_resume_text": "The complete rewritten resume as plain text, preserving the exact same structure as the original",
-  "rewritten_sections": {
-    "original paragraph text": "new paragraph text",
-    ... one entry per paragraph that changed ...
-  },
-  "match_score": 0-100,
-  "score_rationale": "one sentence explaining the score",
-  "key_strengths": ["strength 1", "strength 2", ...],
-  "gaps": [{"signal": "gap name", "severity": "high|medium|low", "recommendation": "what to do"}],
-  "missing_keywords": ["keyword1", "keyword2"],
-  "executive_readiness": "one sentence assessment",
-  "needs_confirmation": ["anything flagged as uncertain"]
+  "rewritten_resume_text": "The complete rewritten resume as plain text, same structure as original",
+  "rewritten_sections": {"exact original paragraph text": "rewritten version", ...}
 }
 
-For rewritten_sections, the keys must be the EXACT original paragraph text (so Python can find and replace them in the DOCX), and the values are the rewritten versions.
+For rewritten_sections: keys = EXACT original paragraph text, values = rewritten text.
+Only include paragraphs that actually changed. Return ONLY valid JSON, no markdown fences.
 
 ORIGINAL RESUME:
 ${S.resumeText}
 
 JOB DESCRIPTION:
-${jd.substring(0,4000)}`,
-      6000, 0.3
+${jd.substring(0,3000)}`,
+      8000, 0.3
     );
 
-    let result;
+    let rewriteResult;
     try{
-      // Strip markdown fences if present
-      const clean=rewriteRaw.replace(/^```json\n?/,'').replace(/\n?```$/,'');
-      result=JSON.parse(clean);
+      const clean=rewriteRaw.replace(/^```json\n?/,'').replace(/\n?```$/,'').trim();
+      rewriteResult=JSON.parse(clean);
     }catch(e){
-      throw new Error('Could not parse AI response. Please try again.');
+      throw new Error('Could not parse rewrite response. Please try again.');
     }
+
+    setPipe(2,'done');setPipe(3,'done');setPipe(4,'active');
+    tick(3,200);
+
+    // ── CALL 2: Score and gap analysis ──────────────────────────────────────
+    setTitle('Scoring and analyzing gaps');
+    tick(4,600);
+    const scoreRaw=await callClaude(
+      `Analyze how well this resume matches the job description.
+
+Return a JSON object with exactly these keys:
+{
+  "match_score": 0-100,
+  "score_rationale": "one sentence",
+  "key_strengths": ["up to 5 strengths"],
+  "gaps": [{"signal": "gap name", "severity": "high|medium|low", "recommendation": "what to do"}],
+  "missing_keywords": ["keyword1", "keyword2"],
+  "executive_readiness": "one sentence assessment",
+  "needs_confirmation": ["anything uncertain"]
+}
+
+Return ONLY valid JSON, no markdown fences.
+
+RESUME:
+${rewriteResult.rewritten_resume_text?.substring(0,3000)||S.resumeText.substring(0,3000)}
+
+JOB:
+${jd.substring(0,2000)}`,
+      2000, 0
+    );
+
+    let scoreResult;
+    try{
+      const clean2=scoreRaw.replace(/^```json\n?/,'').replace(/\n?```$/,'').trim();
+      scoreResult=JSON.parse(clean2);
+    }catch(e){
+      // Non-fatal — use defaults
+      scoreResult={match_score:0,score_rationale:'',key_strengths:[],gaps:[],missing_keywords:[],executive_readiness:'',needs_confirmation:[]};
+    }
+
+    // Merge both results
+    const result={
+      rewritten_resume_text: rewriteResult.rewritten_resume_text||'',
+      rewritten_sections: rewriteResult.rewritten_sections||{},
+      ...scoreResult
+    };
 
     S.result=result;
     setPipe(2,'done');setPipe(3,'done');setPipe(4,'active');
