@@ -8,5 +8,6 @@
     { "source": "/interview", "destination": "/interview-coach.html" },
     { "source": "/jd-decoder", "destination": "/jd-decoder.html" },
     { "source": "/reference", "destination": "/reference-writer.html" }
+    { "source": "/profile", "destination": "/profile.html" }
   ]
 }
