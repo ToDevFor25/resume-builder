@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Signing in — Ascend RX</title>
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,sans-serif;background:#080c14;color:#e2eaf4;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+  .spinner{width:36px;height:36px;border:2px solid rgba(56,189,248,.12);border-top-color:#0ea5e9;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  p{font-size:.82rem;color:#64748b;}
+</style>
+</head>
+<body>
+<div class="spinner"></div>
+<p>Completing sign in…</p>
+<script>
+window.addEventListener('load', async () => {
+  try {
+    await window.__clerk_loaded;
+    const clerk = window.Clerk;
+    await clerk.load();
+
+    // Handle the OAuth callback — Clerk-managed OAuth
+    await clerk.handleRedirectCallback({
+      afterSignInUrl:  '/onboarding',
+      afterSignUpUrl:  '/onboarding'
+    });
+
+  } catch (err) {
+    console.error('SSO callback error:', err);
+    // If something goes wrong, send them to login with an error flag
+    window.location.href = '/login';
+  }
+});
+</script>
+</body>
+</html>
