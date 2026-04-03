@@ -2,6 +2,11 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/app", "destination": "/app.html" },
-    { "source": "/dashboard", "destination": "/dashboard.html" }
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+
+    { "source": "/onboarding", "destination": "/onboarding.html" },
+    { "source": "/interview", "destination": "/interview-coach.html" },
+    { "source": "/jd-decoder", "destination": "/jd-decoder.html" },
+    { "source": "/reference", "destination": "/reference-writer.html" }
   ]
 }
