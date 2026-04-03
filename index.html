@@ -3,8 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ascend RX — The Career Platform for Healthcare Operations Leaders</title>
-<meta name="description" content="Six AI-powered tools built for healthcare operations professionals pursuing VP roles. Resume optimization, interview coaching, salary negotiation, and more."/>
+<title>Ascend RX — AI Career Tools for Healthcare Professionals</title>
+<meta name="description" content="AI-powered resume optimization, interview coaching, salary negotiation, and career tools built exclusively for healthcare professionals. From entry-level to C-suite. Start free."/>
+<meta name="keywords" content="healthcare resume builder, healthcare career tools, medical resume optimizer, hospital operations resume, healthcare interview prep, VP healthcare resume, nursing career advancement, healthcare salary negotiation, director to VP healthcare, clinical operations resume"/>
+<meta property="og:title" content="Ascend RX — AI Career Tools for Healthcare Professionals"/>
+<meta property="og:description" content="Six AI-powered career tools built for healthcare professionals at every level. Resume optimization, interview coaching, JD decoding, salary simulation and more. Start free."/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Ascend RX — AI Career Tools for Healthcare Professionals"/>
+<meta name="twitter:description" content="Resume optimization, interview coaching, and salary negotiation tools built exclusively for healthcare professionals. Start free — no credit card required."/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -199,28 +206,67 @@ section{position:relative;z-index:1;}
 .ptgl-opt{padding:.35rem .9rem;border-radius:99px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-muted);}
 .ptgl-opt.active{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
 .save-badge{font-size:.65rem;background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.25);padding:.15rem .45rem;border-radius:99px;font-weight:700;}
-.pricing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;max-width:900px;margin:0 auto;}
-.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .2s;position:relative;overflow:hidden;}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1060px;margin:0 auto;}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.75rem;transition:all .2s;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.pricing-card:hover{border-color:var(--border-bright);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
 .pricing-card.featured{border-color:rgba(56,189,248,.35);background:linear-gradient(160deg,rgba(14,165,233,.07),var(--card));}
 .pricing-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent3));}
-.pricing-popular{position:absolute;top:14px;right:14px;font-size:.65rem;font-weight:700;background:linear-gradient(135deg,var(--accent2),#0284c7);color:#fff;padding:.25rem .65rem;border-radius:99px;letter-spacing:.04em;text-transform:uppercase;}
-.pricing-plan{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.65rem;}
-.pricing-price{display:flex;align-items:baseline;gap:.25rem;margin-bottom:.3rem;}
-.pricing-amount{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--text);line-height:1;}
-.pricing-period{font-size:.82rem;color:var(--text-muted);}
-.pricing-desc{font-size:.78rem;color:var(--text-muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
-.pricing-features{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem;}
-.pricing-feature{display:flex;align-items:flex-start;gap:.6rem;font-size:.82rem;color:var(--text-dim);}
-.pricing-feature-check{color:var(--green);font-size:.8rem;margin-top:2px;flex-shrink:0;}
-.pricing-feature-x{color:var(--text-muted);font-size:.8rem;margin-top:2px;flex-shrink:0;}
+.pricing-popular{position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:700;background:linear-gradient(135deg,var(--accent2),#0284c7);color:#fff;padding:.22rem .6rem;border-radius:99px;letter-spacing:.04em;text-transform:uppercase;}
+.pricing-best-value{position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:700;background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.3);padding:.22rem .6rem;border-radius:99px;letter-spacing:.04em;text-transform:uppercase;}
+.pricing-plan{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.6rem;}
+.pricing-price{display:flex;align-items:baseline;gap:.25rem;margin-bottom:.2rem;}
+.pricing-amount{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--text);line-height:1;}
+.pricing-period{font-size:.78rem;color:var(--text-muted);}
+.pricing-annual-note{font-size:.7rem;color:var(--green);font-weight:600;margin-bottom:.75rem;min-height:1rem;}
+.pricing-desc{font-size:.76rem;color:var(--text-muted);margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);line-height:1.5;}
+.pricing-features{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.5rem;flex:1;}
+.pricing-feature{display:flex;align-items:flex-start;gap:.5rem;font-size:.79rem;color:var(--text-dim);line-height:1.4;}
+.pricing-feature-check{color:var(--green);font-size:.75rem;margin-top:1px;flex-shrink:0;}
+.pricing-feature-x{color:var(--text-muted);font-size:.75rem;margin-top:1px;flex-shrink:0;}
 .pricing-feature.dim{color:var(--text-muted);}
-.btn-pricing{width:100%;padding:.8rem;border-radius:8px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:all .2s;}
+.btn-pricing{width:100%;padding:.75rem;border-radius:8px;font-family:'Syne',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:all .2s;margin-top:auto;}
 .btn-pricing.outline{background:transparent;border:1px solid var(--border);color:var(--text-dim);}
 .btn-pricing.outline:hover{border-color:var(--border-bright);color:var(--text);}
 .btn-pricing.primary{background:linear-gradient(135deg,var(--accent2),#0284c7);border:none;color:#fff;box-shadow:0 0 20px rgba(56,189,248,.2);}
 .btn-pricing.primary:hover{box-shadow:0 0 32px rgba(56,189,248,.38);transform:translateY(-1px);}
-.btn-pricing.ghost{background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);}
-.btn-pricing.ghost:hover{color:var(--text);border-color:var(--border-bright);}
+.btn-pricing.starter{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:var(--green);}
+.btn-pricing.starter:hover{background:rgba(52,211,153,.18);border-color:rgba(52,211,153,.4);}
+.pricing-note{text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:1.25rem;}
+.pricing-note a{color:var(--accent);text-decoration:none;}
+
+/* ── PAYWALL MODAL ── */
+.paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;padding:1.5rem;}
+.paywall-overlay.show{display:flex;}
+.paywall-modal{background:var(--bg2);border:1px solid var(--border-bright);border-radius:18px;padding:2rem;max-width:480px;width:100%;position:relative;box-shadow:0 0 60px rgba(56,189,248,.1);}
+.paywall-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.paywall-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--text-muted);transition:all .15s;}
+.paywall-close:hover{color:var(--text);border-color:var(--border-bright);}
+.paywall-icon{font-size:2rem;margin-bottom:.75rem;}
+.paywall-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:.4rem;letter-spacing:-.02em;}
+.paywall-sub{font-size:.85rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem;}
+.paywall-options{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.25rem;}
+.paywall-opt{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-radius:10px;cursor:pointer;transition:all .18s;text-decoration:none;}
+.paywall-opt.primary{background:linear-gradient(135deg,var(--accent2),#0284c7);box-shadow:0 0 24px rgba(56,189,248,.2);}
+.paywall-opt.primary:hover{box-shadow:0 0 36px rgba(56,189,248,.35);transform:translateY(-1px);}
+.paywall-opt.secondary{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);}
+.paywall-opt.secondary:hover{background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.35);}
+.paywall-opt-left{}
+.paywall-opt-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;}
+.paywall-opt.primary .paywall-opt-name{color:#fff;}
+.paywall-opt.secondary .paywall-opt-name{color:var(--green);}
+.paywall-opt-desc{font-size:.72rem;margin-top:.1rem;}
+.paywall-opt.primary .paywall-opt-desc{color:rgba(255,255,255,.7);}
+.paywall-opt.secondary .paywall-opt-desc{color:rgba(52,211,153,.8);}
+.paywall-opt-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;}
+.paywall-opt.primary .paywall-opt-price{color:#fff;}
+.paywall-opt.secondary .paywall-opt-price{color:var(--green);}
+.paywall-dismiss{text-align:center;font-size:.75rem;color:var(--text-muted);}
+.paywall-dismiss a{color:var(--text-dim);text-decoration:none;cursor:pointer;}
+.paywall-dismiss a:hover{color:var(--text);}
+
+/* ── DASHBOARD UPGRADE BANNER ── */
+.upgrade-banner{margin-top:20px;border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+
 
 /* ── FAQ ── */
 .faq-section{padding:80px 0;}
@@ -270,7 +316,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   .how-grid{grid-template-columns:1fr;}
   .how-visual{display:none;}
   .testimonials-grid{grid-template-columns:1fr;}
-  .pricing-grid{grid-template-columns:1fr;max-width:420px;}
+  .pricing-grid{grid-template-columns:1fr 1fr;max-width:700px;}
   .faq-grid{grid-template-columns:1fr;}
   .stats-grid{grid-template-columns:1fr 1fr;}
   .mockup-content{grid-template-columns:1fr 1fr;}
@@ -638,13 +684,14 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <div class="section-inner">
     <div class="pricing-header">
       <div class="section-eyebrow reveal" style="justify-content:center;">Pricing</div>
-      <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">Simple pricing.<br><span>No surprises.</span></h2>
-      <p class="section-sub reveal reveal-delay-2" style="text-align:center;margin:0 auto;">Start free. Upgrade when you're ready. Cancel anytime.</p>
+      <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">Start free.<br><span>Upgrade when you're ready.</span></h2>
+      <p class="section-sub reveal reveal-delay-2" style="text-align:center;margin:0 auto;">No contracts. No surprise charges. Cancel anytime. Every new tool we launch is included automatically.</p>
       <div class="pricing-toggle reveal reveal-delay-3" style="display:flex;margin:1.5rem auto 0;">
         <div class="ptgl-opt active" onclick="setToggle(this,'monthly')">Monthly</div>
-        <div class="ptgl-opt" onclick="setToggle(this,'annual')">Annual <span class="save-badge">Save 20%</span></div>
+        <div class="ptgl-opt" onclick="setToggle(this,'annual')">Annual <span class="save-badge">2 months free</span></div>
       </div>
     </div>
+
     <div class="pricing-grid reveal reveal-delay-2">
 
       <!-- FREE -->
@@ -654,58 +701,91 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
           <div class="pricing-amount">$0</div>
           <div class="pricing-period">/ forever</div>
         </div>
-        <div class="pricing-desc">Get started with the Resume Optimizer and see what Ascend RX can do.</div>
+        <div class="pricing-annual-note">&nbsp;</div>
+        <div class="pricing-desc">Try the Resume Optimizer and JD Decoder. No credit card, no time limit — free forever.</div>
         <div class="pricing-features">
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Resume Optimizer (5 uses/month)</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> 3 DOCX downloads/month</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Resume Optimizer (3 uses/month)</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> JD Decoder (3 uses/month)</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Match score + gap analysis</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> 2 DOCX downloads/month</div>
           <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Interview Coach</div>
           <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Salary Simulator</div>
           <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Full suite access</div>
         </div>
-        <a href="/app" class="btn-pricing outline">Start Free</a>
+        <a href="/app" class="btn-pricing outline">Start Free — No card needed</a>
       </div>
 
-      <!-- PRO -->
-      <div class="pricing-card featured">
-        <div class="pricing-popular">Most Popular</div>
-        <div class="pricing-plan">Pro</div>
-        <div class="pricing-price">
-          <div class="pricing-amount" id="pro-price">$97</div>
-          <div class="pricing-period" id="pro-period">/ month</div>
-        </div>
-        <div class="pricing-desc">The full Ascend RX suite. Unlimited access to all 6 tools as they launch.</div>
-        <div class="pricing-features">
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Unlimited Resume Optimizer</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Unlimited DOCX downloads</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Interview Coach (when live)</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> JD Decoder + Salary Simulator</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Reference Writer + Promo Package</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Priority support</div>
-        </div>
-        <a href="/app" class="btn-pricing primary">✦ Get Pro Access</a>
-      </div>
-
-      <!-- CONCIERGE -->
+      <!-- STARTER -->
       <div class="pricing-card">
-        <div class="pricing-plan">Concierge</div>
+        <div class="pricing-plan">Starter</div>
         <div class="pricing-price">
-          <div class="pricing-amount">$297</div>
-          <div class="pricing-period">/ month</div>
+          <div class="pricing-amount">$99</div>
+          <div class="pricing-period">/ year</div>
         </div>
-        <div class="pricing-desc">Everything in Pro, plus hands-on support for your full job search campaign.</div>
+        <div class="pricing-annual-note">That's $8.25/month — less than a lunch</div>
+        <div class="pricing-desc">All 6 tools unlocked. Perfect for passive job seekers who want to stay ready without paying monthly.</div>
         <div class="pricing-features">
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Everything in Pro</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> 1:1 resume review session</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Live interview prep call</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Custom salary negotiation strategy</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Direct Slack access</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Early access to all new tools</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> All 6 career tools unlocked</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> 20 uses/month per tool</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Unlimited DOCX downloads</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Every new tool included automatically</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Career profile + session history</div>
+          <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Unlimited usage</div>
+          <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Priority support</div>
         </div>
-        <a href="/app" class="btn-pricing ghost">Apply for Concierge</a>
+        <a href="/login" class="btn-pricing starter">✦ Get Starter — $99/yr</a>
+      </div>
+
+      <!-- ACTIVE — featured -->
+      <div class="pricing-card featured">
+        <div class="pricing-popular" id="active-badge">Most Popular</div>
+        <div class="pricing-plan">Active Search</div>
+        <div class="pricing-price">
+          <div class="pricing-amount" id="active-price">$39</div>
+          <div class="pricing-period" id="active-period">/ month</div>
+        </div>
+        <div class="pricing-annual-note" id="active-note">&nbsp;</div>
+        <div class="pricing-desc">You're in full job search mode. Unlimited access to every tool. Cancel the month you land your role.</div>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Everything in Starter</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> <strong style="color:var(--text)">Unlimited</strong> usage on all tools</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Interview Coach — all 3 modes</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Salary Simulator + JD scam detection</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Every new tool included automatically</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Priority support</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Founding-member pricing locked in</div>
+        </div>
+        <a href="/login" class="btn-pricing primary" id="active-cta">✦ Start Active Search</a>
+      </div>
+
+      <!-- INTERVIEW PACK — one time -->
+      <div class="pricing-card">
+        <div class="pricing-plan">Interview Pack</div>
+        <div class="pricing-price">
+          <div class="pricing-amount">$47</div>
+          <div class="pricing-period">one-time</div>
+        </div>
+        <div class="pricing-annual-note" style="color:var(--amber);">30 days of Interview Coach access</div>
+        <div class="pricing-desc">Interview coming up? Get 30 days of full Interview Coach access — no subscription, no recurring charge.</div>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Interview Coach — all 3 modes</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Unlimited practice sessions</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Quick Prep + Answer Refiner</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Voice + text input</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Calibrated to your role level</div>
+          <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Resume Optimizer</div>
+          <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Other suite tools</div>
+        </div>
+        <a href="/login" class="btn-pricing outline" style="border-color:rgba(251,191,36,.3);color:var(--amber);">🎯 Get Interview Pack — $47</a>
       </div>
 
     </div>
+
+    <p class="pricing-note reveal">
+      Most users stay 2–3 months on Active Search — then cancel when they land the role. That's the whole point. &nbsp;·&nbsp;
+      <a href="#faq">See FAQ for cancellation details →</a>
+    </p>
+
   </div>
 </section>
 
@@ -737,7 +817,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q">Can I cancel my subscription anytime? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a">Yes — cancel anytime with no contracts, no penalties, and no questions asked. Your access continues until the end of your billing period. We'd rather earn your subscription every month than lock you into anything.</div>
+        <div class="faq-a">Yes — cancel anytime with no contracts, no penalties, and no questions asked. Active Search subscribers keep access until the end of their billing month. Starter annual subscribers keep access until the end of their annual period. Most users on Active Search stay 2–3 months then cancel when they land their role — that's exactly what the plan is designed for.</div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q">Is my resume data private and secure? <span class="faq-chevron">▾</span></div>
@@ -781,6 +861,35 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <div class="footer-copy">© 2026 Ascend RX. All rights reserved.</div>
 </footer>
 
+<!-- PAYWALL MODAL -->
+<div class="paywall-overlay" id="paywallOverlay" onclick="closePaywall(event)">
+  <div class="paywall-modal">
+    <div class="paywall-close" onclick="closePaywallDirect()">✕</div>
+    <div class="paywall-icon">⚡</div>
+    <div class="paywall-title" id="paywall-title">You've used your free optimizations</div>
+    <p class="paywall-sub" id="paywall-sub">You've hit the free tier limit for this month. Upgrade to keep going — or lock in founding pricing before rates increase.</p>
+    <div class="paywall-options">
+      <a href="/login" class="paywall-opt primary">
+        <div class="paywall-opt-left">
+          <div class="paywall-opt-name">Active Search</div>
+          <div class="paywall-opt-desc">Unlimited access to all tools — cancel anytime</div>
+        </div>
+        <div class="paywall-opt-price">$39/mo</div>
+      </a>
+      <a href="/login" class="paywall-opt secondary">
+        <div class="paywall-opt-left">
+          <div class="paywall-opt-name">Starter — Best value</div>
+          <div class="paywall-opt-desc">All tools, 20 uses/month — just $8.25/month</div>
+        </div>
+        <div class="paywall-opt-price">$99/yr</div>
+      </a>
+    </div>
+    <div class="paywall-dismiss">
+      <a onclick="closePaywallDirect()">Continue on free tier — resets next month</a>
+    </div>
+  </div>
+</div>
+
 <script>
 // NAV scroll behavior
 const nav = document.getElementById('nav');
@@ -801,19 +910,44 @@ function toggleFaq(el) {
   if (!isOpen) el.classList.add('open');
 }
 
-// Pricing toggle
+// Pricing toggle — Active Search tier only has monthly/annual
 function setToggle(el, mode) {
   document.querySelectorAll('.ptgl-opt').forEach(o => o.classList.remove('active'));
   el.classList.add('active');
-  const priceEl = document.getElementById('pro-price');
-  const periodEl = document.getElementById('pro-period');
+  const priceEl  = document.getElementById('active-price');
+  const periodEl = document.getElementById('active-period');
+  const noteEl   = document.getElementById('active-note');
+  const badgeEl  = document.getElementById('active-badge');
+  const ctaEl    = document.getElementById('active-cta');
   if (mode === 'annual') {
-    priceEl.textContent = '$77';
-    periodEl.textContent = '/ month, billed $924/yr';
-  } else {
-    priceEl.textContent = '$97';
+    priceEl.textContent  = '$32.50';
     periodEl.textContent = '/ month';
+    noteEl.textContent   = 'Billed $390/yr — save $78 + 2 months free';
+    noteEl.style.color   = 'var(--green)';
+    badgeEl.textContent  = 'Best Value';
+    badgeEl.className    = 'pricing-best-value';
+    ctaEl.textContent    = '✦ Start Active Search — $390/yr';
+  } else {
+    priceEl.textContent  = '$39';
+    periodEl.textContent = '/ month';
+    noteEl.innerHTML     = '&nbsp;';
+    badgeEl.textContent  = 'Most Popular';
+    badgeEl.className    = 'pricing-popular';
+    ctaEl.textContent    = '✦ Start Active Search';
   }
+}
+
+// Paywall modal
+function showPaywall(title, sub) {
+  if (title) document.getElementById('paywall-title').textContent = title;
+  if (sub)   document.getElementById('paywall-sub').textContent   = sub;
+  document.getElementById('paywallOverlay').classList.add('show');
+}
+function closePaywall(e) {
+  if (e.target === document.getElementById('paywallOverlay')) closePaywallDirect();
+}
+function closePaywallDirect() {
+  document.getElementById('paywallOverlay').classList.remove('show');
 }
 </script>
 </body>
