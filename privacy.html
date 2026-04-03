@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy — Ascend RX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#080c14; --bg2:#0d1520; --bg3:#111d2e;
+  --card:#0f1a28;
+  --border:rgba(56,139,253,0.12); --border-bright:rgba(56,189,248,0.28);
+  --accent:#38bdf8; --accent2:#0ea5e9; --accent3:#7dd3fc;
+  --green:#34d399; --text:#e2eaf4; --text-muted:#64748b; --text-dim:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.3;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:99px;}
+nav{position:sticky;top:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,3rem);background:rgba(8,12,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--accent2),#a78bfa);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;}
+.nav-logo-text{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);}
+.nav-logo-text span{color:var(--accent);}
+.nav-back{font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.4rem .85rem;border:1px solid var(--border);border-radius:6px;transition:all .15s;}
+.nav-back:hover{color:var(--text);border-color:var(--border-bright);}
+.page-wrap{position:relative;z-index:1;display:grid;grid-template-columns:220px 1fr;max-width:1000px;margin:0 auto;padding:3rem clamp(1.5rem,4vw,2.5rem) 5rem;gap:4rem;}
+.toc{position:sticky;top:80px;align-self:start;}
+.toc-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.85rem;}
+.toc-links{display:flex;flex-direction:column;gap:.2rem;}
+.toc-link{font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.3rem .65rem;border-radius:5px;border-left:2px solid transparent;transition:all .15s;line-height:1.4;}
+.toc-link:hover{color:var(--text-dim);border-left-color:var(--border-bright);}
+.toc-link.active{color:var(--accent);border-left-color:var(--accent2);}
+.doc-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
+.doc-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.15);border-radius:99px;padding:.28rem .8rem;margin-bottom:1rem;}
+.doc-title{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.02em;color:var(--text);margin-bottom:.6rem;}
+.doc-meta{font-size:.8rem;color:var(--text-muted);}
+.doc-meta a{color:var(--accent);text-decoration:none;}
+.doc-section{margin-bottom:2.5rem;scroll-margin-top:80px;}
+.doc-section h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;}
+.doc-section h2 .sec-num{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text-muted);background:var(--bg3);padding:.18rem .45rem;border-radius:4px;border:1px solid var(--border);}
+.doc-section p{font-size:.9rem;color:var(--text-dim);margin-bottom:.85rem;line-height:1.75;}
+.doc-section p:last-child{margin-bottom:0;}
+.doc-section ul{list-style:none;margin:.5rem 0 .85rem;display:flex;flex-direction:column;gap:.4rem;}
+.doc-section ul li{font-size:.9rem;color:var(--text-dim);padding-left:1.25rem;position:relative;line-height:1.65;}
+.doc-section ul li::before{content:'';position:absolute;left:0;top:.65em;width:5px;height:5px;border-radius:50%;background:var(--border-bright);}
+.doc-section strong{color:var(--text);font-weight:500;}
+.highlight-box{background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.12);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1rem 0;font-size:.85rem;color:var(--text-dim);line-height:1.65;}
+.highlight-box strong{color:var(--accent3);}
+.green-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.12);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1rem 0;font-size:.85rem;color:var(--text-dim);line-height:1.65;}
+.green-box strong{color:var(--green);}
+.placeholder{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:.2rem .5rem;font-family:'DM Mono',monospace;font-size:.8rem;color:#fbbf24;}
+.data-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem;}
+.data-table th{text-align:left;padding:.6rem .85rem;background:var(--bg3);color:var(--text-dim);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--border);}
+.data-table td{padding:.65rem .85rem;border:1px solid var(--border);color:var(--text-dim);vertical-align:top;line-height:1.5;}
+.data-table tr:hover td{background:rgba(255,255,255,.01);}
+.doc-footer{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.doc-footer p{font-size:.78rem;color:var(--text-muted);}
+.doc-footer a{color:var(--accent);text-decoration:none;}
+@media(max-width:768px){
+  .page-wrap{grid-template-columns:1fr;gap:2rem;}
+  .toc{display:none;}
+  .data-table{font-size:.75rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-mark">ARX</div>
+    <span class="nav-logo-text">Ascend <span>RX</span></span>
+  </a>
+  <a href="/" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="page-wrap">
+
+  <aside class="toc">
+    <div class="toc-label">Contents</div>
+    <div class="toc-links">
+      <a href="#overview" class="toc-link">1. Overview</a>
+      <a href="#what-we-collect" class="toc-link">2. What we collect</a>
+      <a href="#how-we-use" class="toc-link">3. How we use it</a>
+      <a href="#what-we-dont" class="toc-link">4. What we don't do</a>
+      <a href="#third-parties" class="toc-link">5. Third parties</a>
+      <a href="#data-retention" class="toc-link">6. Data retention</a>
+      <a href="#security" class="toc-link">7. Security</a>
+      <a href="#your-rights" class="toc-link">8. Your rights</a>
+      <a href="#ccpa" class="toc-link">9. CCPA (California)</a>
+      <a href="#cookies" class="toc-link">10. Cookies</a>
+      <a href="#children" class="toc-link">11. Children</a>
+      <a href="#changes" class="toc-link">12. Changes</a>
+      <a href="#contact" class="toc-link">13. Contact</a>
+    </div>
+  </aside>
+
+  <main class="doc-content">
+    <div class="doc-header">
+      <div class="doc-eyebrow">Legal</div>
+      <h1 class="doc-title">Privacy Policy</h1>
+      <p class="doc-meta">
+        Last updated: April 2, 2026 &nbsp;·&nbsp;
+        Ascend RX LLC &nbsp;·&nbsp;
+        Questions? <a href="/cdn-cgi/l/email-protection#efb49f9d86998e8c96af8e9c8c8a818b9d97c18c8082b2">[<span class="__cf_email__" data-cfemail="eb9b99829d8a8892ab8a98888e858f9993c5888486">[email&#160;protected]</span>]</a>
+      </p>
+    </div>
+
+    <div class="green-box">
+      <strong>Our privacy commitment in plain English:</strong> We collect only what we need to run the platform. We never sell your data. We never use your resume to train AI models. Your career history is yours — we're just here to help you present it better.
+    </div>
+
+    <div class="doc-section" id="overview">
+      <h2><span class="sec-num">01</span> Overview</h2>
+      <p>This Privacy Policy describes how <span class="placeholder">[Ascend RX LLC]</span> ("Ascend RX," "we," "us," or "our") collects, uses, and protects information about you when you use our website at ascendrx.com and our career platform services (collectively, the "Service").</p>
+      <p>By using the Service, you agree to the collection and use of information as described in this Privacy Policy. This policy applies to all users of Ascend RX, including free and paid subscribers.</p>
+    </div>
+
+    <div class="doc-section" id="what-we-collect">
+      <h2><span class="sec-num">02</span> What We Collect</h2>
+      <p>We collect information in the following categories:</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>What it includes</th>
+            <th>How we get it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Account information</strong></td>
+            <td>Name, email address, profile photo, and authentication provider (Google, LinkedIn, Microsoft, or Apple)</td>
+            <td>Provided by your chosen sign-in provider at login</td>
+          </tr>
+          <tr>
+            <td><strong>Resume and career content</strong></td>
+            <td>Resume text, job descriptions you paste, career history, and any materials you submit for processing</td>
+            <td>Submitted directly by you when using the tools</td>
+          </tr>
+          <tr>
+            <td><strong>Usage data</strong></td>
+            <td>Pages visited, features used, tool interactions, session duration, and optimization history</td>
+            <td>Automatically collected as you use the Service</td>
+          </tr>
+          <tr>
+            <td><strong>Payment information</strong></td>
+            <td>Billing name, last four digits of card, billing address, and transaction history</td>
+            <td>Collected and stored securely by Stripe — we never store full card numbers</td>
+          </tr>
+          <tr>
+            <td><strong>Master resume</strong></td>
+            <td>Your uploaded resume, stored as structured career data (name, contact, work history, education, competencies) in your account profile</td>
+            <td>Uploaded by you during onboarding or from your Profile settings. Stored persistently in your account so every tool can use it automatically. You can update or delete it at any time from your Profile. Never shared with employers, recruiters, or third parties.</td>
+          </tr>
+          <tr>
+            <td><strong>Career profile data</strong></td>
+            <td>Your current role level, target role level, and professional focus area (e.g., Operations, Nursing, Finance)</td>
+            <td>Provided by you during onboarding or updated in account settings. Stored securely in your user profile and used solely to personalize tool outputs. Never shared or sold.</td>
+          </tr>
+          <tr>
+            <td><strong>Voice input</strong></td>
+            <td>Speech-to-text transcription if you use voice mode in any Ascend RX tool</td>
+            <td>Audio is processed locally in your browser via the Web Speech API. Audio is never transmitted to our servers and is never stored. Only the resulting text transcript is processed — identical to typed input.</td>
+          </tr>
+          <tr>
+            <td><strong>Device and technical data</strong></td>
+            <td>Browser type, operating system, IP address, and referring URL</td>
+            <td>Automatically collected via standard web server logs</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="doc-section" id="how-we-use">
+      <h2><span class="sec-num">03</span> How We Use Your Information</h2>
+      <p>We use the information we collect for the following purposes:</p>
+      <ul>
+        <li><strong>To provide the Service</strong> — processing your resume, generating optimized content, and delivering tool outputs</li>
+        <li><strong>To manage your account</strong> — authentication, account settings, and subscription management</li>
+        <li><strong>To process payments</strong> — billing, invoicing, and subscription management via Stripe</li>
+        <li><strong>To improve the Service</strong> — understanding how features are used to make them better (using aggregated, anonymized data only)</li>
+        <li><strong>To communicate with you</strong> — transactional emails (receipts, account updates), and with your consent, product news and updates</li>
+        <li><strong>To ensure security</strong> — detecting and preventing fraud, abuse, and unauthorized access</li>
+        <li><strong>To comply with legal obligations</strong> — responding to lawful requests from government authorities</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="what-we-dont">
+      <h2><span class="sec-num">04</span> What We Don't Do</h2>
+      <div class="green-box">
+        <strong>We make these commitments clearly and without qualification:</strong>
+      </div>
+      <ul>
+        <li>We do <strong>not</strong> sell your personal data to third parties — ever</li>
+        <li>We do <strong>not</strong> use your resume or career content to train AI models without your explicit, opt-in consent</li>
+        <li>We do <strong>not</strong> share your resume or career content with other users of the platform</li>
+        <li>We do <strong>not</strong> share your career profile data (role level, target level, focus area) with employers, recruiters, or staffing agencies</li>
+        <li>We do <strong>not</strong> transmit, record, or store voice audio — all speech processing happens locally in your browser</li>
+        <li>We do <strong>not</strong> share your information with employers, recruiters, or staffing agencies</li>
+        <li>We do <strong>not</strong> use your data for behavioral advertising or sell it to data brokers</li>
+        <li>We do <strong>not</strong> store your full payment card information — Stripe handles all payment data</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="third-parties">
+      <h2><span class="sec-num">05</span> Third-Party Services</h2>
+      <p>We use a limited set of trusted third-party services to operate the platform. Each has its own privacy practices:</p>
+      <ul>
+        <li><strong>Anthropic (Claude API)</strong> — powers the AI processing of your resume and career content. Content sent to the API is subject to Anthropic's API data usage policy. Anthropic does not use API inputs to train models by default.</li>
+        <li><strong>Stripe</strong> — handles all payment processing. Your payment information is stored and managed by Stripe under their privacy policy and PCI DSS compliance.</li>
+        <li><strong>Clerk</strong> — manages user authentication via Google, LinkedIn, Microsoft, and Apple sign-in. Clerk stores your authentication data securely.</li>
+        <li><strong>Vercel</strong> — hosts the Service infrastructure. Vercel may log standard request data for security and performance purposes.</li>
+        <li><strong>Analytics provider</strong> — we use a privacy-first analytics tool (such as Plausible or Fathom) that does not use cookies, does not track individuals across sites, and does not sell data.</li>
+      </ul>
+      <p>We do not use Google Analytics, Facebook Pixel, or other advertising-focused tracking tools.</p>
+    </div>
+
+    <div class="doc-section" id="data-retention">
+      <h2><span class="sec-num">06</span> Data Retention</h2>
+      <p>We retain your data for as long as your account is active or as needed to provide the Service. Specifically:</p>
+      <ul>
+        <li><strong>Account data</strong> — retained while your account is active. Deleted within 30 days of account deletion request.</li>
+        <li><strong>Career profile data</strong> — current level, target level, and focus area are stored in your user profile and retained while your account is active. You may update or delete this data at any time from your account settings.</li>
+        <li><strong>Resume and career content</strong> — retained as long as you have an active account and have saved content in your history. You can delete individual saves at any time.</li>
+        <li><strong>Payment records</strong> — retained for 7 years as required by applicable tax and financial regulations.</li>
+        <li><strong>Usage logs</strong> — retained for up to 12 months for security and performance purposes, then deleted or anonymized.</li>
+      </ul>
+      <p>When you delete your account, we will delete or anonymize your personal data within 30 days, except where retention is required by law.</p>
+    </div>
+
+    <div class="doc-section" id="security">
+      <h2><span class="sec-num">07</span> Security</h2>
+      <p>We take data security seriously and implement industry-standard measures to protect your information, including:</p>
+      <ul>
+        <li>HTTPS encryption for all data in transit</li>
+        <li>Secure, access-controlled infrastructure through Vercel</li>
+        <li>Authentication managed through Clerk with industry-standard OAuth 2.0 protocols</li>
+        <li>Payment data handled exclusively by Stripe's PCI DSS-compliant systems</li>
+        <li>Limited employee access to user data on a need-to-know basis</li>
+      </ul>
+      <p>No method of transmission over the internet or electronic storage is 100% secure. While we strive to protect your data, we cannot guarantee absolute security. If you believe your account has been compromised, please contact us immediately at <span class="placeholder">[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="08787a617e696b7148697b6b6d666c7a70266b6765">[email&#160;protected]</a>]</span>.</p>
+    </div>
+
+    <div class="doc-section" id="your-rights">
+      <h2><span class="sec-num">08</span> Your Rights</h2>
+      <p>Regardless of where you are located, you have the following rights with respect to your personal data:</p>
+      <ul>
+        <li><strong>Access</strong> — request a copy of the personal data we hold about you</li>
+        <li><strong>Correction</strong> — request that we correct inaccurate or incomplete data</li>
+        <li><strong>Deletion</strong> — request that we delete your personal data (subject to legal retention requirements)</li>
+        <li><strong>Portability</strong> — request your data in a machine-readable format</li>
+        <li><strong>Objection</strong> — object to our processing of your data for certain purposes</li>
+        <li><strong>Withdrawal of consent</strong> — where processing is based on consent, you may withdraw it at any time</li>
+      </ul>
+      <p>To exercise any of these rights, contact us at <span class="placeholder">[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="304042594651534970514353555e5442481e535f5d">[email&#160;protected]</a>]</span>. We will respond to all requests within 30 days.</p>
+    </div>
+
+    <div class="doc-section" id="ccpa">
+      <h2><span class="sec-num">09</span> California Residents (CCPA)</h2>
+      <p>If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA):</p>
+      <ul>
+        <li><strong>Right to know</strong> — the categories and specific pieces of personal information we collect about you</li>
+        <li><strong>Right to delete</strong> — request deletion of personal information we have collected</li>
+        <li><strong>Right to opt-out</strong> — opt out of the sale of personal information (note: we do not sell personal information)</li>
+        <li><strong>Right to non-discrimination</strong> — we will not discriminate against you for exercising your CCPA rights</li>
+      </ul>
+      <p>To submit a CCPA request, contact us at <span class="placeholder">[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dcacaeb5aabdbfa59cbdafbfb9b2b8aea4f2bfb3b1">[email&#160;protected]</a>]</span> with the subject line "CCPA Request."</p>
+    </div>
+
+    <div class="doc-section" id="cookies">
+      <h2><span class="sec-num">10</span> Cookies and Tracking</h2>
+      <p>We use a minimal set of cookies necessary to operate the Service:</p>
+      <ul>
+        <li><strong>Session cookies</strong> — maintain your login state while you use the platform. These are deleted when you close your browser.</li>
+        <li><strong>Preference cookies</strong> — remember your settings and preferences across sessions.</li>
+      </ul>
+      <p>We do not use advertising cookies, third-party tracking pixels, or cross-site tracking. Our analytics tool (Plausible or Fathom) is cookieless and privacy-first.</p>
+      <p>You can control cookies through your browser settings. Disabling session cookies will prevent you from staying logged in.</p>
+    </div>
+
+    <div class="doc-section" id="children">
+      <h2><span class="sec-num">11</span> Children's Privacy</h2>
+      <p>The Service is not directed to individuals under the age of 18. We do not knowingly collect personal information from children. If we become aware that a child under 18 has provided us with personal information, we will delete it promptly. If you believe a child has provided us with their information, please contact us at <span class="placeholder">[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="710103180710120831100212141f1503095f121e1c">[email&#160;protected]</a>]</span>.</p>
+    </div>
+
+    <div class="doc-section" id="changes">
+      <h2><span class="sec-num">12</span> Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. When we make material changes, we will notify you by updating the "Last updated" date at the top of this page and, where required, by sending a notification to your account email address.</p>
+      <p>We encourage you to review this Privacy Policy periodically. Your continued use of the Service after changes become effective constitutes your acceptance of the updated policy.</p>
+    </div>
+
+    <div class="doc-section" id="contact">
+      <h2><span class="sec-num">13</span> Contact Us</h2>
+      <p>If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:</p>
+      <ul>
+        <li><strong>Privacy inquiries:</strong> <span class="placeholder">[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6313110a1502001a23021000060d07111b4d000c0e">[email&#160;protected]</a>]</span></li>
+        <li><strong>Legal inquiries:</strong> <span class="placeholder">[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92fef7f5f3fed2f3e1f1f7fcf6e0eabcf1fdff">[email&#160;protected]</a>]</span></li>
+        <li><strong>Company:</strong> <span class="placeholder">[Ascend RX LLC]</span></li>
+        <li><strong>State:</strong> <span class="placeholder">[Oklahoma]</span></li>
+      </ul>
+      <p>We are committed to working with you to resolve any privacy concerns. If you feel your concerns have not been addressed, you may have the right to lodge a complaint with your applicable data prot
