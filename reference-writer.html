@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reference Writer — Ascend RX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080c14;--bg2:#0d1520;--bg3:#111d2e;
+  --card:#0f1a28;--card-hover:#152236;
+  --border:rgba(56,139,253,0.12);--border-bright:rgba(56,189,248,0.3);
+  --accent:#38bdf8;--accent2:#0ea5e9;--accent3:#7dd3fc;
+  --green:#34d399;--amber:#fbbf24;--rose:#fb7185;--purple:#a78bfa;
+  --text:#e2eaf4;--text-muted:#64748b;--text-dim:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35;}
+.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;}
+.orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(251,113,133,.05) 0%,transparent 70%);top:-100px;right:-100px;}
+.orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(14,165,233,.05) 0%,transparent 70%);bottom:0;left:-80px;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:99px;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.25rem,4vw,2rem);background:rgba(8,12,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-logo-mark{width:26px;height:26px;background:linear-gradient(135deg,var(--accent2),var(--purple));border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:8px;font-weight:800;color:#fff;}
+.nav-logo-text{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);}
+.nav-logo-text span{color:var(--accent);}
+.nav-divider{width:1px;height:16px;background:var(--border);}
+.nav-module{font-size:.75rem;color:var(--text-muted);font-weight:500;}
+.nav-back{font-size:.75rem;color:var(--text-muted);text-decoration:none;padding:.35rem .75rem;border:1px solid var(--border);border-radius:6px;transition:all .15s;}
+.nav-back:hover{color:var(--text);border-color:var(--border-bright);}
+
+/* MAIN */
+.main{position:relative;z-index:1;max-width:840px;margin:0 auto;padding:2rem clamp(1.25rem,4vw,2rem) 4rem;}
+
+/* HEADER */
+.page-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.15);border-radius:99px;padding:.28rem .8rem;margin-bottom:.85rem;}
+.page-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:.4rem;}
+.page-title span{background:linear-gradient(135deg,var(--rose),#fda4af);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-sub{font-size:.88rem;color:var(--text-muted);line-height:1.6;margin-bottom:2rem;}
+
+/* MODE TABS */
+.mode-tabs{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:1.5rem;gap:4px;}
+.mode-tab{flex:1;padding:.5rem;border-radius:7px;font-size:.82rem;font-weight:500;text-align:center;cursor:pointer;color:var(--text-muted);transition:all .18s;border:1px solid transparent;}
+.mode-tab.active{background:var(--bg3);color:var(--text);border-color:var(--border);}
+
+/* FORM CARD */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.75rem;margin-bottom:1.25rem;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.form-group{display:flex;flex-direction:column;gap:.35rem;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+.form-input{padding:.65rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;transition:border-color .18s;}
+.form-input:focus{border-color:var(--accent2);}
+.form-input::placeholder{color:var(--text-muted);}
+.form-select{padding:.65rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;cursor:pointer;transition:border-color .18s;}
+.form-select:focus{border-color:var(--accent2);}
+textarea.form-input{resize:vertical;min-height:90px;line-height:1.65;}
+
+/* TONE SELECTOR */
+.tone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.35rem;}
+.tone-card{padding:.65rem .75rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .18s;text-align:center;}
+.tone-card:hover{border-color:var(--border-bright);}
+.tone-card.selected{border-color:var(--rose);background:rgba(251,113,133,.06);}
+.tone-icon{font-size:1.1rem;margin-bottom:.2rem;}
+.tone-name{font-size:.72rem;font-weight:600;color:var(--text);font-family:'Syne',sans-serif;}
+.tone-desc{font-size:.62rem;color:var(--text-muted);}
+
+/* RESULT */
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:none;}
+.result-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.result-header h3{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--text);}
+.result-actions{display:flex;gap:.5rem;}
+.result-body{padding:1.75rem;font-size:.9rem;line-height:1.9;color:var(--text-dim);white-space:pre-wrap;font-family:'DM Sans',sans-serif;}
+.result-body p{margin-bottom:1rem;}
+.result-body p:last-child{margin-bottom:0;}
+
+/* PREVIEW LETTER */
+.letter-preview{background:var(--bg2);border-radius:10px;padding:1.75rem;font-size:.88rem;line-height:1.85;color:var(--text-dim);white-space:pre-wrap;min-height:200px;}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.5rem;background:linear-gradient(135deg,var(--rose),#e11d48);border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 0 20px rgba(251,113,133,.18);}
+.btn-primary:hover{box-shadow:0 0 30px rgba(251,113,133,.32);transform:translateY(-1px);}
+.btn-secondary{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.1rem;background:transparent;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:var(--text-dim);cursor:pointer;transition:all .18s;}
+.btn-secondary:hover{border-color:var(--border-bright);color:var(--text);}
+.btn-copy{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem .9rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;color:var(--text-dim);cursor:pointer;transition:all .18s;}
+.btn-copy:hover{border-color:var(--border-bright);color:var(--text);}
+.btn-copy.copied{border-color:rgba(52,211,153,.3);color:var(--green);}
+
+/* LOADER */
+.loader{display:none;position:fixed;inset:0;background:rgba(8,12,20,.92);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+.loader.show{display:flex;}
+.spinner{width:38px;height:38px;border:2px solid rgba(251,113,133,.1);border-top-color:var(--rose);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-text{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);}
+.loader-sub{font-size:.78rem;color:var(--text-muted);}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg2);color:var(--text);padding:.6rem 1.4rem;border-radius:8px;font-size:.82rem;opacity:0;transition:all .28s;z-index:500;pointer-events:none;white-space:nowrap;border:1px solid var(--border);border-left:3px solid var(--rose);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.animate-in{animation:fadeUp .4s ease both;}
+
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr;}
+  .tone-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="toast" id="toast"></div>
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div class="loader-text">Writing your reference letter</div>
+  <div class="loader-sub">Crafting something that actually sounds human…</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo" href="/dashboard">
+      <div class="nav-logo-mark">ARX</div>
+      <span class="nav-logo-text">Ascend <span>RX</span></span>
+    </a>
+    <div class="nav-divider"></div>
+    <span class="nav-module">✉️ Reference Writer</span>
+  </div>
+  <a href="/dashboard" class="nav-back">← Dashboard</a>
+</nav>
+
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="animate-in" style="margin-bottom:2rem;">
+    <div class="page-eyebrow">Reference Writer</div>
+    <h1 class="page-title">A letter that sounds like <span>you wrote it.</span></h1>
+    <p class="page-sub">Write a reference letter for a colleague — or generate one for yourself to send to a reference for their signature. Add context, and get a polished, professional letter in 30 seconds.</p>
+  </div>
+
+  <!-- MODE TABS -->
+  <div class="mode-tabs animate-in">
+    <div class="mode-tab active" onclick="setMode('writing',this)">✍️ I'm writing a reference</div>
+    <div class="mode-tab" onclick="setMode('requesting',this)">📨 I need a reference written for me</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card animate-in">
+
+    <!-- WRITING MODE -->
+    <div id="mode-writing">
+      <div style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:1.25rem;">About the person you're recommending</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Their name</label>
+          <input type="text" class="form-input" id="w-name" placeholder="Dr. Jane Smith"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Their current title</label>
+          <input type="text" class="form-input" id="w-title" placeholder="Director of Operations"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role they're applying for</label>
+          <input type="text" class="form-input" id="w-target-role" placeholder="VP of Clinical Operations"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">How long you've worked together</label>
+          <input type="text" class="form-input" id="w-duration" placeholder="3 years"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your relationship</label>
+          <select class="form-select" id="w-relationship">
+            <option>Direct supervisor</option>
+            <option>Former supervisor</option>
+            <option>Peer / colleague</option>
+            <option>Mentor</option>
+            <option>Direct report</option>
+            <option>Cross-functional collaborator</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your name & title</label>
+          <input type="text" class="form-input" id="w-your-info" placeholder="John Doe, SVP of Operations"/>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Key strengths & accomplishments to highlight</label>
+          <textarea class="form-input" id="w-strengths" placeholder="e.g. Led the system-wide EMR transition, reduced readmission rates 18%, exceptional communication with clinical staff, promoted twice in 3 years…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Tone</label>
+          <div class="tone-grid">
+            <div class="tone-card selected" data-tone="professional" onclick="selectTone(this)">
+              <div class="tone-icon">💼</div>
+              <div class="tone-name">Professional</div>
+              <div class="tone-desc">Formal, measured</div>
+            </div>
+            <div class="tone-card" data-tone="warm" onclick="selectTone(this)">
+              <div class="tone-icon">🤝</div>
+              <div class="tone-name">Warm</div>
+              <div class="tone-desc">Personal, enthusiastic</div>
+            </div>
+            <div class="tone-card" data-tone="executive" onclick="selectTone(this)">
+              <div class="tone-icon">🏆</div>
+              <div class="tone-name">Executive</div>
+              <div class="tone-desc">Authoritative, impact-driven</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REQUESTING MODE -->
+    <div id="mode-requesting" style="display:none;">
+      <div style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.25rem;">About you</div>
+      <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:1.25rem;">We'll write the letter as if it's coming from your reference. They just need to review, adjust if needed, and sign it.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Your name</label>
+          <input type="text" class="form-input" id="r-name" placeholder="Dr. Jane Smith"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your current title</label>
+          <input type="text" class="form-input" id="r-title" placeholder="Director of Operations"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role you're applying for</label>
+          <input type="text" class="form-input" id="r-target-role" placeholder="VP of Clinical Operations"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reference's name & title</label>
+          <input type="text" class="form-input" id="r-ref-info" placeholder="John Doe, SVP of Operations"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your relationship to them</label>
+          <select class="form-select" id="r-relationship">
+            <option>They were my direct supervisor</option>
+            <option>They were my former supervisor</option>
+            <option>We were peers / colleagues</option>
+            <option>They mentored me</option>
+            <option>I was their direct report</option>
+            <option>We worked cross-functionally</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">How long you worked together</label>
+          <input type="text" class="form-input" id="r-duration" placeholder="3 years"/>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Your key accomplishments they can speak to</label>
+          <textarea class="form-input" id="r-strengths" placeholder="e.g. Led the system-wide EMR transition, reduced readmission rates 18%, promoted twice in 3 years, managed a team of 40…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Tone</label>
+          <div class="tone-grid">
+            <div class="tone-card selected" data-tone="professional" onclick="selectTone(this)">
+              <div class="tone-icon">💼</div>
+              <div class="tone-name">Professional</div>
+              <div class="tone-desc">Formal, measured</div>
+            </div>
+            <div class="tone-card" data-tone="warm" onclick="selectTone(this)">
+              <div class="tone-icon">🤝</div>
+              <div class="tone-name">Warm</div>
+              <div class="tone-desc">Personal, enthusiastic</div>
+            </div>
+            <div class="tone-card" data-tone="executive" onclick="selectTone(this)">
+              <div class="tone-icon">🏆</div>
+              <div class="tone-name">Executive</div>
+              <div class="tone-desc">Authoritative, impact-driven</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem;display:flex;justify-content:flex-end;">
+      <button class="btn-primary" onclick="generateLetter()">✉️ Generate Letter →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-card animate-in" id="result-card">
+    <div class="result-header">
+      <h3>Reference Letter</h3>
+      <div class="result-actions">
+        <button class="btn-copy" id="copy-btn" onclick="copyLetter()">📋 Copy letter</button>
+        <button class="btn-secondary" onclick="generateLetter()">↺ Regenerate</button>
+      </div>
+    </div>
+    <div style="padding:1.75rem;">
+      <div class="letter-preview" id="letter-output"></div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-muted);line-height:1.6;">
+        💡 <strong style="color:var(--text-dim);">Tip:</strong> Copy this letter and send it to your reference with a note like: <em>"Here's a draft based on our work together — feel free to adjust the wording to match your voice before signing."</em>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── PROFILE ──────────────────────────────────────────────────────────────────
+// CLERK INTEGRATION POINT: replace with clerk.user.publicMetadata
+const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
+const targetLevel = profile.targetLevel || 'executive';
+const focus = profile.focus || 'operations';
+const levelLabels = {entry:'Entry Level',mid:'Mid Level',senior:'Senior Level',leadership:'Leadership',executive:'Executive'};
+const focusLabels = {operations:'Operations',nursing:'Nursing',finance:'Finance',quality:'Quality',strategy:'Strategy',other:'Other'};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentMode = 'writing';
+let selectedTone = 'professional';
+let generatedLetter = '';
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────────
+function setMode(mode, el) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mode-writing').style.display    = mode === 'writing'    ? 'block' : 'none';
+  document.getElementById('mode-requesting').style.display = mode === 'requesting' ? 'block' : 'none';
+  document.getElementById('result-card').style.display = 'none';
+}
+
+function selectTone(el) {
+  document.querySelectorAll('.tone-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTone = el.dataset.tone;
+}
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function callClaude(prompt, maxTok = 1200, temp = 0.6) {
+  const r = await fetch('/api/optimize', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ prompt, max_tokens: maxTok, temperature: temp })
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'API error'); }
+  return (await r.json()).result;
+}
+
+// ── GENERATE ──────────────────────────────────────────────────────────────────
+async function generateLetter() {
+  let prompt = '';
+
+  if (currentMode === 'writing') {
+    const name         = document.getElementById('w-name').value.trim();
+    const title        = document.getElementById('w-title').value.trim();
+    const targetRole   = document.getElementById('w-target-role').value.trim();
+    const duration     = document.getElementById('w-duration').value.trim();
+    const relationship = document.getElementById('w-relationship').value;
+    const yourInfo     = document.getElementById('w-your-info').value.trim();
+    const strengths    = document.getElementById('w-strengths').value.trim();
+
+    if (!name || !targetRole) { toast('Please fill in the person\'s name and the role they\'re applying for.'); return; }
+
+    prompt = `Write a ${selectedTone} professional reference letter for healthcare career purposes.
+
+You are writing as: ${yourInfo || 'a senior healthcare leader'}
+You are recommending: ${name}${title ? `, ${title}` : ''}
+Relationship: ${relationship} for ${duration || 'several years'}
+They are applying for: ${targetRole}
+Their strengths and accomplishments to highlight: ${strengths || 'strong operational leadership, excellent communication, results-driven'}
+Healthcare context: ${focusLabels[focus]} focus, targeting ${levelLabels[targetLevel] || 'executive'} level
+
+Write a complete, polished reference letter. Tone should be ${selectedTone}.
+- Opening: Introduce yourself and your relationship
+- Body (2 paragraphs): Specific accomplishments, leadership qualities, and why they're ready for this next role
+- Closing: Strong recommendation and offer to be contacted
+
+Write the letter as plain text only — no JSON, no markdown. Start with the salutation.`;
+
+  } else {
+    const name         = document.getElementById('r-name').value.trim();
+    const title        = document.getElementById('r-title').value.trim();
+    const targetRole   = document.getElementById('r-target-role').value.trim();
+    const refInfo      = document.getElementById('r-ref-info').value.trim();
+    const relationship = document.getElementById('r-relationship').value;
+    const duration     = document.getElementById('r-duration').value.trim();
+    const strengths    = document.getElementById('r-strengths').value.trim();
+
+    if (!name || !targetRole) { toast('Please fill in your name and the role you\'re applying for.'); return; }
+
+    prompt = `Write a ${selectedTone} professional reference letter for healthcare career purposes.
+
+This letter is written FROM: ${refInfo || 'a senior healthcare leader'} 
+This letter is FOR: ${name}${title ? `, ${title}` : ''}
+Their relationship: ${relationship} for ${duration || 'several years'}
+The role being applied for: ${targetRole}
+Accomplishments and strengths the reference can speak to: ${strengths || 'strong operational leadership, excellent communication, results-driven'}
+Healthcare context: ${focusLabels[focus]} focus, targeting ${levelLabels[targetLevel] || 'executive'} level
+
+Write a complete, polished reference letter that the reference will send on the candidate's behalf. Tone should be ${selectedTone}.
+- Opening: Reference introduces themselves and their relationship with the candidate
+- Body (2 paragraphs): Specific accomplishments, leadership qualities, readiness for this next role
+- Closing: Strong endorsement and contact offer
+
+Write the letter as plain text only — no JSON, no markdown. Start with the salutation. Write naturally as if the reference is speaking in their own voice.`;
+  }
+
+  document.getElementById('loader').classList.add('show');
+  try {
+    const letter = await callClaude(prompt, 1200, 0.65);
+    generatedLetter = letter;
+    document.getElementById('letter-output').textContent = letter;
+    document.getElementById('result-card').style.display = 'block';
+    document.getElementById('copy-btn').classList.remove('copied');
+    document.getElementById('copy-btn').textContent = '📋 Copy letter';
+    document.getElementById('result-card').scrollIntoView({ behavior:'smooth', block:'start' });
+  } catch(e) {
+    toast('Error: ' + e.message);
+  } finally {
+    document.getElementById('loader').classList.remove('show');
+  }
+}
+
+// ── COPY ──────────────────────────────────────────────────────────────────────
+async function copyLetter() {
+  if (!generatedLetter) return;
+  try {
+    await navigator.clipboard.writeText(generatedLetter);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copy letter';
+      btn.classList.remove('copied');
+    }, 2500);
+  } catch(e) {
+    toast('Could not copy — please select and copy manually.');
+  }
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────────
+let tt;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => el.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
