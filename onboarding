@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Welcome to Ascend RX — Let's set up your profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#080c14; --bg2:#0d1520; --bg3:#111d2e;
+  --card:#0f1a28; --card-hover:#152236;
+  --border:rgba(56,139,253,0.12); --border-bright:rgba(56,189,248,0.3);
+  --accent:#38bdf8; --accent2:#0ea5e9; --accent3:#7dd3fc;
+  --green:#34d399; --amber:#fbbf24; --rose:#fb7185; --purple:#a78bfa;
+  --text:#e2eaf4; --text-muted:#64748b; --text-dim:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden;padding:2rem 1.5rem;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35;}
+.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(14,165,233,.07) 0%,transparent 70%);top:-150px;left:-150px;}
+.orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(167,139,250,.05) 0%,transparent 70%);bottom:-50px;right:-80px;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:99px;}
+
+/* SHELL */
+.onboard-shell{position:relative;z-index:1;width:100%;max-width:680px;}
+
+/* STEP INDICATOR */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2.5rem;animation:fadeUp .5s ease both;}
+.step-item{display:flex;align-items:center;gap:0;}
+.step-dot{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text-muted);transition:all .3s;flex-shrink:0;}
+.step-dot.active{background:rgba(14,165,233,.12);border-color:var(--accent2);color:var(--accent);}
+.step-dot.done{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:var(--green);}
+.step-dot.done::after{content:'✓';font-family:'DM Sans',sans-serif;font-size:.7rem;}
+.step-dot.done span{display:none;}
+.step-label{font-size:.7rem;color:var(--text-muted);margin:0 .5rem;white-space:nowrap;}
+.step-label.active{color:var(--accent);}
+.step-connector{width:32px;height:1px;background:var(--border);margin:0 .25rem;}
+.step-connector.done{background:rgba(52,211,153,.3);}
+
+/* CARD */
+.onboard-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:2.75rem;position:relative;overflow:hidden;}
+.onboard-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.4),transparent);}
+
+/* STEP PANELS */
+.step-panel{display:none;animation:fadeUp .4s ease both;}
+.step-panel.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+/* HEADERS */
+.panel-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.15);border-radius:99px;padding:.28rem .8rem;margin-bottom:1rem;}
+.panel-eyebrow-dot{width:5px;height:5px;background:var(--accent2);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.panel-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:.5rem;line-height:1.2;}
+.panel-title span{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.panel-sub{font-size:.88rem;color:var(--text-muted);line-height:1.6;margin-bottom:2rem;}
+
+/* LEVEL CARDS */
+.level-grid{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem;}
+.level-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .18s;position:relative;}
+.level-card:hover{border-color:var(--border-bright);background:var(--bg3);}
+.level-card.selected{border-color:var(--accent2);background:rgba(14,165,233,.07);}
+.level-card.selected::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent2);border-radius:3px 0 0 3px;}
+.level-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;transition:all .18s;}
+.level-card.selected .level-icon{background:rgba(14,165,233,.12);}
+.level-info{flex:1;}
+.level-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+.level-roles{font-size:.75rem;color:var(--text-muted);line-height:1.4;}
+.level-check{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:transparent;transition:all .18s;flex-shrink:0;}
+.level-card.selected .level-check{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+
+/* FOCUS GRID */
+.focus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:1.75rem;}
+.focus-card{padding:.9rem .75rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .18s;text-align:center;}
+.focus-card:hover{border-color:var(--border-bright);background:var(--bg3);}
+.focus-card.selected{border-color:var(--accent2);background:rgba(14,165,233,.07);}
+.focus-icon{font-size:1.4rem;margin-bottom:.4rem;}
+.focus-name{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--text);}
+.focus-desc{font-size:.68rem;color:var(--text-muted);margin-top:.15rem;line-height:1.3;}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.75rem;}
+.summary-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;}
+.summary-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.summary-label{font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem;}
+.summary-value{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--text);}
+.summary-sub{font-size:.68rem;color:var(--text-muted);margin-top:.15rem;}
+
+/* TOOLS PREVIEW */
+.tools-preview{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.75rem;}
+.tool-item{display:flex;align-items:center;gap:.65rem;padding:.75rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:9px;}
+.tool-icon-wrap{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.tool-name{font-size:.8rem;font-weight:500;color:var(--text);}
+.tool-badge{margin-left:auto;font-size:.6rem;font-weight:700;padding:.18rem .5rem;border-radius:99px;flex-shrink:0;}
+.tool-badge.live{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.2);}
+.tool-badge.soon{background:var(--bg3);color:var(--text-muted);border:1px solid var(--border);}
+
+/* BUTTONS */
+.btn-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-top:.25rem;}
+.btn-next{flex:1;padding:.85rem;background:linear-gradient(135deg,var(--accent2),#0284c7);border:none;border-radius:9px;font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 0 24px rgba(56,189,248,.2);display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.btn-next:hover{box-shadow:0 0 36px rgba(56,189,248,.35);transform:translateY(-1px);}
+.btn-next:disabled{opacity:.4;pointer-events:none;box-shadow:none;transform:none;}
+.btn-back{padding:.85rem 1.25rem;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .18s;}
+.btn-back:hover{border-color:var(--border-bright);color:var(--text);}
+.btn-skip{background:none;border:none;font-size:.75rem;color:var(--text-muted);cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;transition:color .15s;padding:.5rem;}
+.btn-skip:hover{color:var(--text-dim);}
+
+/* PROGRESS BAR */
+.progress-wrap{margin-bottom:2rem;animation:fadeUp .5s .1s ease both;opacity:0;}
+.progress-track{height:3px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent3));border-radius:99px;transition:width .5s ease;}
+.progress-label{display:flex;justify-content:space-between;margin-bottom:.5rem;}
+.progress-label span{font-size:.7rem;color:var(--text-muted);}
+.progress-label strong{font-size:.7rem;color:var(--accent);font-weight:600;}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="onboard-shell">
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progress-text">Step 1 of 3</span>
+      <strong id="progress-pct">33%</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:33%"></div>
+    </div>
+  </div>
+
+  <!-- STEP INDICATORS -->
+  <div class="steps">
+    <div class="step-item">
+      <div class="step-dot active" id="sdot-1"><span>1</span></div>
+      <div class="step-label active" id="slabel-1">Current level</div>
+    </div>
+    <div class="step-connector" id="sconn-1"></div>
+    <div class="step-item">
+      <div class="step-dot" id="sdot-2"><span>2</span></div>
+      <div class="step-label" id="slabel-2">Target & focus</div>
+    </div>
+    <div class="step-connector" id="sconn-2"></div>
+    <div class="step-item">
+      <div class="step-dot" id="sdot-3"><span>3</span></div>
+      <div class="step-label" id="slabel-3">Your platform</div>
+    </div>
+  </div>
+
+  <!-- CARD -->
+  <div class="onboard-card">
+
+    <!-- STEP 1: Current Level -->
+    <div class="step-panel active" id="panel-1">
+      <div class="panel-eyebrow"><span class="panel-eyebrow-dot"></span>Profile Setup</div>
+      <h1 class="panel-title">Where are you <span>right now?</span></h1>
+      <p class="panel-sub">This helps us calibrate every tool to your actual career stage — from resume language to interview questions to salary benchmarks.</p>
+
+      <div class="level-grid" id="current-levels">
+        <div class="level-card" data-level="entry" onclick="selectLevel('current', this)">
+          <div class="level-icon">🌱</div>
+          <div class="level-info">
+            <div class="level-name">Entry Level</div>
+            <div class="level-roles">CNA, Medical Assistant, Patient Care Tech, Coordinator I, Healthcare Admin</div>
+          </div>
+          <div class="level-check">✓</div>
+        </div>
+        <div class="level-card" data-level="mid" onclick="selectLevel('current', this)">
+          <div class="level-icon">📈</div>
+          <div class="level-info">
+            <div class="level-name">Mid Level</div>
+            <div class="level-roles">Charge Nurse, Specialist, Supervisor, Coordinator II, Team Lead</div>
+          </div>
+          <div class="level-check">✓</div>
+        </div>
+        <div class="level-card" data-level="senior" onclick="selectLevel('current', this)">
+          <div class="level-icon">⭐</div>
+          <div class="level-info">
+            <div class="level-name">Senior Level</div>
+            <div class="level-roles">Senior Specialist, Clinical Lead, Department Supervisor, Program Manager</div>
+          </div>
+          <div class="level-check">✓</div>
+        </div>
+        <div class="level-card" data-level="leadership" onclick="selectLevel('current', this)">
+          <div class="level-icon">🎯</div>
+          <div class="level-info">
+            <div class="level-name">Leadership</div>
+            <div class="level-roles">Manager, Director, Department Head, Assistant VP, Clinical Manager</div>
+          </div>
+          <div class="level-check">✓</div>
+        </div>
+        <div class="level-card" data-level="executive" onclick="selectLevel('current', this)">
+          <div class="level-icon">🏆</div>
+          <div class="level-info">
+            <div class="level-name">Executive</div>
+            <div class="level-roles">VP, SVP, CNO, COO, CFO, CEO, C-Suite, System-Level Leader</div>
+          </div>
+          <div class="level-check">✓</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-skip" onclick="skipOnboarding()">Skip setup — I'll do this later</button>
+        <button class="btn-next" id="btn-next-1" disabled onclick="goToStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Target Level + Focus -->
+    <div class="step-panel" id="panel-2">
+      <div class="panel-eyebrow"><span class="panel-eyebrow-dot"></span>Your Goal</div>
+      <h1 class="panel-title">Where are you <span>headed?</span></h1>
+      <p class="panel-sub">Select your target role level and your primary area of focus in healthcare. Every tool will be calibrated to this specific transition.</p>
+
+      <div style="margin-bottom:1.25rem;">
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.65rem;">Target Level</div>
+        <div class="level-grid" id="target-levels">
+          <div class="level-card" data-level="mid" onclick="selectLevel('target', this)">
+            <div class="level-icon">📈</div>
+            <div class="level-info">
+              <div class="level-name">Mid Level</div>
+              <div class="level-roles">Charge Nurse, Specialist, Supervisor, Coordinator II</div>
+            </div>
+            <div class="level-check">✓</div>
+          </div>
+          <div class="level-card" data-level="senior" onclick="selectLevel('target', this)">
+            <div class="level-icon">⭐</div>
+            <div class="level-info">
+              <div class="level-name">Senior Level</div>
+              <div class="level-roles">Senior Specialist, Clinical Lead, Program Manager</div>
+            </div>
+            <div class="level-check">✓</div>
+          </div>
+          <div class="level-card" data-level="leadership" onclick="selectLevel('target', this)">
+            <div class="level-icon">🎯</div>
+            <div class="level-info">
+              <div class="level-name">Leadership</div>
+              <div class="level-roles">Manager, Director, Department Head, Assistant VP</div>
+            </div>
+            <div class="level-check">✓</div>
+          </div>
+          <div class="level-card" data-level="executive" onclick="selectLevel('target', this)">
+            <div class="level-icon">🏆</div>
+            <div class="level-info">
+              <div class="level-name">Executive</div>
+              <div class="level-roles">VP, SVP, CNO, COO, CFO, CEO, C-Suite</div>
+            </div>
+            <div class="level-check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.65rem;">Primary Focus Area</div>
+        <div class="focus-grid">
+          <div class="focus-card" data-focus="operations" onclick="selectFocus(this)">
+            <div class="focus-icon">⚙️</div>
+            <div class="focus-name">Operations</div>
+            <div class="focus-desc">Ops, throughput, efficiency</div>
+          </div>
+          <div class="focus-card" data-focus="nursing" onclick="selectFocus(this)">
+            <div class="focus-icon">🏥</div>
+            <div class="focus-name">Nursing</div>
+            <div class="focus-desc">Clinical nursing leadership</div>
+          </div>
+          <div class="focus-card" data-focus="finance" onclick="selectFocus(this)">
+            <div class="focus-icon">📊</div>
+            <div class="focus-name">Finance</div>
+            <div class="focus-desc">Revenue cycle, budgets</div>
+          </div>
+          <div class="focus-card" data-focus="quality" onclick="selectFocus(this)">
+            <div class="focus-icon">✅</div>
+            <div class="focus-name">Quality</div>
+            <div class="focus-desc">Quality, compliance, safety</div>
+          </div>
+          <div class="focus-card" data-focus="strategy" onclick="selectFocus(this)">
+            <div class="focus-icon">🎯</div>
+            <div class="focus-name">Strategy</div>
+            <div class="focus-desc">Growth, planning, innovation</div>
+          </div>
+          <div class="focus-card" data-focus="other" onclick="selectFocus(this)">
+            <div class="focus-icon">➕</div>
+            <div class="focus-name">Other</div>
+            <div class="focus-desc">IT, HR, supply chain, etc.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back" onclick="goToStep(1)">← Back</button>
+        <button class="btn-next" id="btn-next-2" disabled onclick="goToStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Summary + Launch -->
+    <div class="step-panel" id="panel-3">
+      <div class="panel-eyebrow"><span class="panel-eyebrow-dot"></span>You're all set</div>
+      <h1 class="panel-title">Your platform is <span>ready.</span></h1>
+      <p class="panel-sub">Here's how Ascend RX will be calibrated for you. You can update these settings anytime from your profile.</p>
+
+      <div class="summary-grid" id="summary-grid">
+        <div class="summary-card">
+          <div class="summary-icon">📍</div>
+          <div class="summary-label">Current</div>
+          <div class="summary-value" id="summary-current">—</div>
+          <div class="summary-sub" id="summary-current-sub"></div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon">🎯</div>
+          <div class="summary-label">Target</div>
+          <div class="summary-value" id="summary-target">—</div>
+          <div class="summary-sub" id="summary-target-sub"></div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon">⚡</div>
+          <div class="summary-label">Focus</div>
+          <div class="summary-value" id="summary-focus">—</div>
+          <div class="summary-sub" id="summary-focus-sub"></div>
+        </div>
+      </div>
+
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.75rem;">Your tools — calibrated and ready</div>
+      <div class="tools-preview">
+        <div class="tool-item">
+          <div class="tool-icon-wrap" style="background:rgba(14,165,233,.1)">📄</div>
+          <div class="tool-name">Resume Optimizer</div>
+          <div class="tool-badge live">Live</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-icon-wrap" style="background:rgba(52,211,153,.1)">🎯</div>
+          <div class="tool-name">Interview Coach</div>
+          <div class="tool-badge live">Live</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-icon-wrap" style="background:rgba(34,211,238,.1)">🔍</div>
+          <div class="tool-name">JD Decoder</div>
+          <div class="tool-badge live">Live</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-icon-wrap" style="background:rgba(251,191,36,.1)">💰</div>
+          <div class="tool-name">Salary Simulator</div>
+          <div class="tool-badge live">Live</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-icon-wrap" style="background:rgba(251,113,133,.1)">✉️</div>
+          <div class="tool-name">Reference Writer</div>
+          <div class="tool-badge soon">Soon</div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-icon-wrap" style="background:rgba(167,139,250,.1)">🚀</div>
+          <div class="tool-name">Promo Package</div>
+          <div class="tool-badge soon">Soon</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back" onclick="goToStep(2)">← Back</button>
+        <button class="btn-next" onclick="completeOnboarding()">✦ Enter Ascend RX →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+const profile = {
+  currentLevel: null,
+  targetLevel: null,
+  focus: null
+};
+
+const levelMeta = {
+  entry:      { name: 'Entry Level',   sub: 'Frontline contributor' },
+  mid:        { name: 'Mid Level',     sub: 'Experienced specialist' },
+  senior:     { name: 'Senior Level',  sub: 'Senior specialist / lead' },
+  leadership: { name: 'Leadership',    sub: 'Manager / Director' },
+  executive:  { name: 'Executive',     sub: 'VP / C-Suite' }
+};
+
+const focusMeta = {
+  operations: { name: 'Operations',  sub: 'Ops & efficiency' },
+  nursing:    { name: 'Nursing',     sub: 'Clinical leadership' },
+  finance:    { name: 'Finance',     sub: 'Revenue & budgets' },
+  quality:    { name: 'Quality',     sub: 'Compliance & safety' },
+  strategy:   { name: 'Strategy',    sub: 'Growth & planning' },
+  other:      { name: 'Other',       sub: 'IT, HR, supply chain' }
+};
+
+// ── LEVEL SELECTION ──────────────────────────────────────────────────────────
+function selectLevel(type, el) {
+  const grid = type === 'current' ? 'current-levels' : 'target-levels';
+  document.querySelectorAll(`#${grid} .level-card`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  if (type === 'current') {
+    profile.currentLevel = el.dataset.level;
+    document.getElementById('btn-next-1').disabled = false;
+  } else {
+    profile.targetLevel = el.dataset.level;
+    checkStep2();
+  }
+}
+
+function selectFocus(el) {
+  document.querySelectorAll('.focus-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  profile.focus = el.dataset.focus;
+  checkStep2();
+}
+
+function checkStep2() {
+  document.getElementById('btn-next-2').disabled = !(profile.targetLevel && profile.focus);
+}
+
+// ── STEP NAVIGATION ──────────────────────────────────────────────────────────
+function goToStep(step) {
+  // Hide all panels
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${step}`).classList.add('active');
+
+  // Update step indicators
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById(`sdot-${i}`);
+    const label = document.getElementById(`slabel-${i}`);
+    dot.classList.remove('active', 'done');
+    label.classList.remove('active');
+    if (i < step) {
+      dot.classList.add('done');
+    } else if (i === step) {
+      dot.classList.add('active');
+      label.classList.add('active');
+    }
+  }
+
+  // Update connectors
+  for (let i = 1; i <= 2; i++) {
+    const conn = document.getElementById(`sconn-${i}`);
+    conn.classList.toggle('done', i < step);
+  }
+
+  // Update progress bar
+  const pct = Math.round((step / 3) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Step ${step} of 3`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  // Populate summary on step 3
+  if (step === 3) populateSummary();
+}
+
+function populateSummary() {
+  const cl = levelMeta[profile.currentLevel] || { name: '—', sub: '' };
+  const tl = levelMeta[profile.targetLevel] || { name: '—', sub: '' };
+  const fc = focusMeta[profile.focus] || { name: '—', sub: '' };
+
+  document.getElementById('summary-current').textContent = cl.name;
+  document.getElementById('summary-current-sub').textContent = cl.sub;
+  document.getElementById('summary-target').textContent = tl.name;
+  document.getElementById('summary-target-sub').textContent = tl.sub;
+  document.getElementById('summary-focus').textContent = fc.name;
+  document.getElementById('summary-focus-sub').textContent = fc.sub;
+}
+
+// ── COMPLETE ONBOARDING ───────────────────────────────────────────────────────
+function completeOnboarding() {
+  // CLERK INTEGRATION POINT:
+  // await clerk.user.update({ publicMetadata: {
+  //   currentLevel: profile.currentLevel,
+  //   targetLevel:  profile.targetLevel,
+  //   focus:        profile.focus,
+  //   onboarded:    true
+  // }});
+
+  // localStorage fallback (dev / pre-Clerk)
+  localStorage.setItem('arx_profile', JSON.stringify({
+    currentLevel: profile.currentLevel,
+    targetLevel:  profile.targetLevel,
+    focus:        profile.focus,
+    onboarded:    true,
+    savedAt:      new Date().toISOString()
+  }));
+
+  window.location.href = '/dashboard';
+}
+
+function skipOnboarding() {
+  localStorage.setItem('arx_profile', JSON.stringify({
+    currentLevel: 'leadership',
+    targetLevel:  'executive',
+    focus:        'operations',
+    onboarded:    false,
+    savedAt:      new Date().toISOString()
+  }));
+  window.location.href = '/dashboard';
+}
+</script>
+</body>
+</html>
