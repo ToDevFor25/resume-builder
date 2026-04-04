@@ -1045,15 +1045,15 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Career Tools</div>
-      <a class="nav-item" href="/app">
+      <a class="nav-item" href="#" onclick="window.location.href='/app';return false;">
         <span class="nav-icon">📄</span> Resume Optimizer
         <span class="nav-badge new">LIVE</span>
       </a>
-      <a class="nav-item" href="/interview">
+      <a class="nav-item" href="#" onclick="window.location.href='/interview';return false;">
         <span class="nav-icon">🎯</span> Interview Coach
         <span class="nav-badge new">LIVE</span>
       </a>
-      <a class="nav-item" href="/seethrough">
+      <a class="nav-item" href="#" onclick="window.location.href='/seethrough';return false;">
         <span class="nav-icon">👁</span> SeeThrough
         <span class="nav-badge new">LIVE</span>
       </a>
@@ -1061,7 +1061,7 @@
         <span class="nav-icon">💰</span> Salary Simulator
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" href="/reference">
+      <a class="nav-item" href="#" onclick="window.location.href='/reference';return false;">
         <span class="nav-icon">✉️</span> Reference Writer
         <span class="nav-badge new">LIVE</span>
       </a>
@@ -1073,7 +1073,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Account</div>
-      <a class="nav-item" href="/profile">
+      <a class="nav-item" href="#" onclick="window.location.href='/profile';return false;">
         <span class="nav-icon">👤</span> Profile
       </a>
       <a class="nav-item" onclick="openModule('settings')">
@@ -1108,7 +1108,7 @@
       </div>
       <div class="topbar-right">
         <a href="/#pricing" class="btn btn-ghost" style="text-decoration:none;">Pricing</a>
-        <a href="/profile" class="btn btn-ghost" style="text-decoration:none;">⚙ Profile</a>
+        <a href="#" onclick="window.location.href='/profile';return false;" class="btn btn-ghost" style="text-decoration:none;">⚙ Profile</a>
         <button class="btn btn-primary" onclick="window.location.href='/app'">✦ Optimize Resume</button>
       </div>
     </div>
@@ -1120,17 +1120,17 @@
       <div class="welcome-banner animate-in delay-1">
         <h2>Your career toolkit is <span>ready.</span></h2>
         <p>Four tools live now. Start with your resume, then work through the full system. Every tool gets smarter when you upload your master resume.</p>
-        <div class="progress-bar-wrap">
-          <span class="progress-label">Profile complete</span>
-          <div class="progress-track">
-            <div class="progress-fill" id="progressFill"></div>
-          </div>
-          <span class="progress-pct" id="progressPct">0%</span>
+
+        <!-- Profile completion checklist -->
+        <div id="profile-checklist" style="margin-top:1rem;">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.6rem;">Profile Setup</div>
+          <div style="display:flex;flex-direction:column;gap:.35rem;" id="checklist-items"></div>
         </div>
+
         <!-- Master resume prompt - hidden if uploaded -->
         <div id="resume-prompt" style="margin-top:1rem;padding:.75rem 1rem;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.15);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
           <div style="font-size:.8rem;color:var(--text-dim);">📋 <strong style="color:var(--text);">Upload your master resume</strong> — unlocks real match scores, personalized interview questions, and smarter results across every tool.</div>
-          <a href="/profile" style="font-size:.75rem;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0;">Upload in Profile →</a>
+          <a href="#" onclick="window.location.href='/profile';return false;" style="font-size:.75rem;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0;">Upload in Profile →</a>
         </div>
         <!-- Got the job button -->
         <div style="margin-top:.85rem;text-align:right;">
@@ -1583,23 +1583,52 @@
   // Run on load
   renderUsageWidget();
 
-  // Animate progress bar on load
-  setTimeout(() => {
+  // ── PROFILE CHECKLIST ─────────────────────────────────────────────────────────
+  function renderChecklist() {
     const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
-    let pct = 10;
-    if (profile.currentLevel) pct += 15;
-    if (profile.targetLevel) pct += 15;
-    if (profile.focus) pct += 10;
-    if (localStorage.getItem('arx_master_resume_text')) pct += 20;
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressPct').textContent = pct + '%';
-  }, 600);
+    const hasMasterResume = !!(localStorage.getItem('arx_master_resume_text') ||
+      (typeof clerkMeta !== 'undefined' && clerkMeta.masterResumeText));
 
-  // Hide master resume prompt if already uploaded
-  if (localStorage.getItem('arx_master_resume_text')) {
-    const el = document.getElementById('resume-prompt');
-    if (el) el.style.display = 'none';
+    const items = [
+      { label: 'Career level set',      done: !!profile.currentLevel },
+      { label: 'Target role set',        done: !!profile.targetLevel },
+      { label: 'Focus area set',         done: !!profile.focus },
+      { label: 'Master resume uploaded', done: hasMasterResume,
+        action: !hasMasterResume ? { label: 'Upload now →', onclick: "window.location.href='/profile'" } : null }
+    ];
+
+    const incomplete = items.filter(i => !i.done);
+    const complete   = items.filter(i => i.done);
+    const container  = document.getElementById('checklist-items');
+    const wrapper    = document.getElementById('profile-checklist');
+    if (!container) return;
+
+    // If everything is done, hide the whole checklist section
+    if (incomplete.length === 0) {
+      wrapper.style.display = 'none';
+      document.getElementById('resume-prompt').style.display = 'none';
+      return;
+    }
+
+    // Hide the separate resume prompt — checklist handles it
+    document.getElementById('resume-prompt').style.display = 'none';
+
+    container.innerHTML = [
+      ...complete.map(i => `
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--text-muted);">
+          <span style="color:var(--green);font-size:.75rem;">✓</span>
+          <span style="text-decoration:line-through;opacity:.5;">${i.label}</span>
+        </div>`),
+      ...incomplete.map(i => `
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--text-dim);">
+          <span style="width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:inline-block;"></span>
+          <span>${i.label}</span>
+          ${i.action ? `<a href="#" onclick="${i.action.onclick};return false;" style="margin-left:auto;font-size:.72rem;font-weight:700;color:var(--accent);text-decoration:none;">${i.action.label}</a>` : ''}
+        </div>`)
+    ].join('');
   }
+
+  setTimeout(renderChecklist, 400);
 
   // Clerk init — load user name and founding badge
   window.addEventListener('load', async () => {
