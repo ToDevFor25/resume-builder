@@ -513,26 +513,26 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
       <p class="section-sub reveal reveal-delay-2">Built specifically for healthcare operations professionals. Not generic career advice — precise, role-specific AI that knows your world.</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card c1 reveal">
+      <div class="feature-card c1 reveal" onclick="window.location.href='/app'" style="cursor:pointer;">
         <div class="feature-icon c1">📄</div>
         <div class="feature-tag live"><span class="feature-tag-dot"></span>Live Now</div>
         <div class="feature-name">Resume Optimizer</div>
         <div class="feature-desc">Paste your resume and a job description. Get a fully rewritten, ATS-optimized, metric-driven resume tailored to the exact role — in under 60 seconds.</div>
         <div class="feature-outcome">Increases job match scores by targeting role-specific keywords</div>
       </div>
-      <div class="feature-card c2 reveal reveal-delay-1">
+      <div class="feature-card c2 reveal reveal-delay-1" onclick="window.location.href='/interview'" style="cursor:pointer;">
         <div class="feature-icon c2">🎯</div>
-        <div class="feature-tag soon"><span class="feature-tag-dot"></span>Coming Soon</div>
+        <div class="feature-tag live"><span class="feature-tag-dot"></span>Live Now</div>
         <div class="feature-name">Interview Coach</div>
         <div class="feature-desc">AI mock interviews with real VP-level healthcare ops questions. Get scored feedback on your answers, executive presence, and behavioral responses.</div>
         <div class="feature-outcome">Prepare for the exact questions healthcare hiring managers ask</div>
       </div>
-      <div class="feature-card c3 reveal reveal-delay-2">
-        <div class="feature-icon c3">🔍</div>
-        <div class="feature-tag soon"><span class="feature-tag-dot"></span>Coming Soon</div>
-        <div class="feature-name">JD Decoder</div>
-        <div class="feature-desc">Paste any job posting. Instantly see what the role actually requires vs. what's fluff, red flags in the language, salary range, and your real match score.</div>
-        <div class="feature-outcome">Know exactly what they want before you apply</div>
+      <div class="feature-card c3 reveal reveal-delay-2" onclick="window.location.href='/seethrough'" style="cursor:pointer;">
+        <div class="feature-icon c3">👁</div>
+        <div class="feature-tag live"><span class="feature-tag-dot"></span>Live Now</div>
+        <div class="feature-name">SeeThrough</div>
+        <div class="feature-desc">Paste any job posting or recruiter message. Instantly see what the role actually requires, spot red flags and scams, check the salary range, and get your real match score.</div>
+        <div class="feature-outcome">SeeThrough any posting before you apply</div>
       </div>
       <div class="feature-card c4 reveal reveal-delay-3">
         <div class="feature-icon c4">💰</div>
@@ -541,9 +541,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
         <div class="feature-desc">Live back-and-forth salary negotiation practice with an AI playing the hiring manager. Stop leaving money on the table — know your number and how to get it.</div>
         <div class="feature-outcome">Practice until the conversation feels natural</div>
       </div>
-      <div class="feature-card c5 reveal reveal-delay-4">
+      <div class="feature-card c5 reveal reveal-delay-4" onclick="window.location.href='/reference'" style="cursor:pointer;">
         <div class="feature-icon c5">✉️</div>
-        <div class="feature-tag soon"><span class="feature-tag-dot"></span>Coming Soon</div>
+        <div class="feature-tag live"><span class="feature-tag-dot"></span>Live Now</div>
         <div class="feature-name">Reference Writer</div>
         <div class="feature-desc">Generate polished, personalized reference letters in 30 seconds. Add context, your relationship, and the target role — and get a letter that sounds like you wrote it.</div>
         <div class="feature-outcome">Professional references without the awkward back-and-forth</div>
@@ -702,10 +702,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
           <div class="pricing-period">/ forever</div>
         </div>
         <div class="pricing-annual-note">&nbsp;</div>
-        <div class="pricing-desc">Try the Resume Optimizer and JD Decoder. No credit card, no time limit — free forever.</div>
+        <div class="pricing-desc">Try the Resume Optimizer and SeeThrough. No credit card, no time limit — free forever.</div>
         <div class="pricing-features">
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Resume Optimizer (3 uses/month)</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> JD Decoder (3 uses/month)</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> SeeThrough (3 uses/month)</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Match score + gap analysis</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> 2 DOCX downloads/month</div>
           <div class="pricing-feature dim"><span class="pricing-feature-x">—</span> Interview Coach</div>
@@ -750,7 +750,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Everything in Starter</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> <strong style="color:var(--text)">Unlimited</strong> usage on all tools</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Interview Coach — all 3 modes</div>
-          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Salary Simulator + JD scam detection</div>
+          <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Salary Simulator + SeeThrough scam detection</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Every new tool included automatically</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Priority support</div>
           <div class="pricing-feature"><span class="pricing-feature-check">✓</span> Founding-member pricing locked in</div>
@@ -812,8 +812,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
         <div class="faq-a">You can upload your resume as a PDF, DOCX, TXT, or RTF file. The output is always a professionally formatted DOCX file ready to send — with your choice of Executive, Modern two-column, or ATS-clean single-column layout.</div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">When will the other tools (Interview Coach, Salary Simulator, etc.) launch? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a">We're building and launching modules sequentially so each one is excellent before we move to the next. Pro subscribers get early access to every tool as it goes live. Sign up now to lock in founding-member pricing before rates increase.</div>
+        <div class="faq-q">Which tools are live right now? <span class="faq-chevron">▾</span></div>
+        <div class="faq-a">Four tools are live today — Resume Optimizer, Interview Coach, SeeThrough, and Reference Writer. Salary Simulator and Promotion Package are in development. Every paid plan automatically includes new tools the moment they launch — no upgrade needed, no extra charge.</div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q">Can I cancel my subscription anytime? <span class="faq-chevron">▾</span></div>
