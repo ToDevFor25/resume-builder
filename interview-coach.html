@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Interview Coach — Ascend RX</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+</script>
 <style>
 :root{
   --bg:#080c14;--bg2:#0d1520;--bg3:#111d2e;
@@ -243,6 +247,7 @@ textarea.input::placeholder{color:var(--text-muted);}
     <span class="nav-module">🎯 Interview Coach</span>
   </div>
   <div class="nav-right">
+    <a href="/#pricing" class="nav-back">Pricing</a>
     <a href="/dashboard" class="nav-back">← Dashboard</a>
   </div>
 </nav>
@@ -420,6 +425,17 @@ textarea.input::placeholder{color:var(--text-muted);}
           <button class="btn-secondary" onclick="showPage('practice-setup')">↺ Run another session</button>
           <button class="btn-primary" onclick="showPage('home')">← Back to modes</button>
         </div>
+        <!-- Feedback bar -->
+        <div id="session-feedback-bar" style="display:none;align-items:center;gap:.75rem;padding:.65rem 1rem;background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:8px;margin-top:.75rem;flex-wrap:wrap;">
+          <span style="font-size:.78rem;color:var(--text-muted);flex:1;">How was this session?</span>
+          <div style="display:flex;gap:.4rem;">
+            <button id="ic-fb-up" onclick="submitSessionFeedback('up')" style="padding:.32rem .75rem;border-radius:6px;border:1px solid var(--border);background:var(--bg2);font-size:.8rem;cursor:pointer;color:var(--text-muted);">👍</button>
+            <button id="ic-fb-down" onclick="submitSessionFeedback('down')" style="padding:.32rem .75rem;border-radius:6px;border:1px solid var(--border);background:var(--bg2);font-size:.8rem;cursor:pointer;color:var(--text-muted);">👎</button>
+          </div>
+          <div id="ic-fb-comment" style="display:none;width:100%;margin-top:.4rem;">
+            <input type="text" id="ic-fb-text" placeholder="What could be better? (optional)" onkeydown="if(event.key==='Enter')submitICFeedbackComment()" style="width:100%;padding:.45rem .7rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--text);outline:none;"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -462,8 +478,19 @@ textarea.input::placeholder{color:var(--text-muted);}
 </div>
 
 <script>
-// ── PROFILE ──────────────────────────────────────────────────────────────────
-// CLERK INTEGRATION POINT: replace localStorage read with clerk.user.publicMetadata
+// ── PROFILE — Dual-layer: Clerk (primary) + localStorage (fallback) ──────────
+let clerkMeta = {};
+window.addEventListener('load', async () => {
+  try {
+    await window.__clerk_loaded;
+    const clerk = window.Clerk;
+    if (clerk) { await clerk.load(); if (clerk.user) clerkMeta = clerk.user.publicMetadata || {}; }
+  } catch(e) { console.warn('Clerk:', e); }
+});
+function getMasterResumeText() {
+  return clerkMeta.masterResumeText || localStorage.getItem('arx_master_resume_text') || null;
+}
+
 const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
 const currentLevel = profile.currentLevel || 'leadership';
 const targetLevel  = profile.targetLevel  || 'executive';
@@ -621,8 +648,10 @@ async function startSession() {
 
   showLoader('Preparing your interview', 'Building questions for your session…');
   try {
+    const masterText = getMasterResumeText();
+    const resumeContext = masterText ? `\nCandidate resume context (tailor questions to their actual background):\n${masterText.substring(0,1500)}\n` : '';
     const prompt = `You are a healthcare hiring manager conducting a real job interview. Generate exactly ${qCount} interview questions for a candidate who is ${levelPrompt[currentLevel]} interviewing for ${targetPrompt[targetLevel]} in healthcare ${focusLabels[focus]}.
-${jd ? `\nRole context:\n${jd.substring(0,1500)}` : ''}
+${resumeContext}${jd ? `\nRole context:\n${jd.substring(0,1500)}` : ''}
 
 Mix question types: behavioral (STAR-format), situational, strategic, and technical/operational.
 Make them specific to healthcare ${focusLabels[focus]} at the ${levelLabels[targetLevel]} level.
@@ -763,6 +792,11 @@ async function endSession() {
 
   showPage('results');
   document.getElementById('chat-input-wrap').style.display = 'block';
+  // Show feedback bar after a short delay
+  setTimeout(() => {
+    const fb = document.getElementById('session-feedback-bar');
+    if (fb) fb.style.display = 'flex';
+  }, 1500);
 }
 
 function getScoreClass(s) {
@@ -888,6 +922,34 @@ function toast(msg) {
   el.classList.add('show');
   clearTimeout(tt);
   tt = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── SESSION FEEDBACK ──────────────────────────────────────────────────────────
+function submitSessionFeedback(rating) {
+  document.getElementById('ic-fb-up').style.background   = rating==='up'   ? 'rgba(52,211,153,.1)'  : 'var(--bg2)';
+  document.getElementById('ic-fb-down').style.background = rating==='down' ? 'rgba(251,113,133,.1)' : 'var(--bg2)';
+  const entry = { tool:'interview', rating, timestamp: new Date().toISOString() };
+  const existing = JSON.parse(localStorage.getItem('arx_feedback') || '[]');
+  existing.push(entry);
+  localStorage.setItem('arx_feedback', JSON.stringify(existing.slice(-100)));
+  if (rating === 'down') {
+    document.getElementById('ic-fb-comment').style.display = 'block';
+    document.getElementById('ic-fb-text').focus();
+  } else {
+    toast('Thanks for the feedback!');
+  }
+  // AIRTABLE MIGRATION POINT: POST entry to /api/feedback
+}
+function submitICFeedbackComment() {
+  const comment = document.getElementById('ic-fb-text').value.trim();
+  if (comment) {
+    const existing = JSON.parse(localStorage.getItem('arx_feedback') || '[]');
+    if (existing.length > 0) existing[existing.length-1].comment = comment;
+    localStorage.setItem('arx_feedback', JSON.stringify(existing));
+    toast('Thanks — that helps us improve!');
+    document.getElementById('ic-fb-comment').style.display = 'none';
+    document.getElementById('ic-fb-text').value = '';
+  }
 }
 </script>
 </body>
