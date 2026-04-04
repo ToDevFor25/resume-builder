@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Reference Writer — Ascend RX</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+</script>
 <style>
 :root{
   --bg:#080c14;--bg2:#0d1520;--bg3:#111d2e;
@@ -135,7 +139,10 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.65;}
     <div class="nav-divider"></div>
     <span class="nav-module">✉️ Reference Writer</span>
   </div>
-  <a href="/dashboard" class="nav-back">← Dashboard</a>
+  <div style="display:flex;align-items:center;gap:.5rem;">
+    <a href="/#pricing" class="nav-back">Pricing</a>
+    <a href="/dashboard" class="nav-back">← Dashboard</a>
+  </div>
 </nav>
 
 <div class="main">
@@ -300,13 +307,36 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.65;}
       <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-muted);line-height:1.6;">
         💡 <strong style="color:var(--text-dim);">Tip:</strong> Copy this letter and send it to your reference with a note like: <em>"Here's a draft based on our work together — feel free to adjust the wording to match your voice before signing."</em>
       </div>
+      <!-- Feedback bar -->
+      <div id="rw-feedback-bar" style="display:none;align-items:center;gap:.75rem;padding:.65rem 1rem;background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:8px;margin-top:.85rem;flex-wrap:wrap;">
+        <span style="font-size:.78rem;color:var(--text-muted);flex:1;">How was this letter?</span>
+        <div style="display:flex;gap:.4rem;">
+          <button id="rw-fb-up" onclick="submitRWFeedback('up')" style="padding:.32rem .75rem;border-radius:6px;border:1px solid var(--border);background:var(--bg2);font-size:.8rem;cursor:pointer;color:var(--text-muted);">👍</button>
+          <button id="rw-fb-down" onclick="submitRWFeedback('down')" style="padding:.32rem .75rem;border-radius:6px;border:1px solid var(--border);background:var(--bg2);font-size:.8rem;cursor:pointer;color:var(--text-muted);">👎</button>
+        </div>
+        <div id="rw-fb-comment" style="display:none;width:100%;margin-top:.4rem;">
+          <input type="text" id="rw-fb-text" placeholder="What could be better? (optional)" onkeydown="if(event.key==='Enter')submitRWFeedbackComment()" style="width:100%;padding:.45rem .7rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--text);outline:none;"/>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-// ── PROFILE ──────────────────────────────────────────────────────────────────
+// ── PROFILE — Dual-layer: Clerk (primary) + localStorage (fallback) ──────────
+let clerkMeta = {};
+window.addEventListener('load', async () => {
+  try {
+    await window.__clerk_loaded;
+    const clerk = window.Clerk;
+    if (clerk) { await clerk.load(); if (clerk.user) clerkMeta = clerk.user.publicMetadata || {}; }
+  } catch(e) { console.warn('Clerk:', e); }
+});
+function getMasterResumeText() {
+  return clerkMeta.masterResumeText || localStorage.getItem('arx_master_resume_text') || null;
+}
+
 // CLERK INTEGRATION POINT: replace with clerk.user.publicMetadata
 const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
 const targetLevel = profile.targetLevel || 'executive';
@@ -406,6 +436,11 @@ Write the letter as plain text only — no JSON, no markdown. Start with the sal
 
   document.getElementById('loader').classList.add('show');
   try {
+    // Inject master resume context if available
+    const masterText = getMasterResumeText();
+    if (masterText && currentMode === 'requesting') {
+      prompt += `\n\nCandidate's resume for additional context:\n${masterText.substring(0, 1200)}`;
+    }
     const letter = await callClaude(prompt, 1200, 0.65);
     generatedLetter = letter;
     document.getElementById('letter-output').textContent = letter;
@@ -413,6 +448,11 @@ Write the letter as plain text only — no JSON, no markdown. Start with the sal
     document.getElementById('copy-btn').classList.remove('copied');
     document.getElementById('copy-btn').textContent = '📋 Copy letter';
     document.getElementById('result-card').scrollIntoView({ behavior:'smooth', block:'start' });
+    // Show feedback bar after short delay
+    setTimeout(() => {
+      const fb = document.getElementById('rw-feedback-bar');
+      if (fb) fb.style.display = 'flex';
+    }, 1000);
   } catch(e) {
     toast('Error: ' + e.message);
   } finally {
@@ -434,6 +474,34 @@ async function copyLetter() {
     }, 2500);
   } catch(e) {
     toast('Could not copy — please select and copy manually.');
+  }
+}
+
+// ── FEEDBACK ──────────────────────────────────────────────────────────────────
+function submitRWFeedback(rating) {
+  document.getElementById('rw-fb-up').style.background   = rating==='up'   ? 'rgba(52,211,153,.1)'  : 'var(--bg2)';
+  document.getElementById('rw-fb-down').style.background = rating==='down' ? 'rgba(251,113,133,.1)' : 'var(--bg2)';
+  const entry = { tool:'reference', rating, timestamp: new Date().toISOString() };
+  const existing = JSON.parse(localStorage.getItem('arx_feedback') || '[]');
+  existing.push(entry);
+  localStorage.setItem('arx_feedback', JSON.stringify(existing.slice(-100)));
+  if (rating === 'down') {
+    document.getElementById('rw-fb-comment').style.display = 'block';
+    document.getElementById('rw-fb-text').focus();
+  } else {
+    toast('Thanks for the feedback!');
+  }
+  // AIRTABLE MIGRATION POINT: POST entry to /api/feedback
+}
+function submitRWFeedbackComment() {
+  const comment = document.getElementById('rw-fb-text').value.trim();
+  if (comment) {
+    const existing = JSON.parse(localStorage.getItem('arx_feedback') || '[]');
+    if (existing.length > 0) existing[existing.length-1].comment = comment;
+    localStorage.setItem('arx_feedback', JSON.stringify(existing));
+    toast('Thanks — that helps us improve!');
+    document.getElementById('rw-fb-comment').style.display = 'none';
+    document.getElementById('rw-fb-text').value = '';
   }
 }
 
