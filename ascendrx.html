@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ascend RX — Healthcare Career Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+</script>
 <style>
   :root {
     --bg: #080c14;
@@ -453,6 +457,108 @@
     display: flex;
     align-items: center;
     gap: 3px;
+  }
+
+  /* USAGE WIDGET */
+  .usage-widget {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .usage-widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .usage-widget-title {
+    font-family: 'Syne', sans-serif;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .usage-widget-reset {
+    font-size: .7rem;
+    color: var(--text-muted);
+  }
+  .usage-tool-row {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: .55rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .usage-tool-row:last-child { border-bottom: none; }
+  .usage-tool-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .usage-tool-name {
+    font-size: .78rem;
+    color: var(--text-dim);
+    width: 130px;
+    flex-shrink: 0;
+  }
+  .usage-track-wrap { flex: 1; }
+  .usage-track {
+    height: 5px;
+    background: var(--bg3);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: .2rem;
+  }
+  .usage-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width .6s ease;
+  }
+  .usage-fill.none  { background: var(--bg3); width: 0%; }
+  .usage-fill.low   { background: var(--accent2); }
+  .usage-fill.warn  { background: var(--amber); }
+  .usage-fill.full  { background: var(--rose); }
+  .usage-count {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    width: 60px;
+    text-align: right;
+  }
+  .usage-count.warn  { color: var(--amber); font-weight: 600; }
+  .usage-count.full  { color: var(--rose);  font-weight: 600; }
+  .usage-upgrade-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: .85rem;
+    padding-top: .85rem;
+    border-top: 1px solid var(--border);
+  }
+  .usage-upgrade-text { font-size: .72rem; color: var(--text-muted); }
+  .usage-upgrade-btn {
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .3rem .75rem;
+    background: rgba(56,189,248,.08);
+    border: 1px solid rgba(56,189,248,.18);
+    border-radius: 6px;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .usage-upgrade-btn:hover {
+    background: rgba(56,189,248,.15);
+    border-color: rgba(56,189,248,.3);
   }
 
   /* MODULE GRID */
@@ -939,25 +1045,25 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Career Tools</div>
-      <a class="nav-item" onclick="openModule('resume')">
+      <a class="nav-item" href="/app">
         <span class="nav-icon">📄</span> Resume Optimizer
         <span class="nav-badge new">LIVE</span>
       </a>
-      <a class="nav-item" onclick="openModule('interview')">
+      <a class="nav-item" href="/interview">
         <span class="nav-icon">🎯</span> Interview Coach
-        <span class="nav-badge soon">Soon</span>
+        <span class="nav-badge new">LIVE</span>
       </a>
-      <a class="nav-item" onclick="openModule('jd')">
-        <span class="nav-icon">🔍</span> JD Decoder
-        <span class="nav-badge soon">Soon</span>
+      <a class="nav-item" href="/seethrough">
+        <span class="nav-icon">👁</span> SeeThrough
+        <span class="nav-badge new">LIVE</span>
       </a>
       <a class="nav-item" onclick="openModule('salary')">
         <span class="nav-icon">💰</span> Salary Simulator
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" onclick="openModule('reference')">
+      <a class="nav-item" href="/reference">
         <span class="nav-icon">✉️</span> Reference Writer
-        <span class="nav-badge soon">Soon</span>
+        <span class="nav-badge new">LIVE</span>
       </a>
       <a class="nav-item" onclick="openModule('promo')">
         <span class="nav-icon">🚀</span> Promo Package
@@ -967,6 +1073,9 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Account</div>
+      <a class="nav-item" href="/profile">
+        <span class="nav-icon">👤</span> Profile
+      </a>
       <a class="nav-item" onclick="openModule('settings')">
         <span class="nav-icon">⚙</span> Settings
       </a>
@@ -976,11 +1085,12 @@
     </div>
 
     <div class="sidebar-footer">
-      <div class="user-card">
-        <div class="avatar">JD</div>
+      <a href="/#pricing" style="display:block;text-align:center;font-size:.7rem;color:var(--text-muted);text-decoration:none;padding:.4rem;margin-bottom:.5rem;border-radius:6px;transition:all .15s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">View pricing →</a>
+      <div class="user-card" onclick="window.location.href='/profile'" style="cursor:pointer;">
+        <div class="avatar" id="dash-avatar">?</div>
         <div class="user-info">
-          <div class="user-name">Jonathan D.</div>
-          <div class="user-plan">✦ Free Plan</div>
+          <div class="user-name" id="dash-name">Loading…</div>
+          <div class="user-plan" id="dash-plan">✦ Free Plan</div>
         </div>
         <span style="font-size:10px; color:var(--text-muted);">⋯</span>
       </div>
@@ -997,8 +1107,9 @@
         <p>Welcome back — your VP track awaits.</p>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-ghost" onclick="openModule('settings')">⚙ Settings</button>
-        <button class="btn btn-primary" onclick="openModule('resume')">✦ Optimize Resume</button>
+        <a href="/#pricing" class="btn btn-ghost" style="text-decoration:none;">Pricing</a>
+        <a href="/profile" class="btn btn-ghost" style="text-decoration:none;">⚙ Profile</a>
+        <button class="btn btn-primary" onclick="window.location.href='/app'">✦ Optimize Resume</button>
       </div>
     </div>
 
@@ -1007,15 +1118,23 @@
 
       <!-- WELCOME BANNER -->
       <div class="welcome-banner animate-in delay-1">
-        <h2>Your VP-track toolkit is <span>ready.</span></h2>
-        <p>Six AI-powered tools built specifically for healthcare operations leaders. Start with your resume, then work your way through the full system.</p>
+        <h2>Your career toolkit is <span>ready.</span></h2>
+        <p>Four tools live now. Start with your resume, then work through the full system. Every tool gets smarter when you upload your master resume.</p>
         <div class="progress-bar-wrap">
           <span class="progress-label">Profile complete</span>
           <div class="progress-track">
             <div class="progress-fill" id="progressFill"></div>
           </div>
-          <span class="progress-pct">16%</span>
-          <span style="font-size:11px; color:var(--text-muted); margin-left:8px;">— Complete all 6 modules to unlock your career score</span>
+          <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <!-- Master resume prompt - hidden if uploaded -->
+        <div id="resume-prompt" style="margin-top:1rem;padding:.75rem 1rem;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.15);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+          <div style="font-size:.8rem;color:var(--text-dim);">📋 <strong style="color:var(--text);">Upload your master resume</strong> — unlocks real match scores, personalized interview questions, and smarter results across every tool.</div>
+          <a href="/profile" style="font-size:.75rem;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0;">Upload in Profile →</a>
+        </div>
+        <!-- Got the job button -->
+        <div style="margin-top:.85rem;text-align:right;">
+          <button onclick="showJobLandedModal()" style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:8px;padding:.45rem .9rem;font-size:.75rem;font-weight:600;color:var(--green);cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(52,211,153,.15)'" onmouseout="this.style.background='rgba(52,211,153,.08)'">🎉 I got the job!</button>
         </div>
       </div>
 
@@ -1040,6 +1159,59 @@
           <div class="stat-label">Tools Used</div>
           <div class="stat-value green">0 <span style="font-size:14px; color:var(--text-muted);">/ 6</span></div>
           <div class="stat-change" style="color:var(--text-muted);">Start with Resume Optimizer</div>
+        </div>
+      </div>
+
+      <!-- USAGE WIDGET -->
+      <div class="usage-widget animate-in delay-3" id="usage-widget">
+        <div class="usage-widget-header">
+          <div class="usage-widget-title">Monthly Usage</div>
+          <div class="usage-widget-reset" id="usage-reset-label">Resets in — days</div>
+        </div>
+
+        <!-- Resume Optimizer -->
+        <div class="usage-tool-row">
+          <div class="usage-tool-icon" style="background:rgba(14,165,233,.1);">📄</div>
+          <div class="usage-tool-name">Resume Optimizer</div>
+          <div class="usage-track-wrap">
+            <div class="usage-track"><div class="usage-fill none" id="uf-resume"></div></div>
+          </div>
+          <div class="usage-count" id="uc-resume">0 / 3</div>
+        </div>
+
+        <!-- Interview Coach -->
+        <div class="usage-tool-row">
+          <div class="usage-tool-icon" style="background:rgba(52,211,153,.1);">🎯</div>
+          <div class="usage-tool-name">Interview Coach</div>
+          <div class="usage-track-wrap">
+            <div class="usage-track"><div class="usage-fill none" id="uf-interview"></div></div>
+          </div>
+          <div class="usage-count" id="uc-interview">0 / 3</div>
+        </div>
+
+        <!-- SeeThrough -->
+        <div class="usage-tool-row">
+          <div class="usage-tool-icon" style="background:rgba(34,211,238,.1);">👁</div>
+          <div class="usage-tool-name">SeeThrough</div>
+          <div class="usage-track-wrap">
+            <div class="usage-track"><div class="usage-fill none" id="uf-seethrough"></div></div>
+          </div>
+          <div class="usage-count" id="uc-seethrough">0 / 3</div>
+        </div>
+
+        <!-- Reference Writer -->
+        <div class="usage-tool-row">
+          <div class="usage-tool-icon" style="background:rgba(251,113,133,.1);">✉️</div>
+          <div class="usage-tool-name">Reference Writer</div>
+          <div class="usage-track-wrap">
+            <div class="usage-track"><div class="usage-fill none" id="uf-reference"></div></div>
+          </div>
+          <div class="usage-count" id="uc-reference">0 / 3</div>
+        </div>
+
+        <div class="usage-upgrade-row" id="usage-upgrade-row" style="display:none;">
+          <div class="usage-upgrade-text">Upgrade for unlimited access across all tools</div>
+          <a href="/#pricing" class="usage-upgrade-btn">See plans →</a>
         </div>
       </div>
 
@@ -1070,13 +1242,13 @@
         </div>
 
         <!-- MODULE 2: Interview Coach -->
-        <div class="module-card green animate-in delay-4" onclick="openModule('interview')">
+        <div class="module-card green animate-in delay-4" onclick="window.location.href='/interview'">
           <div class="module-header">
             <div class="module-icon-wrap green">🎯</div>
             <div class="module-meta">
               <div class="module-name">Interview Coach</div>
               <div class="module-desc">AI mock interviews with real VP-level healthcare ops questions. Scored feedback in real time.</div>
-              <span class="module-status ready">⚡ Coming Soon</span>
+              <span class="module-status live"><span class="live-dot"></span> Live Now</span>
             </div>
           </div>
           <div class="module-cta">
@@ -1085,18 +1257,18 @@
           </div>
         </div>
 
-        <!-- MODULE 3: JD Decoder -->
-        <div class="module-card cyan animate-in delay-5" onclick="openModule('jd')">
+        <!-- MODULE 3: SeeThrough -->
+        <div class="module-card cyan animate-in delay-5" onclick="window.location.href='/seethrough'">
           <div class="module-header">
-            <div class="module-icon-wrap cyan">🔍</div>
+            <div class="module-icon-wrap cyan">👁</div>
             <div class="module-meta">
-              <div class="module-name">JD Decoder</div>
-              <div class="module-desc">Paste any job posting. Get the real requirements, red flags, and your match score instantly.</div>
-              <span class="module-status ready">⚡ Coming Soon</span>
+              <div class="module-name">SeeThrough</div>
+              <div class="module-desc">Paste any job posting or recruiter message. See what they actually want, spot red flags, and check if it's worth your time.</div>
+              <span class="module-status live"><span class="live-dot"></span> Live Now</span>
             </div>
           </div>
           <div class="module-cta">
-            <span class="module-cta-label">Decode a job description →</span>
+            <span class="module-cta-label">SeeThrough any posting →</span>
             <div class="module-arrow">→</div>
           </div>
         </div>
@@ -1118,13 +1290,13 @@
         </div>
 
         <!-- MODULE 5: Reference Writer -->
-        <div class="module-card rose animate-in delay-7" onclick="openModule('reference')">
+        <div class="module-card rose animate-in delay-7" onclick="window.location.href='/reference'">
           <div class="module-header">
             <div class="module-icon-wrap rose">✉️</div>
             <div class="module-meta">
               <div class="module-name">Reference Writer</div>
               <div class="module-desc">Generate polished, personalized reference letters in 30 seconds. For you or a colleague.</div>
-              <span class="module-status soon">⏳ Coming Soon</span>
+              <span class="module-status live"><span class="live-dot"></span> Live Now</span>
             </div>
           </div>
           <div class="module-cta">
@@ -1193,7 +1365,7 @@
           <div style="text-align:center; padding: 24px 0; color:var(--text-muted); font-size:13px;">
             <div style="font-size:28px; margin-bottom:8px;">📋</div>
             No jobs tracked yet.<br>
-            <span style="font-size:11px;">Paste a job description into the JD Decoder<br>to start tracking applications.</span>
+            <span style="font-size:11px;">Paste a job posting into SeeThrough<br>to start tracking applications.</span>
           </div>
         </div>
 
@@ -1218,8 +1390,33 @@
     <div class="cs-close" onclick="closeOverlay()">✕</div>
     <div class="cs-icon" id="csIcon">🎯</div>
     <h3 id="csTitle">Interview Coach</h3>
-    <p id="csDesc">This module is in development and will be available soon. We're building it specifically for healthcare operations professionals pursuing VP roles.</p>
+    <p id="csDesc">This module is in development and will be available soon.</p>
     <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="closeOverlay()">✓ Got it — notify me when live</button>
+  </div>
+</div>
+
+<!-- JOB LANDED MODAL -->
+<div class="coming-soon-overlay" id="jobLandedOverlay" onclick="closeJobLandedModal(event)" style="z-index:500;">
+  <div class="cs-modal" style="max-width:480px;">
+    <div class="cs-close" onclick="closeJobLandedModal()">✕</div>
+    <div id="jl-form">
+      <div style="font-size:2rem;margin-bottom:.5rem;">🎉</div>
+      <h3 style="margin-bottom:.4rem;">You got the job!</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6;">Congratulations — this is what it's all about. Tell us about it so we can celebrate with you (and help the next person).</p>
+      <div style="display:flex;flex-direction:column;gap:.65rem;margin-bottom:1rem;">
+        <input id="jl-role" type="text" placeholder="What role did you land? (e.g. VP of Clinical Operations)" style="padding:.7rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'"/>
+        <input id="jl-org" type="text" placeholder="Organization / Health System (optional)" style="padding:.7rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'"/>
+        <input id="jl-tools" type="text" placeholder="Which tools helped most? (e.g. Resume Optimizer, Interview Coach)" style="padding:.7rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;width:100%;" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'"/>
+        <textarea id="jl-quote" placeholder="Share a quick quote we can use (optional — first name + title only, we'll ask before publishing)" style="padding:.7rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;width:100%;resize:vertical;min-height:80px;line-height:1.5;" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:11px;" onclick="submitJobLanded()">🎉 Submit — I crushed it</button>
+      <div style="text-align:center;margin-top:.65rem;"><a onclick="closeJobLandedModal()" style="font-size:.72rem;color:var(--text-muted);cursor:pointer;">Maybe later</a></div>
+    </div>
+    <div id="jl-success" style="display:none;text-align:center;padding:1rem 0;">
+      <div style="font-size:2.5rem;margin-bottom:.75rem;">🏆</div>
+      <h3 style="margin-bottom:.5rem;">Amazing — congratulations!</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">Thank you for sharing. Your story will help the next healthcare professional on their way up. Go enjoy it — you earned this.</p>
+    </div>
   </div>
 </div>
 
@@ -1235,61 +1432,71 @@
     interview: {
       icon: '🎯',
       title: 'Interview Coach',
-      desc: 'AI-powered mock interviews with real VP-level healthcare ops questions. Scored feedback, executive presence coaching, and behavioral question prep — all tailored to your specialty.'
+      desc: 'AI-powered mock interviews with real VP-level healthcare ops questions. Scored feedback, executive presence coaching, and behavioral question prep — all tailored to your specialty.',
+      live: true,
+      url: '/interview'
+    },
+    seethrough: {
+      icon: '👁',
+      title: 'SeeThrough',
+      desc: 'Paste any job posting or recruiter message. See what they actually want, spot red flags, check salary, and see if it\'s worth your time.',
+      live: true,
+      url: '/seethrough'
     },
     jd: {
-      icon: '🔍',
-      title: 'JD Decoder',
-      desc: 'Paste any job posting and instantly see what the role actually requires (vs. what\'s fluff), red flags in the language, estimated salary range, and how well your background matches.'
+      icon: '👁',
+      title: 'SeeThrough',
+      desc: 'Paste any job posting or recruiter message. See what they actually want, spot red flags, check salary, and see if it\'s worth your time.',
+      live: true,
+      url: '/seethrough'
     },
     salary: {
       icon: '💰',
-      title: 'Salary Negotiation Simulator',
-      desc: 'Practice live back-and-forth salary negotiations with an AI playing the role of a hiring manager. Built for healthcare ops leaders who are tired of leaving money on the table.'
+      title: 'Salary Simulator — Coming Soon',
+      desc: 'Practice live back-and-forth salary negotiations with an AI playing the role of a hiring manager. Built for healthcare ops leaders who are tired of leaving money on the table. Launching soon.'
     },
     reference: {
       icon: '✉️',
-      title: 'Reference Letter Writer',
-      desc: 'Generate polished, personalized reference letters in 30 seconds. Input the context, your relationship, and the target role — and get a letter that sounds like you, not a template.'
+      title: 'Reference Writer',
+      desc: 'Generate polished, personalized reference letters in 30 seconds.',
+      live: true,
+      url: '/reference'
     },
     promo: {
       icon: '🚀',
-      title: 'Promotion Package Builder',
-      desc: 'Build your complete promotion pitch kit: a self-advocacy memo, talking points for the conversation, a 90-day leadership plan, and a before/after impact narrative. Everything you need to walk into that conversation ready.'
+      title: 'Promo Package — Coming Soon',
+      desc: 'Build your complete promotion pitch kit: a self-advocacy memo, talking points for the conversation, a 90-day leadership plan, and a before/after impact narrative. Launching soon.'
     },
     settings: {
       icon: '⚙️',
       title: 'Settings',
-      desc: 'Account settings, notification preferences, and profile customization are coming soon.'
+      desc: 'Manage your career profile, master resume, and account preferences.',
+      live: true,
+      url: '/profile'
     },
     billing: {
       icon: '◈',
       title: 'Billing & Plans',
-      desc: 'Choose from Free (always), Starter ($99/year — $8.25/month), Active Search ($39/month or $390/year), or Interview Pack ($47 one-time). Every paid plan includes all new tools as they launch. Cancel anytime.'
+      desc: 'Choose from Free (always), Starter ($99/year — $8.25/month), Active Search ($39/month or $390/year), or Interview Pack ($47 one-time). Every paid plan includes all new tools as they launch. Cancel anytime.',
+      live: true,
+      url: '/#pricing'
     }
   };
 
   function openModule(key) {
     const mod = modules[key];
     if (!mod) return;
-
-    if (mod.live) {
-      // For live modules, show a launch prompt
-      document.getElementById('csIcon').textContent = mod.icon;
-      document.getElementById('csTitle').textContent = mod.title + ' — Live!';
-      document.getElementById('csDesc').textContent = mod.desc;
-      document.querySelector('#csOverlay .btn-primary').textContent = '→ Launch Resume Optimizer';
-      document.querySelector('#csOverlay .btn-primary').onclick = function() {
-        window.location.href = mod.url || '/app';
-      };
-    } else {
-      document.getElementById('csIcon').textContent = mod.icon;
-      document.getElementById('csTitle').textContent = mod.title;
-      document.getElementById('csDesc').textContent = mod.desc;
-      document.querySelector('#csOverlay .btn-primary').textContent = '✓ Got it — notify me when live';
-      document.querySelector('#csOverlay .btn-primary').onclick = closeOverlay;
+    // Live modules go directly to their page
+    if (mod.live && mod.url) {
+      window.location.href = mod.url;
+      return;
     }
-
+    // Coming soon modules show the modal
+    document.getElementById('csIcon').textContent = mod.icon;
+    document.getElementById('csTitle').textContent = mod.title;
+    document.getElementById('csDesc').textContent = mod.desc;
+    document.querySelector('#csOverlay .btn-primary').textContent = '✓ Got it — notify me when live';
+    document.querySelector('#csOverlay .btn-primary').onclick = closeOverlay;
     document.getElementById('csOverlay').classList.add('show');
   }
 
@@ -1306,10 +1513,145 @@
     event.currentTarget.classList.add('active');
   }
 
+  // ── USAGE WIDGET ──────────────────────────────────────────────────────────────
+  function getUsage(tool) {
+    const month = new Date().toISOString().slice(0, 7);
+    return parseInt(localStorage.getItem(`arx_usage_${tool}_${month}`) || '0');
+  }
+  function getResetDays() {
+    const now = new Date();
+    const reset = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    return Math.ceil((reset - now) / (1000 * 60 * 60 * 24));
+  }
+
+  function renderUsageWidget() {
+    const FREE_LIMIT = 3;
+    const tools = [
+      { key: 'resume',    fillId: 'uf-resume',    countId: 'uc-resume' },
+      { key: 'interview', fillId: 'uf-interview',  countId: 'uc-interview' },
+      { key: 'seethrough',fillId: 'uf-seethrough', countId: 'uc-seethrough' },
+      { key: 'reference', fillId: 'uf-reference',  countId: 'uc-reference' }
+    ];
+
+    let anyUsed = false;
+    let anyAtLimit = false;
+
+    tools.forEach(({ key, fillId, countId }) => {
+      const used = getUsage(key);
+      const pct  = Math.min(100, Math.round((used / FREE_LIMIT) * 100));
+      const fill = document.getElementById(fillId);
+      const count = document.getElementById(countId);
+
+      if (!fill || !count) return;
+
+      // Set bar width after a short delay for animation
+      setTimeout(() => { fill.style.width = pct + '%'; }, 300);
+
+      // Color
+      fill.classList.remove('none', 'low', 'warn', 'full');
+      if (used === 0)              fill.classList.add('none');
+      else if (used < FREE_LIMIT)  fill.classList.add(used === FREE_LIMIT - 1 ? 'warn' : 'low');
+      else                         fill.classList.add('full');
+
+      // Count label
+      count.textContent = `${used} / ${FREE_LIMIT}`;
+      count.classList.toggle('warn', used === FREE_LIMIT - 1);
+      count.classList.toggle('full', used >= FREE_LIMIT);
+
+      if (used > 0)          anyUsed = true;
+      if (used >= FREE_LIMIT) anyAtLimit = true;
+    });
+
+    // Reset label
+    const days = getResetDays();
+    document.getElementById('usage-reset-label').textContent =
+      days === 1 ? 'Resets tomorrow' : `Resets in ${days} days`;
+
+    // Hide widget entirely if user is paid (no limits apply)
+    const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
+    if (profile.plan && profile.plan !== 'free') {
+      document.getElementById('usage-widget').style.display = 'none';
+      return;
+    }
+
+    // Show upgrade nudge if any tool is at limit or all are used
+    if (anyAtLimit) {
+      document.getElementById('usage-upgrade-row').style.display = 'flex';
+    }
+  }
+
+  // Run on load
+  renderUsageWidget();
+
   // Animate progress bar on load
   setTimeout(() => {
-    document.getElementById('progressFill').style.width = '16%';
+    const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
+    let pct = 10;
+    if (profile.currentLevel) pct += 15;
+    if (profile.targetLevel) pct += 15;
+    if (profile.focus) pct += 10;
+    if (localStorage.getItem('arx_master_resume_text')) pct += 20;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
   }, 600);
+
+  // Hide master resume prompt if already uploaded
+  if (localStorage.getItem('arx_master_resume_text')) {
+    const el = document.getElementById('resume-prompt');
+    if (el) el.style.display = 'none';
+  }
+
+  // Clerk init — load user name and founding badge
+  window.addEventListener('load', async () => {
+    try {
+      await window.__clerk_loaded;
+      const clerk = window.Clerk;
+      if (!clerk) return;
+      await clerk.load();
+      const user = clerk.user;
+      if (!user) return;
+      const name = user.firstName || user.fullName || 'You';
+      const initials = (user.fullName || name).split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('dash-avatar').textContent = initials;
+      document.getElementById('dash-name').textContent = name;
+      const meta = user.publicMetadata || {};
+      if (meta.plan && meta.plan !== 'free') {
+        document.getElementById('dash-plan').textContent = '✦ ' + (meta.plan === 'active' ? 'Active Search' : meta.plan === 'starter' ? 'Starter' : 'Pro');
+      }
+      if (meta.foundingMember) {
+        document.getElementById('dash-plan').innerHTML += ' &nbsp;⭐';
+        document.getElementById('dash-plan').title = 'Founding Member — Price Locked';
+      }
+      if (meta.masterResumeText && !localStorage.getItem('arx_master_resume_text')) {
+        localStorage.setItem('arx_master_resume_text', meta.masterResumeText);
+        document.getElementById('resume-prompt').style.display = 'none';
+      }
+    } catch(e) { console.warn('Clerk dashboard init:', e); }
+  });
+
+  // Job landed modal
+  function showJobLandedModal() {
+    document.getElementById('jobLandedOverlay').classList.add('show');
+  }
+  function closeJobLandedModal(e) {
+    if (!e || e.target === document.getElementById('jobLandedOverlay')) {
+      document.getElementById('jobLandedOverlay').classList.remove('show');
+    }
+  }
+  async function submitJobLanded() {
+    const role  = document.getElementById('jl-role').value.trim();
+    const org   = document.getElementById('jl-org').value.trim();
+    const quote = document.getElementById('jl-quote').value.trim();
+    const tools = document.getElementById('jl-tools').value.trim();
+    if (!role) { alert('Please tell us what role you landed!'); return; }
+    const data = { role, org, quote, tools, timestamp: new Date().toISOString() };
+    // Store locally
+    localStorage.setItem('arx_job_landed', JSON.stringify(data));
+    // AIRTABLE MIGRATION POINT: POST to /api/testimonial
+    document.getElementById('jl-success').style.display = 'block';
+    document.getElementById('jl-form').style.display = 'none';
+    setTimeout(() => closeJobLandedModal(), 3000);
+  }
 </script>
 
 </body>
