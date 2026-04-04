@@ -272,8 +272,8 @@ textarea::placeholder{color:var(--text-muted);}
             </div>
             <!-- Expandable swap option -->
             <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);">
-              <button onclick="toggleResumeSwap()" style="background:none;border:none;font-size:.74rem;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;gap:.3rem;" id="swap-toggle">
-                <span id="swap-toggle-icon">▸</span> Use a different resume for this session
+              <button onclick="toggleResumeSwap()" id="swap-toggle" style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:.76rem;font-weight:600;color:var(--text-dim);cursor:pointer;padding:.4rem .85rem;display:flex;align-items:center;gap:.4rem;transition:all .18s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">
+                <span id="swap-toggle-icon">📎</span> Use a different resume for this session
               </button>
               <div id="swap-zone" style="display:none;margin-top:.65rem;">
                 <div class="upload-zone" id="uz" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" style="padding:1rem;">
@@ -356,6 +356,11 @@ textarea::placeholder{color:var(--text-muted);}
           <div class="notice">The AI will <strong>never invent</strong> companies, titles, dates, degrees, certifications, or metrics not in your original resume.</div>
         </div>
       </div>
+    </div>
+    <!-- Back to results banner — shown after editing inputs -->
+    <div id="back-to-results-banner" style="display:none;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);border-radius:8px;margin-bottom:.75rem;flex-wrap:wrap;">
+      <div style="font-size:.82rem;color:var(--text-dim);">✅ <strong style="color:var(--text);">Your last result is saved.</strong> You can go back to it without re-running.</div>
+      <button onclick="goBackToResults()" style="font-size:.78rem;font-weight:700;padding:.4rem .9rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:6px;color:var(--green);cursor:pointer;white-space:nowrap;transition:all .15s;">← Back to results</button>
     </div>
     <button class="gen-btn" onclick="generate()">✦ Run Optimization Pipeline</button>
   </div>
@@ -940,12 +945,32 @@ function closePaywall(e){
 
 // ── EDIT INPUTS (back button fix) ────────────────────────────────────────────
 function editInputs(){
-  // Keep result in memory — just go back to input page
-  // Result is already auto-saved to localStorage so it's never lost
+  // Result is saved in both S.result and localStorage — never lost
   showPage('dashboard');
-  // Restore last JD if available
-  const lastJD=localStorage.getItem('arx_last_jd');
-  if(lastJD)document.getElementById('jd').value=lastJD;
+  // Restore last JD
+  const lastJD = localStorage.getItem('arx_last_jd');
+  if (lastJD) document.getElementById('jd').value = lastJD;
+  // Show "back to results" banner so they don't lose their result
+  showBackToResults();
+}
+
+function showBackToResults() {
+  // Only show if we have a result in memory
+  if (!S.result && !localStorage.getItem('arx_last_result')) return;
+  let banner = document.getElementById('back-to-results-banner');
+  if (!banner) return;
+  banner.style.display = 'flex';
+}
+
+function goBackToResults() {
+  // Restore from memory or localStorage
+  if (!S.result) {
+    try { S.result = JSON.parse(localStorage.getItem('arx_last_result') || ''); }
+    catch { toast('Could not restore result — please run again.'); return; }
+  }
+  renderResults(S.result);
+  showPage('results');
+  document.getElementById('back-to-results-banner').style.display = 'none';
 }
 
 // ── SAVE AS MASTER RESUME ─────────────────────────────────────────────────────
@@ -989,14 +1014,14 @@ function submitFeedbackComment(){
 }
 
 // ── RESTORE LAST RESULT ON PAGE LOAD ──────────────────────────────────────────
-// If user navigated away and came back, offer to restore
 window.addEventListener('DOMContentLoaded',()=>{
-  const lastResult=localStorage.getItem('arx_last_result');
-  if(lastResult&&!S.result){
-    try{
-      S.result=JSON.parse(lastResult);
-      // Don't auto-show — just make it available via the Saved tab
-    }catch{}
+  const lastResult = localStorage.getItem('arx_last_result');
+  if (lastResult) {
+    try {
+      S.result = JSON.parse(lastResult);
+      // Show the back-to-results banner so they know it's available
+      setTimeout(showBackToResults, 500);
+    } catch{}
   }
 });
 </script>
