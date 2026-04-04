@@ -175,6 +175,40 @@ textarea::placeholder{color:var(--text-muted);}
 
 /* CREDITS BADGE */
 .credits-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.2);color:var(--accent3);font-size:.72rem;font-weight:600;padding:.28rem .85rem;border-radius:6px;}
+.credits-badge.warn{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.25);color:var(--amber);}
+.credits-badge.danger{background:rgba(251,113,133,.07);border-color:rgba(251,113,133,.25);color:var(--rose);}
+.usage-bar-wrap{margin:-.5rem 0 1rem;padding:.6rem .9rem;background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:8px;display:none;}
+.usage-bar-track{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:.35rem;}
+.usage-bar-fill{height:100%;border-radius:99px;transition:width .4s ease;}
+.usage-bar-label{font-size:.7rem;color:var(--text-muted);display:flex;justify-content:space-between;}
+/* Paywall modal */
+.paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:400;align-items:center;justify-content:center;padding:1.5rem;}
+.paywall-overlay.show{display:flex;}
+.paywall-modal{background:var(--bg2);border:1px solid rgba(56,189,248,.3);border-radius:16px;padding:2rem;max-width:440px;width:100%;position:relative;box-shadow:0 0 60px rgba(56,189,248,.1);}
+.paywall-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.paywall-opt{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-radius:10px;cursor:pointer;transition:all .18s;text-decoration:none;margin-bottom:.6rem;}
+.paywall-opt.primary{background:linear-gradient(135deg,var(--accent2),#0284c7);box-shadow:0 0 24px rgba(56,189,248,.2);}
+.paywall-opt.primary:hover{box-shadow:0 0 36px rgba(56,189,248,.35);transform:translateY(-1px);}
+.paywall-opt.secondary{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);}
+.paywall-opt.secondary:hover{background:rgba(52,211,153,.14);}
+/* Feedback component */
+.feedback-bar{display:none;align-items:center;gap:.75rem;padding:.65rem 1rem;background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:8px;margin-top:.75rem;flex-wrap:wrap;}
+.feedback-bar.show{display:flex;}
+.feedback-q{font-size:.78rem;color:var(--text-muted);flex:1;}
+.feedback-btns{display:flex;gap:.4rem;}
+.fb-btn{padding:.32rem .75rem;border-radius:6px;border:1px solid var(--border);background:var(--bg2);font-size:.8rem;cursor:pointer;transition:all .15s;color:var(--text-muted);}
+.fb-btn:hover{border-color:var(--border-bright);color:var(--text);}
+.fb-btn.selected-up{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:var(--green);}
+.fb-btn.selected-down{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.3);color:var(--rose);}
+.fb-comment{display:none;width:100%;margin-top:.5rem;}
+.fb-comment input{width:100%;padding:.45rem .7rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--text);outline:none;}
+.fb-comment input:focus{border-color:var(--accent2);}
+/* Save as master prompt */
+.master-prompt{display:none;align-items:center;gap:.75rem;padding:.75rem 1rem;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.18);border-radius:8px;margin-top:.75rem;}
+.master-prompt.show{display:flex;}
+.master-prompt-text{font-size:.78rem;color:var(--text-dim);flex:1;line-height:1.5;}
+.master-prompt-btn{font-size:.72rem;font-weight:700;padding:.32rem .75rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:6px;color:var(--green);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.master-prompt-btn:hover{background:rgba(52,211,153,.18);}
 </style>
 </head>
 <body>
@@ -201,7 +235,7 @@ textarea::placeholder{color:var(--text-muted);}
     <span class="logo-module">Resume Optimizer</span>
   </div>
   <div class="nav-r">
-    <a onclick="showPage('dashboard')">Optimizer</a>
+    <a href="/#pricing">Pricing</a>
     <a onclick="showPage('saved')">Saved</a>
     <a href="/dashboard" class="back-btn">← Dashboard</a>
   </div>
@@ -212,7 +246,7 @@ textarea::placeholder{color:var(--text-muted);}
   <div class="dash">
     <div class="dash-top">
       <div><h2>Resume Optimizer</h2><p>Paste your resume and a job description. Get a tailored, formatted resume ready to send.</p></div>
-      <div class="credits-badge">✦ Free Beta · 5 credits</div>
+      <div id="usage-badge" class="credits-badge">✦ Loading…</div>
     </div>
     <div class="pipeline">
       <div class="pipe-step" id="ps1"><div class="pipe-dot"></div>Upload</div>
@@ -295,7 +329,12 @@ textarea::placeholder{color:var(--text-muted);}
   <div class="dash">
     <div class="dash-top">
       <div><h2>Optimization Results</h2><p>Review the rewrite, download your formatted resume, check the gap analysis.</p></div>
-      <button class="dl-btn" onclick="showPage('dashboard')">← Back</button>
+      <button class="dl-btn" onclick="editInputs()">← Edit inputs</button>
+    </div>
+    <!-- Usage bar -->
+    <div class="usage-bar-wrap" id="results-usage-bar">
+      <div class="usage-bar-track"><div class="usage-bar-fill" id="results-usage-fill"></div></div>
+      <div class="usage-bar-label"><span id="results-usage-left"></span><span id="results-usage-reset"></span></div>
     </div>
     <div class="pipeline" style="margin-bottom:1.5rem;">
       <div class="pipe-step done"><div class="pipe-dot"></div>Upload</div>
@@ -333,6 +372,23 @@ textarea::placeholder{color:var(--text-muted);}
           <button class="dl-btn" onclick="saveResume()">💾 Save</button>
         </div>
         <p style="font-size:.68rem;color:var(--mist);margin-top:.5rem;" id="tpl-note"></p>
+        <!-- Save as master resume prompt -->
+        <div class="master-prompt" id="master-prompt">
+          <div class="master-prompt-text">📋 <strong style="color:var(--text);">Save as your master resume?</strong> Every tool will use it automatically for personalized results.</div>
+          <button class="master-prompt-btn" onclick="saveAsMaster()">Save as master</button>
+          <button style="font-size:.7rem;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:.2rem;" onclick="document.getElementById('master-prompt').classList.remove('show')">✕</button>
+        </div>
+        <!-- Feedback bar -->
+        <div class="feedback-bar" id="feedback-bar">
+          <span class="feedback-q">How was this optimization?</span>
+          <div class="feedback-btns">
+            <button class="fb-btn" id="fb-up" onclick="submitFeedback('up')">👍</button>
+            <button class="fb-btn" id="fb-down" onclick="submitFeedback('down')">👎</button>
+          </div>
+          <div class="fb-comment" id="fb-comment">
+            <input type="text" id="fb-text" placeholder="What could be better? (optional)" onkeydown="if(event.key==='Enter')submitFeedbackComment()"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -439,7 +495,21 @@ async function processFile(f){
 async function generate(){
   const jd=document.getElementById('jd').value.trim();
   if(!S.resumeText){toast('Upload your resume first.');return;}
-  if(!jd){toast('Paste the job description.');return;}
+  if(!jd){toast('Paste a job description.');return;}
+
+  // ── USAGE CHECK ──────────────────────────────────────────────────────────────
+  const remaining=getRemainingUses();
+  if(remaining<=0){showPaywall();return;}
+
+  // ── JD VALIDATION PRE-FLIGHT ─────────────────────────────────────────────────
+  const jdSignals=['responsib','qualif','require','experience','skill','role','position','job','duties','department','team','manage','lead','direct','support','develop','implement'];
+  const jdLower=jd.toLowerCase();
+  const signalCount=jdSignals.filter(s=>jdLower.includes(s)).length;
+  if(jd.length<100||signalCount<2){
+    toast('This doesn\'t look like a job description — try pasting just the posting text, not the full web page.');
+    return;
+  }
+
   S.jobDesc=jd;
   resetPipe();resetLoader();showLoader();
 
@@ -447,6 +517,10 @@ async function generate(){
     setPipe(1,'done');setPipe(2,'active');
     const intensity=document.getElementById('opt-i').value;
     const positioning=document.getElementById('opt-p').value;
+
+    // Load master resume context if available
+    const masterText=localStorage.getItem('arx_master_resume_text')||'';
+    const resumeContext=masterText&&!S.resumeText.includes(masterText.substring(0,50))?`MASTER RESUME PROFILE:\n${masterText.substring(0,1000)}\n\nCURRENT RESUME:\n${S.resumeText}`:`RESUME:\n${S.resumeText}`;
 
     // ── CALL 1: Rewrite ──────────────────────────────────────────────────────
     setTitle('Rewriting resume for target role');
@@ -481,8 +555,7 @@ Return JSON with exactly these keys — no markdown fences:
   "rewritten_resume_text": "complete resume as plain text for preview"
 }
 
-ORIGINAL RESUME:
-${S.resumeText}
+${resumeContext}
 
 JOB DESCRIPTION:
 ${jd.substring(0,3500)}`,
@@ -525,9 +598,27 @@ JOB: ${jd.substring(0,2000)}`,
     setTitle('Building your document');
     await wait(800);
 
+    // ── INCREMENT USAGE ──────────────────────────────────────────────────────
+    const newCount=incrementUsage();
+    const newRemaining=getRemainingUses();
+    updateUsageBadge(newRemaining);
+
+    // ── AUTO-SAVE RESULT ────────────────────────────────────────────────────
+    localStorage.setItem('arx_last_result', JSON.stringify(S.result));
+    localStorage.setItem('arx_last_jd', jd);
+
     hideLoader();
     renderResults(S.result);
     showPage('results');
+
+    // Show master resume prompt if no master resume saved yet
+    if(!localStorage.getItem('arx_master_resume_text')){
+      setTimeout(()=>document.getElementById('master-prompt').classList.add('show'),1200);
+    }
+    // Show feedback bar
+    setTimeout(()=>document.getElementById('feedback-bar').classList.add('show'),1800);
+    // Show usage warning if low
+    showResultsUsageBar(newRemaining);
 
   }catch(e){
     hideLoader();
@@ -718,6 +809,149 @@ function loadSaved(id){
   renderResults(s.result);showPage('results');
 }
 function delSaved(id){S.saved=S.saved.filter(x=>x.id!==id);try{localStorage.setItem('ro_saved',JSON.stringify(S.saved));}catch{}renderSaved();}
+
+// ── USAGE TRACKING ────────────────────────────────────────────────────────────
+// CLERK MIGRATION POINT: replace localStorage with server-side count tied to user ID
+const FREE_LIMIT=3;
+const TOOL_KEY='resume';
+function _usageKey(){return `arx_usage_${TOOL_KEY}_${new Date().toISOString().slice(0,7)}`;}
+function getUsage(){return parseInt(localStorage.getItem(_usageKey())||'0');}
+function getRemainingUses(){return Math.max(0,FREE_LIMIT-getUsage());}
+function incrementUsage(){const k=_usageKey();const n=getUsage()+1;localStorage.setItem(k,String(n));return n;}
+function getResetDate(){const now=new Date();const reset=new Date(now.getFullYear(),now.getMonth()+1,1);const days=Math.ceil((reset-now)/(1000*60*60*24));return days===1?'tomorrow':`in ${days} days`;}
+
+function updateUsageBadge(remaining){
+  const el=document.getElementById('usage-badge');
+  if(remaining===Infinity||remaining>1){
+    el.className='credits-badge';
+    el.textContent=remaining===Infinity?'✦ Unlimited':'✦ '+remaining+' of '+FREE_LIMIT+' free optimizations left';
+  }else if(remaining===1){
+    el.className='credits-badge warn';
+    el.textContent='⚠ 1 optimization left this month';
+  }else{
+    el.className='credits-badge danger';
+    el.textContent='✕ No free optimizations left — resets '+getResetDate();
+  }
+}
+
+function showResultsUsageBar(remaining){
+  if(remaining===Infinity)return;
+  const bar=document.getElementById('results-usage-bar');
+  const fill=document.getElementById('results-usage-fill');
+  const left=document.getElementById('results-usage-left');
+  const reset=document.getElementById('results-usage-reset');
+  bar.style.display='block';
+  const pct=Math.round((getUsage()/FREE_LIMIT)*100);
+  fill.style.width=pct+'%';
+  fill.style.background=remaining===0?'var(--rose)':remaining===1?'var(--amber)':'var(--accent2)';
+  left.textContent=remaining===0?'No free optimizations left this month':remaining+' of '+FREE_LIMIT+' free optimizations remaining';
+  reset.textContent='Resets '+getResetDate();
+  if(remaining<=1){
+    bar.style.background='rgba(251,191,36,.04)';
+    bar.style.borderColor='rgba(251,191,36,.15)';
+  }
+}
+
+// Init badge on load
+document.addEventListener('DOMContentLoaded',()=>{
+  updateUsageBadge(getRemainingUses());
+  const rd=getResetDate();
+  const el1=document.getElementById('paywall-reset-date');
+  const el2=document.getElementById('paywall-reset-date2');
+  if(el1)el1.textContent=rd;
+  if(el2)el2.textContent=rd;
+});
+
+// ── PAYWALL ───────────────────────────────────────────────────────────────────
+function showPaywall(){
+  document.getElementById('paywall-overlay').classList.add('show');
+}
+function closePaywall(e){
+  if(!e||e.target===document.getElementById('paywall-overlay'))
+    document.getElementById('paywall-overlay').classList.remove('show');
+}
+
+// ── EDIT INPUTS (back button fix) ────────────────────────────────────────────
+function editInputs(){
+  // Keep result in memory — just go back to input page
+  // Result is already auto-saved to localStorage so it's never lost
+  showPage('dashboard');
+  // Restore last JD if available
+  const lastJD=localStorage.getItem('arx_last_jd');
+  if(lastJD)document.getElementById('jd').value=lastJD;
+}
+
+// ── SAVE AS MASTER RESUME ─────────────────────────────────────────────────────
+function saveAsMaster(){
+  if(!S.resumeText)return;
+  localStorage.setItem('arx_master_resume_text',S.resumeText);
+  localStorage.setItem('arx_master_resume_filename',S.resumeFile||'Master Resume');
+  document.getElementById('master-prompt').classList.remove('show');
+  toast('✓ Saved as your master resume — all tools will use it automatically');
+}
+
+// ── FEEDBACK ──────────────────────────────────────────────────────────────────
+function submitFeedback(rating){
+  document.getElementById('fb-up').classList.toggle('selected-up',rating==='up');
+  document.getElementById('fb-down').classList.toggle('selected-down',rating==='down');
+  // Save rating
+  const entry={tool:'resume',rating,timestamp:new Date().toISOString()};
+  const existing=JSON.parse(localStorage.getItem('arx_feedback')||'[]');
+  existing.push(entry);
+  localStorage.setItem('arx_feedback',JSON.stringify(existing.slice(-100)));
+  // If thumbs down show comment box
+  if(rating==='down'){
+    document.getElementById('fb-comment').style.display='block';
+    document.getElementById('fb-text').focus();
+  }else{
+    document.getElementById('fb-comment').style.display='none';
+    toast('Thanks for the feedback!');
+  }
+  // AIRTABLE MIGRATION POINT: POST entry to /api/feedback
+}
+function submitFeedbackComment(){
+  const comment=document.getElementById('fb-text').value.trim();
+  if(comment){
+    const existing=JSON.parse(localStorage.getItem('arx_feedback')||'[]');
+    if(existing.length>0)existing[existing.length-1].comment=comment;
+    localStorage.setItem('arx_feedback',JSON.stringify(existing));
+    toast('Thanks — that helps us improve!');
+    document.getElementById('fb-comment').style.display='none';
+    document.getElementById('fb-text').value='';
+  }
+}
+
+// ── RESTORE LAST RESULT ON PAGE LOAD ──────────────────────────────────────────
+// If user navigated away and came back, offer to restore
+window.addEventListener('DOMContentLoaded',()=>{
+  const lastResult=localStorage.getItem('arx_last_result');
+  if(lastResult&&!S.result){
+    try{
+      S.result=JSON.parse(lastResult);
+      // Don't auto-show — just make it available via the Saved tab
+    }catch{}
+  }
+});
 </script>
+
+<!-- PAYWALL MODAL -->
+<div class="paywall-overlay" id="paywall-overlay" onclick="closePaywall(event)">
+  <div class="paywall-modal">
+    <div style="font-size:1.75rem;margin-bottom:.5rem;">⚡</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:.4rem;">You've used your 3 free optimizations</div>
+    <p style="font-size:.83rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem;">Resets <strong style="color:var(--text);" id="paywall-reset-date"></strong> — or upgrade now for unlimited access and every new tool we launch.</p>
+    <a href="/login" class="paywall-opt primary" style="text-decoration:none;">
+      <div><div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#fff;">Active Search</div><div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:.1rem;">Unlimited everything — cancel anytime</div></div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;color:#fff;">$39/mo</div>
+    </a>
+    <a href="/login" class="paywall-opt secondary" style="text-decoration:none;">
+      <div><div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--green);">Starter — Best value</div><div style="font-size:.72rem;color:rgba(52,211,153,.8);margin-top:.1rem;">All tools, 20 uses/month</div></div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">$99/yr</div>
+    </a>
+    <div style="text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:.75rem;">
+      <a onclick="closePaywall()" style="color:var(--text-dim);cursor:pointer;">Continue on free — resets <span id="paywall-reset-date2"></span></a>
+    </div>
+  </div>
+</div>
 </body>
 </html>
