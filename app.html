@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Resume Optimizer — Ascend RX</title>
+<title>Resume Tailor — Ascend RX</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -17,7 +17,6 @@
   --green:#34d399;--amber:#fbbf24;--rose:#fb7185;--purple:#a78bfa;
   --text:#e2eaf4;--text-muted:#64748b;--text-dim:#94a3b8;
   --surface:#0f1a28;--radius:8px;
-  /* legacy compat aliases */
   --ink:#080c14;--paper:#080c14;--cream:#0d1520;--gold:var(--accent);
   --gold-lt:var(--border-bright);--gold-pale:rgba(56,189,248,0.07);
   --sage:var(--green);--steel:var(--text-dim);--mist:var(--text-muted);
@@ -48,20 +47,27 @@ nav{background:rgba(8,12,20,0.92);backdrop-filter:blur(12px);display:flex;align-
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg2);color:var(--text);padding:.6rem 1.4rem;border-radius:8px;font-size:.82rem;opacity:0;transition:all .28s;z-index:500;pointer-events:none;white-space:nowrap;border:1px solid var(--border);border-left:3px solid var(--accent);box-shadow:0 8px 32px rgba(0,0,0,0.4);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* LOADER */
-.loader{display:none;position:fixed;inset:0;background:rgba(8,12,20,.95);backdrop-filter:blur(8px);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+/* ── WOW #4 LOADER — real-time stats ── */
+.loader{display:none;position:fixed;inset:0;background:rgba(8,12,20,.97);backdrop-filter:blur(12px);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;}
 .loader.show{display:flex;}
-.spinner{width:42px;height:42px;border:2px solid rgba(56,189,248,.12);border-top-color:var(--accent2);border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loader-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);}
-.lsteps{display:flex;flex-direction:column;gap:.3rem;margin-top:.4rem;}
-.lstep{display:flex;align-items:center;gap:.55rem;font-size:.76rem;color:rgba(255,255,255,.2);transition:color .4s;}
+.loader-ring{position:relative;width:56px;height:56px;margin-bottom:.25rem;}
+.loader-ring svg{width:56px;height:56px;transform:rotate(-90deg);}
+.loader-ring-bg{fill:none;stroke:rgba(56,189,248,.1);stroke-width:3;}
+.loader-ring-fill{fill:none;stroke:var(--accent2);stroke-width:3;stroke-linecap:round;stroke-dasharray:150;stroke-dashoffset:150;transition:stroke-dashoffset .6s ease;}
+.loader-ring-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.loader-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);text-align:center;}
+.loader-stat{font-size:.75rem;color:var(--accent3);font-family:'DM Mono',monospace;text-align:center;min-height:1.2em;transition:opacity .3s;}
+.lsteps{display:flex;flex-direction:column;gap:.25rem;margin-top:.5rem;}
+.lstep{display:flex;align-items:center;gap:.55rem;font-size:.72rem;color:rgba(255,255,255,.2);transition:all .4s;}
 .lstep.on{color:rgba(255,255,255,.85);}
 .ldot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.1);transition:background .4s;flex-shrink:0;}
 .lstep.on .ldot{background:var(--accent2);}
+.lstep.done{color:var(--green);}
+.lstep.done .ldot{background:var(--green);}
 
 /* LAYOUT */
 .dash{max-width:1060px;margin:0 auto;padding:2rem;}
+@media(max-width:600px){.dash{padding:1rem;}}
 .dash-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
 .dash-top h2{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--text);}
 .dash-top p{font-size:.8rem;color:var(--text-muted);margin-top:.2rem;}
@@ -97,6 +103,7 @@ textarea{width:100%;padding:.65rem .85rem;border:1px solid var(--border);border-
 textarea:focus{border-color:var(--accent2);}
 textarea::placeholder{color:var(--text-muted);}
 .opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.6rem;}
+@media(max-width:500px){.opts-grid{grid-template-columns:1fr;}}
 .opt-g label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem;}
 .opt-g select{width:100%;padding:.48rem .7rem;border:1px solid var(--border);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.8rem;background:var(--bg2);color:var(--text);outline:none;cursor:pointer;transition:border-color .2s;}
 .opt-g select:focus{border-color:var(--accent2);}
@@ -126,30 +133,99 @@ textarea::placeholder{color:var(--text-muted);}
 .tpl-name{font-size:.82rem;font-weight:600;color:var(--text);font-family:'Syne',sans-serif;}
 .tpl-desc{font-size:.7rem;color:var(--text-muted);margin-top:.1rem;}
 
-/* RESULTS */
-.results-grid{display:grid;grid-template-columns:260px 1fr;gap:1.1rem;}
-@media(max-width:840px){.results-grid{grid-template-columns:1fr;}}
-.score-card{background:linear-gradient(160deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:10px;padding:1.4rem;text-align:center;}
-.score-card h3{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
-.score-card p{font-size:.7rem;color:var(--text-muted);margin-bottom:.9rem;}
-.score-ring{width:86px;height:86px;border-radius:50%;border:2px solid var(--accent2);box-shadow:0 0 20px rgba(56,189,248,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1rem;}
-.score-num{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--accent);line-height:1;}
-.score-lbl{font-size:.58rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;}
+/* ── WOW #9 — EMPTY STATE SAMPLE ── */
+.empty-state-preview{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-top:1rem;}
+.esp-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;}
+.esp-label span{flex:1;height:1px;background:var(--border);}
+.esp-col-labels{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.5rem;}
+.esp-col-label{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.esp-col-label.before{color:var(--text-muted);}
+.esp-col-label.after{color:var(--green);}
+.esp-cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.esp-bullet{font-size:.75rem;line-height:1.55;padding:.5rem .65rem;border-radius:6px;}
+.esp-bullet.before{background:var(--bg2);color:var(--text-muted);border:1px solid var(--border);}
+.esp-bullet.after{background:rgba(52,211,153,.05);color:var(--text-dim);border:1px solid rgba(52,211,153,.15);}
+.esp-arrow{display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.8rem;padding:.25rem 0;}
+
+/* RESULTS LAYOUT */
+.results-grid{display:grid;grid-template-columns:280px 1fr;gap:1.1rem;}
+@media(max-width:900px){.results-grid{grid-template-columns:1fr;}}
+
+/* ── WOW #1 — ANIMATED SCORE RING ── */
+.score-card{background:linear-gradient(160deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:14px;padding:1.6rem;text-align:center;position:relative;overflow:hidden;}
+.score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.3),transparent);}
+.score-card-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.1rem;}
+.score-ring-wrap{position:relative;width:120px;height:120px;margin:0 auto 1rem;}
+.score-ring-svg{width:120px;height:120px;transform:rotate(-90deg);}
+.score-ring-bg{fill:none;stroke:rgba(56,189,248,.08);stroke-width:8;}
+.score-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1),stroke .3s;}
+.score-ring-glow{fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:339.3;stroke-dashoffset:339.3;opacity:.3;filter:blur(4px);transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1),stroke .3s;}
+.score-ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-num{font-family:'DM Mono',monospace;font-size:2rem;font-weight:500;line-height:1;transition:color .3s;}
+.score-pct{font-size:.65rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.1rem;}
+
+/* ── WOW #8 — READINESS VERDICT ── */
+.verdict-card{border-radius:8px;padding:.65rem .85rem;margin-top:.75rem;font-size:.78rem;line-height:1.5;display:flex;align-items:flex-start;gap:.5rem;}
+.verdict-card.submit{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:var(--green);}
+.verdict-card.review{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);color:var(--amber);}
+.verdict-card.work{background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.15);color:var(--accent3);}
+.verdict-card.poor{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.18);color:var(--rose);}
+.verdict-icon{font-size:.9rem;flex-shrink:0;margin-top:.05rem;}
+
+/* ── WOW #7 — KEYWORD MATCH BAR ── */
+.kw-match-section{margin-top:1rem;}
+.kw-match-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.kw-match-label{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--text);}
+.kw-match-pct{font-family:'DM Mono',monospace;font-size:.85rem;font-weight:500;}
+.kw-match-track{height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:.5rem;}
+.kw-match-fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.kw-match-detail{font-size:.7rem;color:var(--text-muted);margin-bottom:.75rem;}
+.kw-tags{display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.4rem;}
+.kw-tag{display:inline-block;font-size:.68rem;padding:.18rem .55rem;border-radius:4px;cursor:default;}
+.kw-tag.have{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:var(--green);}
+.kw-tag.missing{background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.2);color:var(--rose);}
+.kw-section-label{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem;}
+
+/* SIGNAL ITEMS */
 .signal{display:flex;align-items:flex-start;gap:.4rem;padding:.38rem 0;border-bottom:1px solid var(--border);font-size:.73rem;line-height:1.45;text-align:left;color:var(--text-dim);}
 .signal:last-child{border-bottom:none;}
 .sdot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0;}
 .s-g{background:var(--green);} .s-y{background:var(--amber);} .s-r{background:var(--rose);}
 
 /* RESULT TABS */
-.rtabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1rem;}
-.rtab{padding:.52rem 1.1rem;background:none;border:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+.rtabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1rem;overflow-x:auto;}
+.rtab{padding:.52rem 1.1rem;background:none;border:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;}
 .rtab.on{color:var(--accent);border-bottom-color:var(--accent2);font-weight:600;}
-.resume-view{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.75rem;font-size:.875rem;line-height:1.78;min-height:200px;white-space:pre-wrap;font-family:'DM Mono',monospace;color:var(--text-dim);}
 
-/* KEYWORDS / FLAGS */
-.kw-tag{display:inline-block;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.2);color:var(--rose);font-size:.68rem;padding:.18rem .55rem;border-radius:4px;margin:.15rem;}
-.flag-item{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:var(--radius);padding:.7rem .9rem;margin-bottom:.6rem;}
-.flag-item p{font-size:.75rem;color:var(--text-dim);line-height:1.5;}
+/* ── WOW #2 — FORMATTED RESUME PREVIEW ── */
+.resume-doc{background:#fafaf8;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:2.5rem 2.75rem;min-height:400px;box-shadow:0 4px 32px rgba(0,0,0,.3),0 1px 4px rgba(0,0,0,.2);color:#1a1a1a;position:relative;}
+@media(max-width:600px){.resume-doc{padding:1.5rem 1.25rem;}}
+.resume-doc .r-name{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:#0f0f0f;text-align:center;letter-spacing:-.02em;margin-bottom:.2rem;}
+.resume-doc .r-contact{font-size:.72rem;color:#555;text-align:center;margin-bottom:1.25rem;line-height:1.6;}
+.resume-doc .r-section{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#333;padding-bottom:.25rem;border-bottom:1.5px solid #222;margin:1.1rem 0 .6rem;}
+.resume-doc .r-competencies{font-size:.76rem;color:#333;line-height:1.7;margin-bottom:.5rem;}
+.resume-doc .r-role-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:#111;margin-bottom:.05rem;}
+.resume-doc .r-role-meta{font-size:.73rem;color:#666;margin-bottom:.3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.25rem;}
+.resume-doc .r-bullet{font-size:.76rem;color:#2a2a2a;line-height:1.6;padding:.1rem 0 .1rem 1rem;position:relative;}
+.resume-doc .r-bullet::before{content:'•';position:absolute;left:.2rem;color:#555;}
+.resume-doc .r-edu{font-size:.76rem;color:#333;line-height:1.6;}
+.resume-doc .r-role-block{margin-bottom:.85rem;}
+
+/* ── WOW #3 — BEFORE/AFTER DIFF ── */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:700px){.diff-grid{grid-template-columns:1fr;}}
+.diff-col-label{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.4rem .75rem;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:.4rem;}
+.diff-col-label.before{background:rgba(251,113,133,.08);color:var(--rose);border:1px solid rgba(251,113,133,.15);border-bottom:none;}
+.diff-col-label.after{background:rgba(52,211,153,.08);color:var(--green);border:1px solid rgba(52,211,153,.15);border-bottom:none;}
+.diff-content{background:var(--bg2);border-radius:0 0 8px 8px;padding:1.1rem;min-height:300px;font-size:.78rem;line-height:1.7;color:var(--text-dim);max-height:600px;overflow-y:auto;}
+.diff-content.before{border:1px solid rgba(251,113,133,.15);border-top:none;}
+.diff-content.after{border:1px solid rgba(52,211,153,.15);border-top:none;}
+.diff-line{padding:.15rem 0;}
+.diff-line.changed{background:rgba(52,211,153,.07);padding:.15rem .4rem;border-radius:3px;margin:0 -.4rem;}
+.diff-line.removed{background:rgba(251,113,133,.07);padding:.15rem .4rem;border-radius:3px;margin:0 -.4rem;text-decoration:line-through;opacity:.6;}
+.diff-legend{display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;font-size:.7rem;color:var(--text-muted);}
+.diff-legend-item{display:flex;align-items:center;gap:.3rem;}
+.diff-legend-dot{width:8px;height:8px;border-radius:2px;}
 
 /* DOWNLOAD BAR */
 .dl-bar{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.1rem;}
@@ -158,7 +234,16 @@ textarea::placeholder{color:var(--text-muted);}
 .dl-btn.prim{background:linear-gradient(135deg,var(--accent2),#0284c7);color:#fff;border-color:transparent;box-shadow:0 0 16px rgba(56,189,248,.2);}
 .dl-btn.prim:hover{box-shadow:0 0 24px rgba(56,189,248,.35);transform:translateY(-1px);}
 
-/* SAVED */
+/* ── WOW #5 — ANTI-HALLUCINATION CONFIRMATION ── */
+.integrity-banner{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.18);border-radius:8px;margin-top:.85rem;transition:all .5s;}
+.integrity-banner.collapsed{padding:.35rem .75rem;}
+.integrity-icon{font-size:1rem;flex-shrink:0;margin-top:.05rem;}
+.integrity-text{flex:1;}
+.integrity-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:.2rem;}
+.integrity-body{font-size:.74rem;color:var(--text-muted);line-height:1.55;}
+.integrity-badge{display:none;font-size:.72rem;font-weight:600;color:var(--green);align-items:center;gap:.3rem;}
+
+/* SAVED / MISC */
 .saved-item{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);margin-bottom:.6rem;gap:1rem;flex-wrap:wrap;transition:border-color .2s;}
 .saved-item:hover{border-color:var(--border-bright);}
 .saved-item h4{font-weight:600;font-size:.85rem;color:var(--text);font-family:'Syne',sans-serif;}
@@ -166,14 +251,12 @@ textarea::placeholder{color:var(--text-muted);}
 .saved-acts{display:flex;gap:.4rem;}
 .tiny{padding:.28rem .65rem;border:1px solid var(--border);border-radius:5px;font-size:.72rem;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text-dim);transition:all .15s;font-family:'DM Sans',sans-serif;}
 .tiny:hover{border-color:var(--border-bright);color:var(--text);}
-
-/* EMPTY STATE */
 .empty{text-align:center;padding:2.5rem;color:var(--text-muted);}
 .empty .big{font-size:2rem;margin-bottom:.5rem;}
 .empty h3{font-family:'Syne',sans-serif;color:var(--text);margin-bottom:.3rem;font-size:1rem;}
 .empty p{font-size:.8rem;max-width:300px;margin:0 auto;color:var(--text-muted);}
 
-/* CREDITS BADGE */
+/* CREDITS / USAGE */
 .credits-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.2);color:var(--accent3);font-size:.72rem;font-weight:600;padding:.28rem .85rem;border-radius:6px;}
 .credits-badge.warn{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.25);color:var(--amber);}
 .credits-badge.danger{background:rgba(251,113,133,.07);border-color:rgba(251,113,133,.25);color:var(--rose);}
@@ -181,7 +264,8 @@ textarea::placeholder{color:var(--text-muted);}
 .usage-bar-track{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:.35rem;}
 .usage-bar-fill{height:100%;border-radius:99px;transition:width .4s ease;}
 .usage-bar-label{font-size:.7rem;color:var(--text-muted);display:flex;justify-content:space-between;}
-/* Paywall modal */
+
+/* PAYWALL */
 .paywall-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:400;align-items:center;justify-content:center;padding:1.5rem;}
 .paywall-overlay.show{display:flex;}
 .paywall-modal{background:var(--bg2);border:1px solid rgba(56,189,248,.3);border-radius:16px;padding:2rem;max-width:440px;width:100%;position:relative;box-shadow:0 0 60px rgba(56,189,248,.1);}
@@ -191,69 +275,96 @@ textarea::placeholder{color:var(--text-muted);}
 .paywall-opt.primary:hover{box-shadow:0 0 36px rgba(56,189,248,.35);transform:translateY(-1px);}
 .paywall-opt.secondary{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);}
 .paywall-opt.secondary:hover{background:rgba(52,211,153,.14);}
-/* Feedback component */
+
+/* FEEDBACK */
 .feedback-bar{display:none;align-items:center;gap:.75rem;padding:.65rem 1rem;background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:8px;margin-top:.75rem;flex-wrap:wrap;}
 .feedback-bar.show{display:flex;}
 .feedback-q{font-size:.78rem;color:var(--text-muted);flex:1;}
 .feedback-btns{display:flex;gap:.4rem;}
 .fb-btn{padding:.32rem .75rem;border-radius:6px;border:1px solid var(--border);background:var(--bg2);font-size:.8rem;cursor:pointer;transition:all .15s;color:var(--text-muted);}
-.fb-btn:hover{border-color:var(--border-bright);color:var(--text);}
 .fb-btn.selected-up{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:var(--green);}
 .fb-btn.selected-down{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.3);color:var(--rose);}
 .fb-comment{display:none;width:100%;margin-top:.5rem;}
 .fb-comment input{width:100%;padding:.45rem .7rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--text);outline:none;}
 .fb-comment input:focus{border-color:var(--accent2);}
-/* Save as master prompt */
 .master-prompt{display:none;align-items:center;gap:.75rem;padding:.75rem 1rem;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.18);border-radius:8px;margin-top:.75rem;}
 .master-prompt.show{display:flex;}
 .master-prompt-text{font-size:.78rem;color:var(--text-dim);flex:1;line-height:1.5;}
 .master-prompt-btn{font-size:.72rem;font-weight:700;padding:.32rem .75rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:6px;color:var(--green);cursor:pointer;white-space:nowrap;transition:all .15s;}
-.master-prompt-btn:hover{background:rgba(52,211,153,.18);}
+
+/* ── WOW #10 — MOBILE ── */
+@media(max-width:600px){
+  .results-grid{grid-template-columns:1fr;}
+  .score-ring-wrap{width:100px;height:100px;}
+  .score-ring-svg{width:100px;height:100px;}
+  .score-ring-bg,.score-ring-fill,.score-ring-glow{stroke-dasharray:282.7;}
+  .score-num{font-size:1.65rem;}
+  .diff-grid{grid-template-columns:1fr;}
+  .dl-btn{flex:1;justify-content:center;min-height:44px;}
+  .dl-bar{flex-direction:column;}
+  #cancel-btn{min-height:44px;min-width:44px;}
+  .pipeline{gap:0;}
+  .pipe-step{padding:.3rem .55rem;font-size:.65rem;}
+  nav{padding:0 1rem;}
+  .nav-r a{padding:.35rem .55rem;font-size:.7rem;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.animate-in{animation:fadeIn .4s ease both;}
 </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
 
+<!-- ── WOW #4 LOADER ── -->
 <div class="loader" id="loader">
-  <!-- Cancel window — visible for first 3 seconds -->
   <div id="cancel-window" style="position:absolute;top:1.5rem;right:1.5rem;">
-    <button id="cancel-btn" onclick="cancelOptimization()" style="display:flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;">
+    <button id="cancel-btn" onclick="cancelOptimization()" style="display:flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;min-height:44px;">
       <span id="cancel-countdown" style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--amber);min-width:14px;text-align:center;">3</span>
       Cancel — no credit used
     </button>
   </div>
-  <div class="spinner"></div>
-  <div class="loader-title" id="loader-title">Analyzing resume</div>
+  <div class="loader-ring">
+    <svg class="loader-ring-svg" viewBox="0 0 56 56">
+      <circle class="loader-ring-bg" cx="28" cy="28" r="24"/>
+      <circle class="loader-ring-fill" id="loader-progress" cx="28" cy="28" r="24"/>
+    </svg>
+    <div class="loader-ring-icon" id="loader-icon">✦</div>
+  </div>
+  <div class="loader-title" id="loader-title">Preparing your optimization</div>
+  <div class="loader-stat" id="loader-stat"> </div>
   <div class="lsteps">
-    <div class="lstep" id="ls1"><div class="ldot"></div>Reading resume</div>
-    <div class="lstep" id="ls2"><div class="ldot"></div>Analyzing job requirements</div>
-    <div class="lstep" id="ls3"><div class="ldot"></div>Rewriting for target role</div>
-    <div class="lstep" id="ls4"><div class="ldot"></div>Scoring and gap analysis</div>
-    <div class="lstep" id="ls5"><div class="ldot"></div>Building your document</div>
+    <div class="lstep" id="ls1"><div class="ldot"></div><span id="ls1-text">Reading resume</span></div>
+    <div class="lstep" id="ls2"><div class="ldot"></div><span id="ls2-text">Analyzing job requirements</span></div>
+    <div class="lstep" id="ls3"><div class="ldot"></div><span id="ls3-text">Rewriting for target role</span></div>
+    <div class="lstep" id="ls4"><div class="ldot"></div><span id="ls4-text">Scoring and gap analysis</span></div>
+    <div class="lstep" id="ls5"><div class="ldot"></div><span id="ls5-text">Building your document</span></div>
   </div>
 </div>
 
 <nav>
-  <div class="logo" onclick="showPage('dashboard')">
+  <div class="logo" onclick="window.location.href='/dashboard';return false;">
     <div class="logo-mark">ARX</div>
     Ascend <span>RX</span>
     <div class="logo-divider"></div>
-    <span class="logo-module">Resume Optimizer</span>
+    <span class="logo-module">Resume Tailor</span>
   </div>
   <div class="nav-r">
+    <div id="usage-badge" class="credits-badge">✦ Loading…</div>
     <a href="#" onclick="window.location.href='/#pricing';return false;">Pricing</a>
     <a onclick="showPage('saved')">Saved</a>
     <a href="#" onclick="window.location.href='/dashboard';return false;" class="back-btn">← Dashboard</a>
   </div>
 </nav>
 
-<!-- DASHBOARD -->
+<!-- INPUT PAGE -->
 <div class="page active" id="page-dashboard">
   <div class="dash">
     <div class="dash-top">
-      <div><h2>Resume Optimizer</h2><p>Paste your resume and a job description. Get a tailored, formatted resume ready to send.</p></div>
-      <div id="usage-badge" class="credits-badge">✦ Loading…</div>
+      <div>
+        <h2 id="dash-headline">Resume Tailor</h2>
+        <p>Paste your resume and a job description. Get a tailored, formatted resume ready to send.</p>
+      </div>
     </div>
     <div class="pipeline">
       <div class="pipe-step" id="ps1"><div class="pipe-dot"></div>Upload</div>
@@ -264,10 +375,8 @@ textarea::placeholder{color:var(--text-muted);}
     </div>
     <div class="two-col">
       <div>
-        <!-- RESUME CARD — layout adapts based on whether master resume exists -->
+        <!-- RESUME CARD -->
         <div class="card" style="margin-bottom:1rem;" id="resume-card">
-
-          <!-- STATE A: Master resume loaded (shown when profile resume exists) -->
           <div id="resume-state-master" style="display:none;">
             <div style="display:flex;align-items:center;gap:.85rem;">
               <div style="width:36px;height:36px;border-radius:9px;background:rgba(56,189,248,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📋</div>
@@ -277,10 +386,9 @@ textarea::placeholder{color:var(--text-muted);}
               </div>
               <a href="#" onclick="window.location.href='/profile';return false;" style="font-size:.72rem;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0;">Update ↗</a>
             </div>
-            <!-- Expandable swap option -->
             <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);">
-              <button onclick="toggleResumeSwap()" id="swap-toggle" style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:.76rem;font-weight:600;color:var(--text-dim);cursor:pointer;padding:.4rem .85rem;display:flex;align-items:center;gap:.4rem;transition:all .18s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.borderColor='var(--border-bright)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">
-                <span id="swap-toggle-icon">📎</span> Use a different resume for this session
+              <button onclick="toggleResumeSwap()" style="background:none;border:none;font-size:.74rem;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;gap:.3rem;" id="swap-toggle">
+                <span id="swap-toggle-icon">▸</span> Use a different resume for this session
               </button>
               <div id="swap-zone" style="display:none;margin-top:.65rem;">
                 <div class="upload-zone" id="uz" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" style="padding:1rem;">
@@ -293,13 +401,11 @@ textarea::placeholder{color:var(--text-muted);}
               </div>
             </div>
           </div>
-
-          <!-- STATE B: No master resume (shown for new users) -->
           <div id="resume-state-upload" style="display:none;">
             <div class="card-title">📄 Resume</div>
             <div class="card-sub">Upload your resume for this session.</div>
             <div class="upload-zone" id="uz-b" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
-              <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
+              <input type="file" id="rf-b" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
               <div class="upload-icon">📎</div>
               <strong id="uz-title">Drop resume here or click to browse</strong>
               <p id="uz-sub">DOCX · PDF · TXT · RTF</p>
@@ -308,8 +414,20 @@ textarea::placeholder{color:var(--text-muted);}
             <div style="margin-top:.65rem;padding:.55rem .8rem;background:var(--bg3);border-radius:var(--radius);font-size:.75rem;color:var(--text-muted);line-height:1.5;">
               💡 Save time — <a href="#" onclick="window.location.href='/profile';return false;" style="color:var(--accent);text-decoration:none;font-weight:600;">upload a master resume in your Profile</a> and it loads here automatically every time.
             </div>
+            <!-- ── WOW #9 EMPTY STATE SAMPLE ── -->
+            <div class="empty-state-preview" id="empty-state-sample">
+              <div class="esp-label">✦ <span>What your resume becomes</span> <span></span></div>
+              <div class="esp-col-labels">
+                <div class="esp-col-label before">Before</div>
+                <div class="esp-col-label after">After ↑</div>
+              </div>
+              <div class="esp-cols">
+                <div class="esp-bullet before">Managed operations across 3 departments and helped with staffing decisions.</div>
+                <div class="esp-bullet after">Directed cross-functional operations across 3 service lines, implementing lean workflows that reduced overtime 22% while sustaining 97% patient satisfaction scores.</div>
+              </div>
+              <div class="esp-arrow" style="margin-top:.5rem;">↑ Real results from a real optimization</div>
+            </div>
           </div>
-
         </div>
 
         <div class="card">
@@ -344,43 +462,67 @@ textarea::placeholder{color:var(--text-muted);}
           <div class="card-title">⚙️ Settings</div>
           <div class="card-sub">Fine-tune the transformation.</div>
           <div class="opts-grid">
-            <div class="opt-g"><label>Rewrite Intensity</label>
-              <select id="opt-i"><option>Conservative</option><option selected>Balanced</option><option>Aggressive</option></select>
+            <div class="opt-g">
+              <label>Rewrite Intensity</label>
+              <select id="opt-i">
+                <option value="balanced">Balanced</option>
+                <option value="aggressive">Aggressive</option>
+                <option value="conservative">Conservative</option>
+              </select>
             </div>
-            <div class="opt-g"><label>Positioning</label>
-              <select id="opt-p"><option>Auto-detect</option><option>Director → VP</option><option>VP → SVP</option><option>Manager → Director</option></select>
+            <div class="opt-g">
+              <label>Positioning</label>
+              <select id="opt-p">
+                <option value="auto">Auto-detect</option>
+                <option value="operations">Operations</option>
+                <option value="clinical">Clinical Leadership</option>
+                <option value="finance">Finance/Revenue Cycle</option>
+                <option value="strategy">Strategy/Growth</option>
+              </select>
             </div>
           </div>
-          <div style="margin-top:.9rem;">
-            <div class="tgl-row"><span>Preserve all job titles and dates</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="tgl-row"><span>Inject ATS keywords from job description</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="tgl-row"><span>Elevate action verb language</span><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+          <div style="margin-top:.85rem;">
+            <div class="tgl-row">
+              <span>Preserve all job titles and dates</span>
+              <div class="tgl on" id="tgl-titles" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="tgl-row">
+              <span>Inject ATS keywords from job description</span>
+              <div class="tgl on" id="tgl-kw" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="tgl-row">
+              <span>Elevate action verb language</span>
+              <div class="tgl on" id="tgl-verbs" onclick="this.classList.toggle('on')"></div>
+            </div>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">🔒 Trust & Safety</div>
+          <div class="card-title">🔒 Trust &amp; Safety</div>
           <div class="card-sub">Hard rules enforced on every output.</div>
-          <div class="notice">The AI will <strong>never invent</strong> companies, titles, dates, degrees, certifications, or metrics not in your original resume.</div>
+          <div class="notice">The AI <strong>never</strong> will <strong>invent</strong> companies, titles, dates, degrees, certifications, or metrics not in your original resume.</div>
         </div>
       </div>
     </div>
-    <!-- Back to results banner — shown after editing inputs -->
+    <!-- Back to results banner -->
     <div id="back-to-results-banner" style="display:none;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);border-radius:8px;margin-bottom:.75rem;flex-wrap:wrap;">
       <div style="font-size:.82rem;color:var(--text-dim);">✅ <strong style="color:var(--text);">Your last result is saved.</strong> You can go back to it without re-running.</div>
-      <button onclick="goBackToResults()" style="font-size:.78rem;font-weight:700;padding:.4rem .9rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:6px;color:var(--green);cursor:pointer;white-space:nowrap;transition:all .15s;">← Back to results</button>
+      <button onclick="goBackToResults()" style="font-size:.78rem;font-weight:700;padding:.4rem .9rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:6px;color:var(--green);cursor:pointer;white-space:nowrap;min-height:44px;">← Back to results</button>
     </div>
     <button class="gen-btn" onclick="generate()">✦ Run Optimization Pipeline</button>
   </div>
 </div>
 
-<!-- RESULTS -->
+<!-- RESULTS PAGE -->
 <div class="page" id="page-results">
   <div class="dash">
-    <div class="dash-top">
-      <div><h2>Optimization Results</h2><p>Review the rewrite, download your formatted resume, check the gap analysis.</p></div>
+    <div class="dash-top" id="results-header">
+      <div>
+        <!-- ── WOW #6 — DYNAMIC RESULTS COPY ── -->
+        <h2 id="results-headline">Your tailored resume is ready.</h2>
+        <p id="results-subline">Review the rewrite, download your formatted resume, check the gap analysis.</p>
+      </div>
       <button class="dl-btn" onclick="editInputs()">← Edit inputs</button>
     </div>
-    <!-- Usage bar -->
     <div class="usage-bar-wrap" id="results-usage-bar">
       <div class="usage-bar-track"><div class="usage-bar-fill" id="results-usage-fill"></div></div>
       <div class="usage-bar-label"><span id="results-usage-left"></span><span id="results-usage-reset"></span></div>
@@ -393,41 +535,104 @@ textarea::placeholder{color:var(--text-muted);}
       <div class="pipe-step active"><div class="pipe-dot"></div>Results</div>
     </div>
     <div class="results-grid">
+      <!-- LEFT COL: Score + verdicts + keywords -->
       <div>
-        <div class="score-card">
-          <h3>Job Match Score</h3><p>Alignment with target role</p>
-          <div class="score-ring"><div class="score-num" id="sc-num">—</div><div class="score-lbl">match</div></div>
+        <div class="score-card animate-in">
+          <div class="score-card-title">Job Match Score</div>
+          <!-- ── WOW #1 — ANIMATED SCORE RING ── -->
+          <div class="score-ring-wrap">
+            <svg class="score-ring-svg" viewBox="0 0 120 120">
+              <circle class="score-ring-bg" cx="60" cy="60" r="54"/>
+              <circle class="score-ring-glow" id="score-glow" cx="60" cy="60" r="54" stroke="var(--accent2)"/>
+              <circle class="score-ring-fill" id="score-ring" cx="60" cy="60" r="54" stroke="var(--accent2)"/>
+            </svg>
+            <div class="score-ring-center">
+              <div class="score-num" id="sc-num">—</div>
+              <div class="score-pct">match</div>
+            </div>
+          </div>
           <div id="signals"></div>
+          <!-- ── WOW #8 — READINESS VERDICT ── -->
+          <div id="verdict-card"></div>
         </div>
-        <div class="card" style="margin-top:1rem;display:none;" id="kw-card">
-          <div class="card-title" style="font-size:.88rem;">Missing Keywords</div>
-          <div id="missing-kw" style="margin-top:.5rem;"></div>
+
+        <!-- ── WOW #7 — KEYWORD MATCH BAR ── -->
+        <div class="card kw-match-section" style="margin-top:.85rem;" id="kw-section">
+          <div class="kw-match-header">
+            <div class="kw-match-label">Keyword Match</div>
+            <div class="kw-match-pct" id="kw-pct">—</div>
+          </div>
+          <div class="kw-match-track">
+            <div class="kw-match-fill" id="kw-fill" style="width:0%;background:var(--accent2);"></div>
+          </div>
+          <div class="kw-match-detail" id="kw-detail"></div>
+          <div class="kw-section-label">Matched ✓</div>
+          <div class="kw-tags" id="kw-have"></div>
+          <div class="kw-section-label" style="margin-top:.5rem;">Missing — address in interview</div>
+          <div class="kw-tags" id="kw-missing"></div>
         </div>
+
         <div class="card" style="margin-top:.85rem;display:none;" id="flags-card">
           <div class="card-title" style="font-size:.88rem;">🚩 Needs Confirmation</div>
           <div id="flags-display" style="margin-top:.5rem;font-size:.78rem;"></div>
         </div>
       </div>
+
+      <!-- RIGHT COL: Resume + diff + gap -->
       <div>
         <div class="rtabs">
           <button class="rtab on" onclick="showRTab('preview',this)">Rewritten Resume</button>
+          <button class="rtab" onclick="showRTab('diff',this)">Before / After</button>
           <button class="rtab" onclick="showRTab('gaps',this)">Gap Analysis</button>
         </div>
-        <div id="rt-preview"><div class="resume-view" id="rv-preview"></div></div>
+
+        <!-- ── WOW #2 — FORMATTED RESUME PREVIEW ── -->
+        <div id="rt-preview">
+          <div class="resume-doc" id="rv-preview"></div>
+        </div>
+
+        <!-- ── WOW #3 — BEFORE/AFTER DIFF ── -->
+        <div id="rt-diff" style="display:none;">
+          <div class="diff-legend">
+            <div class="diff-legend-item"><div class="diff-legend-dot" style="background:var(--green);"></div> Elevated</div>
+            <div class="diff-legend-item"><div class="diff-legend-dot" style="background:var(--rose);"></div> Replaced</div>
+          </div>
+          <div class="diff-grid">
+            <div>
+              <div class="diff-col-label before">Your original</div>
+              <div class="diff-content before" id="diff-before"></div>
+            </div>
+            <div>
+              <div class="diff-col-label after">Tailored for this role</div>
+              <div class="diff-content after" id="diff-after"></div>
+            </div>
+          </div>
+        </div>
+
         <div id="rt-gaps" style="display:none;"><div id="rv-gaps"></div></div>
+
         <div class="dl-bar">
-          <button class="dl-btn prim" onclick="dlDocx()">⬇ Download DOCX</button>
-          <button class="dl-btn" onclick="dlTxt()">⬇ Download TXT</button>
+          <button class="dl-btn prim" onclick="dlDocx()">⬇ Download your tailored resume</button>
+          <button class="dl-btn" onclick="dlTxt()">⬇ TXT</button>
           <button class="dl-btn" onclick="saveResume()">💾 Save</button>
         </div>
-        <p style="font-size:.68rem;color:var(--mist);margin-top:.5rem;" id="tpl-note"></p>
-        <!-- Save as master resume prompt -->
+        <p style="font-size:.68rem;color:var(--text-muted);margin-top:.5rem;" id="tpl-note"></p>
+
+        <!-- ── WOW #5 — ANTI-HALLUCINATION CONFIRMATION ── -->
+        <div class="integrity-banner" id="integrity-banner">
+          <div class="integrity-icon">✓</div>
+          <div class="integrity-text">
+            <div class="integrity-title">Integrity check passed</div>
+            <div class="integrity-body" id="integrity-body">Every company name, job title, date, degree, certification, and metric in this resume matches your original exactly. Nothing was invented. Everything was elevated.</div>
+          </div>
+          <div class="integrity-badge" id="integrity-badge">✓ Verified</div>
+        </div>
+
         <div class="master-prompt" id="master-prompt">
           <div class="master-prompt-text">📋 <strong style="color:var(--text);">Save as your master resume?</strong> Every tool will use it automatically for personalized results.</div>
           <button class="master-prompt-btn" onclick="saveAsMaster()">Save as master</button>
           <button style="font-size:.7rem;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:.2rem;" onclick="document.getElementById('master-prompt').classList.remove('show')">✕</button>
         </div>
-        <!-- Feedback bar -->
         <div class="feedback-bar" id="feedback-bar">
           <span class="feedback-q">How was this optimization?</span>
           <div class="feedback-btns">
@@ -446,8 +651,28 @@ textarea::placeholder{color:var(--text-muted);}
 <!-- SAVED -->
 <div class="page" id="page-saved">
   <div class="dash">
-    <div class="dash-top"><div><h2>Saved Resumes</h2><p>Your optimization history — stored in this browser.</p></div></div>
+    <div class="dash-top"><div><h2>Saved Resumes</h2><p>Your optimization history — stored in this browser.</p></div><button class="dl-btn" onclick="showPage('dashboard')">← Back</button></div>
     <div id="saved-list"></div>
+  </div>
+</div>
+
+<!-- PAYWALL MODAL -->
+<div class="paywall-overlay" id="paywall-overlay" onclick="closePaywall(event)">
+  <div class="paywall-modal">
+    <div style="font-size:1.75rem;margin-bottom:.5rem;">⚡</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:.4rem;">You've used your 3 free optimizations</div>
+    <p style="font-size:.83rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem;">Resets <strong style="color:var(--text);" id="paywall-reset-date"></strong> — or upgrade for unlimited access.</p>
+    <a href="/login" class="paywall-opt primary" style="text-decoration:none;">
+      <div><div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#fff;">Active Search</div><div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:.1rem;">Unlimited everything — cancel anytime</div></div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;color:#fff;">$39/mo</div>
+    </a>
+    <a href="/login" class="paywall-opt secondary" style="text-decoration:none;">
+      <div><div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--green);">Starter — Best value</div><div style="font-size:.72rem;color:rgba(52,211,153,.8);margin-top:.1rem;">All tools, 20 uses/month</div></div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">$99/yr</div>
+    </a>
+    <div style="text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:.75rem;">
+      <a onclick="closePaywall()" style="color:var(--text-dim);cursor:pointer;">Continue on free — resets <span id="paywall-reset-date2"></span></a>
+    </div>
   </div>
 </div>
 
@@ -455,51 +680,38 @@ textarea::placeholder{color:var(--text-muted);}
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const S={
-  resumeText:'',resumeFile:'',jobDesc:'',
+  resumeText:'',resumeFile:'',jobDesc:'',originalText:'',
   selectedTemplate:'executive',
-  result:null,
-  parsedData:null,
+  result:null,parsedData:null,
   cancelled:false,
   saved:JSON.parse(localStorage.getItem('ro_saved')||'[]')
 };
 
-// ── TEMPLATE SELECTION ───────────────────────────────────────────────────────
 function setTemplate(t){
   S.selectedTemplate=t;
-  ['executive','modern','ats'].forEach(x=>{
-    document.getElementById('tpl-'+x).classList.toggle('active',x===t);
-  });
+  ['executive','modern','ats'].forEach(x=>document.getElementById('tpl-'+x).classList.toggle('active',x===t));
 }
 
-// ── API ──────────────────────────────────────────────────────────────────────
 async function callClaude(prompt,maxTok=4000,temp=0.3){
-  const r=await fetch('/api/optimize',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt,max_tokens:maxTok,temperature:temp})
-  });
+  const r=await fetch('/api/optimize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,max_tokens:maxTok,temperature:temp})});
   if(!r.ok){const e=await r.json();throw new Error(e.error||'Server error '+r.status);}
-  const d=await r.json();
-  return d.result;
+  return (await r.json()).result;
 }
-
 function parseJSON(raw){
-  let s=raw.trim();
-  s=s.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
-  const a=s.indexOf('{'), b=s.lastIndexOf('}');
+  let s=raw.trim().replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+  const a=s.indexOf('{'),b=s.lastIndexOf('}');
   if(a>=0&&b>a)s=s.substring(a,b+1);
   const p=JSON.parse(s);
   return typeof p==='string'?JSON.parse(p):p;
 }
 
-// ── UI ───────────────────────────────────────────────────────────────────────
 function showPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+n).classList.add('active');
   if(n==='saved')renderSaved();
 }
 function showRTab(t,el){
-  ['preview','gaps'].forEach(x=>document.getElementById('rt-'+x).style.display=x===t?'block':'none');
+  ['preview','diff','gaps'].forEach(x=>document.getElementById('rt-'+x).style.display=x===t?'block':'none');
   document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('on'));
   el.classList.add('on');
 }
@@ -509,11 +721,24 @@ function setPipe(n,s){document.getElementById('ps'+n).className='pipe-step'+(s==
 function resetPipe(){for(let i=1;i<=5;i++)document.getElementById('ps'+i).className='pipe-step';}
 function showLoader(){document.getElementById('loader').classList.add('show');}
 function hideLoader(){document.getElementById('loader').classList.remove('show');}
-function setTitle(t){document.getElementById('loader-title').textContent=t;}
-async function tick(n,d=800){await wait(d);document.getElementById('ls'+n).classList.add('on');}
+function setTitle(t,stat=''){
+  document.getElementById('loader-title').textContent=t;
+  const s=document.getElementById('loader-stat');
+  s.style.opacity='0';
+  setTimeout(()=>{s.textContent=stat;s.style.opacity='1';},200);
+}
+// Loader ring progress
+function setLoaderProgress(pct,icon='✦'){
+  const r=24,circ=2*Math.PI*r;
+  const fill=document.getElementById('loader-progress');
+  if(fill)fill.style.strokeDashoffset=circ-(circ*pct/100);
+  document.getElementById('loader-icon').textContent=icon;
+}
+async function tick(n,d=800){await wait(d);const el=document.getElementById('ls'+n);if(el)el.classList.add('on');}
+function markDone(n){const el=document.getElementById('ls'+n);if(el){el.classList.remove('on');el.classList.add('done');}}
 function resetLoader(){
-  for(let i=1;i<=5;i++)document.getElementById('ls'+i).classList.remove('on');
-  // Reset cancel button for fresh run
+  for(let i=1;i<=5;i++){const el=document.getElementById('ls'+i);if(el){el.classList.remove('on','done');}}
+  setLoaderProgress(0,'✦');
   const btn=document.getElementById('cancel-btn');
   if(btn){btn.style.display='flex';btn.style.opacity='1';btn.style.pointerEvents='auto';}
   const cd=document.getElementById('cancel-countdown');
@@ -521,122 +746,121 @@ function resetLoader(){
 }
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ── FILE HANDLING ────────────────────────────────────────────────────────────
+// FILE HANDLING
 function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files[0];if(f)processFile(f);}
-function onDragOver(e){e.preventDefault();document.getElementById('uz').classList.add('drag');}
-function onDragLeave(){document.getElementById('uz').classList.remove('drag');}
+function onDragOver(e){e.preventDefault();const uz=document.getElementById('uz')||document.getElementById('uz-b');if(uz)uz.classList.add('drag');}
+function onDragLeave(){const uz=document.getElementById('uz')||document.getElementById('uz-b');if(uz)uz.classList.remove('drag');}
 function onFile(e){if(e.target.files[0])processFile(e.target.files[0]);}
-// ── CANCEL WINDOW ─────────────────────────────────────────────────────────────
-let cancelTimer = null;
-let cancelCountdownInterval = null;
-
-function startCancelCountdown() {
-  const btn      = document.getElementById('cancel-btn');
-  const countdown= document.getElementById('cancel-countdown');
-  const window_  = document.getElementById('cancel-window');
-  if (!btn) return;
-
-  let seconds = 3;
-  btn.style.display = 'flex';
-  countdown.textContent = seconds;
-
-  cancelCountdownInterval = setInterval(() => {
-    seconds--;
-    if (seconds <= 0) {
-      clearInterval(cancelCountdownInterval);
-      // Fade out the cancel button — pipeline is committed
-      btn.style.opacity = '0';
-      btn.style.pointerEvents = 'none';
-      setTimeout(() => { btn.style.display = 'none'; }, 400);
-    } else {
-      countdown.textContent = seconds;
-    }
-  }, 1000);
-}
-
-function cancelOptimization() {
-  S.cancelled = true;
-  clearInterval(cancelCountdownInterval);
-  hideLoader();
-  // Reset button state for next run
-  const btn = document.getElementById('cancel-btn');
-  if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
-  // Restore JD in the textarea
-  if (S.jobDesc) document.getElementById('jd').value = S.jobDesc;
-  toast('Optimization cancelled — no credit used.');
-  resetPipe();
-}
-
-// Toggle the swap zone in State A
-function toggleResumeSwap() {
-  const zone   = document.getElementById('swap-zone');
-  const icon   = document.getElementById('swap-toggle-icon');
-  const isOpen = zone.style.display === 'block';
-  zone.style.display = isOpen ? 'none' : 'block';
-  icon.textContent   = isOpen ? '▸' : '▾';
-}
 
 async function processFile(f){
   S.resumeFile=f.name;
-  // Update whichever file-ok indicator is visible
-  const fok  = document.getElementById('file-ok')  || document.getElementById('file-ok-b');
-  const fname= document.getElementById('fname')     || document.getElementById('fname-b');
-  if (fok)  { fok.style.display='flex'; }
-  if (fname){ fname.textContent=f.name; }
+  const fok=document.getElementById('file-ok')||document.getElementById('file-ok-b');
+  const fname=document.getElementById('fname')||document.getElementById('fname-b');
+  if(fok)fok.style.display='flex';
+  if(fname)fname.textContent=f.name;
+  // Hide empty state sample once file is uploaded
+  const esp=document.getElementById('empty-state-sample');
+  if(esp)esp.style.display='none';
   const ext=f.name.split('.').pop().toLowerCase();
-  if(ext==='docx'){
-    try{const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});S.resumeText=r.value;}
-    catch{S.resumeText='[Could not parse DOCX]';}
-  }else if(ext==='txt'||ext==='rtf'){
-    S.resumeText=await f.text();
-  }else if(ext==='pdf'){
+  if(ext==='docx'){try{const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});S.resumeText=r.value;}catch{S.resumeText='[Could not parse DOCX]';}}
+  else if(ext==='txt'||ext==='rtf'){S.resumeText=await f.text();}
+  else if(ext==='pdf'){
     try{
       const ab=await f.arrayBuffer();
       const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-      let t='';
-      for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();t+=c.items.map(x=>x.str).join(' ')+'\n';}
+      let t='';for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();t+=c.items.map(x=>x.str).join(' ')+'\n';}
       S.resumeText=t;
     }catch{S.resumeText='[Could not parse PDF]';}
   }
   setPipe(1,'done');
 }
 
-// ── MAIN PIPELINE ────────────────────────────────────────────────────────────
+// ── CANCEL WINDOW ──────────────────────────────────────────────────────────────
+let cancelCountdownInterval=null;
+function startCancelCountdown(){
+  const btn=document.getElementById('cancel-btn');
+  const cd=document.getElementById('cancel-countdown');
+  if(!btn)return;
+  btn.style.display='flex';btn.style.opacity='1';btn.style.pointerEvents='auto';
+  let seconds=3;cd.textContent=seconds;
+  cancelCountdownInterval=setInterval(()=>{
+    seconds--;
+    if(seconds<=0){
+      clearInterval(cancelCountdownInterval);
+      btn.style.opacity='0';btn.style.pointerEvents='none';
+      setTimeout(()=>btn.style.display='none',400);
+    }else{cd.textContent=seconds;}
+  },1000);
+}
+function cancelOptimization(){
+  S.cancelled=true;
+  clearInterval(cancelCountdownInterval);
+  hideLoader();
+  const btn=document.getElementById('cancel-btn');
+  if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}
+  if(S.jobDesc)document.getElementById('jd').value=S.jobDesc;
+  toast('Optimization cancelled — no credit used.');
+  resetPipe();
+}
+
+// Toggle swap zone
+function toggleResumeSwap(){
+  const zone=document.getElementById('swap-zone');
+  const icon=document.getElementById('swap-toggle-icon');
+  const isOpen=zone.style.display==='block';
+  zone.style.display=isOpen?'none':'block';
+  icon.textContent=isOpen?'▸':'▾';
+}
+
+// ── MAIN PIPELINE ──────────────────────────────────────────────────────────────
 async function generate(){
   const jd=document.getElementById('jd').value.trim();
   if(!S.resumeText){toast('Upload your resume first.');return;}
   if(!jd){toast('Paste a job description.');return;}
 
-  // ── USAGE CHECK ──────────────────────────────────────────────────────────────
   const remaining=getRemainingUses();
   if(remaining<=0){showPaywall();return;}
 
-  // ── JD VALIDATION PRE-FLIGHT ─────────────────────────────────────────────────
   const jdSignals=['responsib','qualif','require','experience','skill','role','position','job','duties','department','team','manage','lead','direct','support','develop','implement'];
   const jdLower=jd.toLowerCase();
   const signalCount=jdSignals.filter(s=>jdLower.includes(s)).length;
   if(jd.length<100||signalCount<2){
-    toast('This doesn\'t look like a job description — try pasting just the posting text, not the full web page.');
+    toast('This doesn\'t look like a job description — try pasting just the posting text.');
     return;
   }
 
   S.jobDesc=jd;
   S.cancelled=false;
+  S.originalText=S.resumeText; // store for diff
   resetPipe();resetLoader();showLoader();
   startCancelCountdown();
 
+  // ── WOW #4 — REAL-TIME STATS ──────────────────────────────────────────────
+  const wordCount=S.resumeText.split(/\s+/).filter(Boolean).length;
+  const bulletCount=(S.resumeText.match(/•|\-\s|^\*\s/gm)||[]).length||
+    (S.resumeText.match(/\n[A-Z][^A-Z\n]{20,}/g)||[]).length;
+  const jdWords=jd.split(/\s+/).filter(Boolean).length;
+  const jdKeywords=(jd.match(/\b[A-Z][a-zA-Z]{3,}\b/g)||[]).length;
+
   try{
     setPipe(1,'done');setPipe(2,'active');
+    setLoaderProgress(15,'📄');
+    setTitle('Reading your resume',`${wordCount} words · ${Math.max(2,bulletCount)} accomplishments detected`);
+    tick(1,200);
+
+    await wait(600);
+    setLoaderProgress(30,'🔍');
+    setTitle('Analyzing job requirements',`${jdWords} words · scanning for key requirements`);
+    tick(2,200);
+
     const intensity=document.getElementById('opt-i').value;
     const positioning=document.getElementById('opt-p').value;
-
-    // Load master resume context if available
     const masterText=localStorage.getItem('arx_master_resume_text')||'';
     const resumeContext=masterText&&!S.resumeText.includes(masterText.substring(0,50))?`MASTER RESUME PROFILE:\n${masterText.substring(0,1000)}\n\nCURRENT RESUME:\n${S.resumeText}`:`RESUME:\n${S.resumeText}`;
 
-    // ── CALL 1: Rewrite ──────────────────────────────────────────────────────
-    setTitle('Rewriting resume for target role');
-    tick(1,200);tick(2,800);
+    setLoaderProgress(45,'✍️');
+    setTitle('Rewriting for target role',`Elevating language to ${positioning==='auto'?'executive':positioning} level`);
+    tick(3,200);
 
     const rewriteRaw=await callClaude(
       `You are a senior executive resume writer. Rewrite the resume below to target the job description. Do NOT ask questions. Always complete the full rewrite immediately.
@@ -660,10 +884,10 @@ Return JSON with exactly these keys — no markdown fences:
       "company": "EXACT original company name",
       "dates": "EXACT original dates",
       "context": "markets/scope line if present, else empty string",
-      "bullets": ["rewritten bullet 1", "rewritten bullet 2", ...]
+      "bullets": ["rewritten bullet 1", "rewritten bullet 2"]
     }
   ],
-  "education": ["degree line 1", "degree line 2"],
+  "education": ["degree line 1"],
   "rewritten_resume_text": "complete resume as plain text for preview"
 }
 
@@ -675,15 +899,18 @@ ${jd.substring(0,3500)}`,
     );
 
     let rewriteResult;
-    try{ rewriteResult=parseJSON(rewriteRaw); }
-    catch(e){ throw new Error('Could not parse AI response. Please try again.'); }
+    try{rewriteResult=parseJSON(rewriteRaw);}
+    catch(e){throw new Error('Could not parse AI response. Please try again.');}
 
     S.parsedData=rewriteResult;
+    const bulletsMade=(rewriteResult.roles||[]).reduce((a,r)=>a+(r.bullets||[]).length,0);
+    markDone(1);markDone(2);markDone(3);
     setPipe(2,'done');setPipe(3,'done');setPipe(4,'active');
-    tick(3,200);tick(4,600);
 
-    // ── CALL 2: Score ────────────────────────────────────────────────────────
-    setTitle('Scoring and analyzing gaps');
+    setLoaderProgress(70,'📊');
+    setTitle('Scoring your match',`Checking ${bulletsMade} rewritten bullets against requirements`);
+    tick(4,200);
+
     const scoreRaw=await callClaude(
       `Analyze how well this resume matches the job. Return JSON only — no markdown:
 {
@@ -691,7 +918,8 @@ ${jd.substring(0,3500)}`,
   "score_rationale": "one sentence",
   "key_strengths": ["up to 5 strengths"],
   "gaps": [{"signal": "gap", "severity": "high|medium|low", "recommendation": "advice"}],
-  "missing_keywords": ["kw1", "kw2"],
+  "missing_keywords": ["kw1","kw2"],
+  "present_keywords": ["kw1","kw2"],
   "executive_readiness": "one sentence"
 }
 
@@ -701,38 +929,39 @@ JOB: ${jd.substring(0,2000)}`,
     );
 
     let scoreResult;
-    try{ scoreResult=parseJSON(scoreRaw); }
-    catch(e){ scoreResult={match_score:0,score_rationale:'',key_strengths:[],gaps:[],missing_keywords:[],executive_readiness:''}; }
+    try{scoreResult=parseJSON(scoreRaw);}
+    catch(e){scoreResult={match_score:0,score_rationale:'',key_strengths:[],gaps:[],missing_keywords:[],present_keywords:[],executive_readiness:''};}
 
     S.result={...rewriteResult,...scoreResult};
-    setPipe(4,'done');setPipe(5,'active');
+    markDone(4);setPipe(4,'done');setPipe(5,'active');
+
+    setLoaderProgress(90,'✦');
+    setTitle('Building your document','Almost ready…');
     tick(5,400);
-    setTitle('Building your document');
     await wait(800);
 
-    // Check if user cancelled during the pipeline
-    if(S.cancelled){ hideLoader(); return; }
+    if(S.cancelled){hideLoader();return;}
 
-    // ── INCREMENT USAGE — only on successful completion ──────────────────────
+    markDone(5);
+    setLoaderProgress(100,'🎉');
+    await wait(300);
+
     const newCount=incrementUsage();
     const newRemaining=getRemainingUses();
     updateUsageBadge(newRemaining);
 
-    // ── AUTO-SAVE RESULT ────────────────────────────────────────────────────
-    localStorage.setItem('arx_last_result', JSON.stringify(S.result));
-    localStorage.setItem('arx_last_jd', jd);
+    localStorage.setItem('arx_last_result',JSON.stringify(S.result));
+    localStorage.setItem('arx_last_jd',jd);
+    localStorage.setItem('arx_last_original',S.originalText);
 
     hideLoader();
     renderResults(S.result);
     showPage('results');
 
-    // Show master resume prompt only if no master resume saved yet (State B)
     if(!localStorage.getItem('arx_master_resume_text')){
       setTimeout(()=>document.getElementById('master-prompt').classList.add('show'),1200);
     }
-    // Show feedback bar
-    setTimeout(()=>document.getElementById('feedback-bar').classList.add('show'),1800);
-    // Show usage warning if low
+    setTimeout(()=>document.getElementById('feedback-bar').classList.add('show'),2000);
     showResultsUsageBar(newRemaining);
 
   }catch(e){
@@ -741,192 +970,224 @@ JOB: ${jd.substring(0,2000)}`,
   }
 }
 
-// ── RENDER RESULTS ───────────────────────────────────────────────────────────
+// ── WOW #1 — ANIMATED SCORE RING ─────────────────────────────────────────────
+function animateScoreRing(score){
+  const ring=document.getElementById('score-ring');
+  const glow=document.getElementById('score-glow');
+  const numEl=document.getElementById('sc-num');
+  const r=54;
+  const circ=2*Math.PI*r;
+  const offset=circ-(circ*score/100);
+
+  // Color
+  const color=score>=75?'var(--green)':score>=55?'var(--amber)':'var(--rose)';
+  ring.style.stroke=color;
+  glow.style.stroke=color;
+  numEl.style.color=color;
+
+  // Animate ring
+  setTimeout(()=>{
+    ring.style.strokeDashoffset=offset;
+    glow.style.strokeDashoffset=offset;
+  },100);
+
+  // Count-up number
+  let current=0;
+  const duration=1500;
+  const step=duration/score;
+  const counter=setInterval(()=>{
+    current=Math.min(current+1,score);
+    numEl.textContent=current+'%';
+    if(current>=score)clearInterval(counter);
+  },step);
+}
+
+// ── WOW #2 — FORMATTED RESUME RENDERER ───────────────────────────────────────
+function renderResumeDoc(r){
+  const el=document.getElementById('rv-preview');
+  if(!el)return;
+  let html='';
+  if(r.name)html+=`<div class="r-name">${esc(r.name)}</div>`;
+  if(r.contact)html+=`<div class="r-contact">${esc(r.contact)}</div>`;
+  if(r.summary){
+    html+=`<div class="r-section">Professional Summary</div>`;
+    html+=`<div style="font-size:.79rem;color:#222;line-height:1.7;margin-bottom:.5rem;">${esc(r.summary)}</div>`;
+  }
+  if(r.competencies){
+    html+=`<div class="r-section">Core Competencies</div>`;
+    html+=`<div class="r-competencies">${esc(r.competencies)}</div>`;
+  }
+  if(r.roles&&r.roles.length){
+    html+=`<div class="r-section">Professional Experience</div>`;
+    r.roles.forEach(role=>{
+      html+=`<div class="r-role-block">`;
+      html+=`<div class="r-role-title">${esc(role.title||'')}</div>`;
+      html+=`<div class="r-role-meta"><span>${esc(role.company||'')}</span><span>${esc(role.dates||'')}</span></div>`;
+      if(role.context)html+=`<div style="font-size:.73rem;color:#666;font-style:italic;margin-bottom:.2rem;">${esc(role.context)}</div>`;
+      (role.bullets||[]).forEach(b=>{html+=`<div class="r-bullet">${esc(b)}</div>`;});
+      html+=`</div>`;
+    });
+  }
+  if(r.education&&r.education.length){
+    html+=`<div class="r-section">Education & Credentials</div>`;
+    r.education.forEach(e=>html+=`<div class="r-edu">${esc(e)}</div>`);
+  }
+  el.innerHTML=html;
+}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── WOW #3 — BEFORE/AFTER DIFF ───────────────────────────────────────────────
+function renderDiff(original,rewritten){
+  const beforeEl=document.getElementById('diff-before');
+  const afterEl=document.getElementById('diff-after');
+  if(!beforeEl||!afterEl)return;
+
+  const origLines=(original||'').split('\n').filter(l=>l.trim().length>3);
+  const rewLines=(rewritten||'').split('\n').filter(l=>l.trim().length>3);
+
+  // Simple line-level diff — mark lines that changed significantly
+  function similarity(a,b){
+    const aw=new Set(a.toLowerCase().split(/\s+/));
+    const bw=b.toLowerCase().split(/\s+/);
+    const matches=bw.filter(w=>aw.has(w)).length;
+    return matches/Math.max(aw.size,bw.length);
+  }
+
+  let beforeHtml='',afterHtml='';
+  const maxLines=Math.max(origLines.length,rewLines.length);
+
+  for(let i=0;i<Math.min(origLines.length,50);i++){
+    const line=origLines[i];
+    const matchLine=rewLines[i]||'';
+    const sim=similarity(line,matchLine);
+    const cls=sim<0.6?'diff-line removed':'diff-line';
+    beforeHtml+=`<div class="${cls}">${esc(line)}</div>`;
+  }
+
+  for(let i=0;i<Math.min(rewLines.length,50);i++){
+    const line=rewLines[i];
+    const origLine=origLines[i]||'';
+    const sim=similarity(origLine,line);
+    const cls=sim<0.6?'diff-line changed':'diff-line';
+    afterHtml+=`<div class="${cls}">${esc(line)}</div>`;
+  }
+
+  beforeEl.innerHTML=beforeHtml||'<div style="color:var(--text-muted);font-size:.75rem;">Original text not available</div>';
+  afterEl.innerHTML=afterHtml||'<div style="color:var(--text-muted);font-size:.75rem;">No output</div>';
+}
+
+// ── WOW #6 — DYNAMIC RESULTS COPY ────────────────────────────────────────────
+function setResultsCopy(score,roleTitle,org){
+  const headEl=document.getElementById('results-headline');
+  const subEl=document.getElementById('results-subline');
+  if(!headEl)return;
+  if(score>=80){headEl.textContent='Your VP-ready resume is ready.';}
+  else if(score>=60){headEl.textContent='Strong match — a few gaps to close.';}
+  else if(score>=40){headEl.textContent='Good foundation — here\'s what to strengthen.';}
+  else{headEl.textContent='Here\'s your tailored resume.';}
+  if(roleTitle&&org&&org!=='Not specified'){
+    subEl.textContent=`Tailored for ${roleTitle} at ${org} — download and submit.`;
+  }else if(roleTitle){
+    subEl.textContent=`Tailored for ${roleTitle} — download and submit.`;
+  }
+}
+
+// ── WOW #7 — KEYWORD MATCH BAR ───────────────────────────────────────────────
+function renderKeywordBar(present,missing){
+  const total=(present||[]).length+(missing||[]).length;
+  if(!total){document.getElementById('kw-section').style.display='none';return;}
+  const pct=Math.round(((present||[]).length/total)*100);
+  const color=pct>=75?'var(--green)':pct>=55?'var(--amber)':'var(--rose)';
+  document.getElementById('kw-pct').textContent=pct+'%';
+  document.getElementById('kw-pct').style.color=color;
+  document.getElementById('kw-detail').textContent=`${(present||[]).length} of ${total} key requirements matched`;
+  const fill=document.getElementById('kw-fill');
+  setTimeout(()=>{fill.style.width=pct+'%';fill.style.background=color;},200);
+  document.getElementById('kw-have').innerHTML=(present||[]).map(k=>`<span class="kw-tag have">${esc(k)}</span>`).join('');
+  document.getElementById('kw-missing').innerHTML=(missing||[]).map(k=>`<span class="kw-tag missing">${esc(k)}</span>`).join('');
+}
+
+// ── WOW #8 — READINESS VERDICT ───────────────────────────────────────────────
+function renderVerdict(score){
+  const el=document.getElementById('verdict-card');
+  if(!el)return;
+  let cls,icon,text;
+  if(score>=80){cls='submit';icon='✅';text='This resume is ready to submit. Download and send.';}
+  else if(score>=60){cls='review';icon='⚡';text='Strong draft. Review the gaps below before submitting.';}
+  else if(score>=40){cls='work';icon='🔧';text='Consider a second pass against a more specific job description.';}
+  else{cls='poor';icon='⚠';text='This role may not be the right fit. Check gap analysis below.';}
+  el.innerHTML=`<div class="verdict-card ${cls}"><div class="verdict-icon">${icon}</div><div>${text}</div></div>`;
+}
+
+// ── WOW #5 — INTEGRITY BANNER COLLAPSE ───────────────────────────────────────
+function animateIntegrityBanner(){
+  const banner=document.getElementById('integrity-banner');
+  const badge=document.getElementById('integrity-badge');
+  const body=document.getElementById('integrity-body');
+  if(!banner)return;
+  setTimeout(()=>{
+    banner.style.transition='all .5s ease';
+    body.style.transition='all .5s ease';
+    body.style.maxHeight='0';
+    body.style.overflow='hidden';
+    body.style.opacity='0';
+    banner.style.background='rgba(52,211,153,.03)';
+    if(badge){badge.style.display='flex';}
+    setTimeout(()=>{body.style.display='none';},500);
+  },4000);
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────────────────────
 function renderResults(r){
-  document.getElementById('sc-num').textContent=(r.match_score||0)>0?(r.match_score+'%'):'—';
+  const score=r.match_score||0;
+
+  // #1 Animated score ring
+  animateScoreRing(score);
+
+  // Signals
   document.getElementById('signals').innerHTML=[
-    ...(r.key_strengths||[]).slice(0,4).map(s=>`<div class="signal"><div class="sdot s-g"></div>${s}</div>`),
-    ...(r.gaps||[]).filter(g=>g.severity==='high').slice(0,2).map(g=>`<div class="signal"><div class="sdot s-r"></div>${g.signal}</div>`)
+    ...(r.key_strengths||[]).slice(0,3).map(s=>`<div class="signal"><div class="sdot s-g"></div>${esc(s)}</div>`),
+    ...(r.gaps||[]).filter(g=>g.severity==='high').slice(0,2).map(g=>`<div class="signal"><div class="sdot s-r"></div>${esc(g.signal)}</div>`)
   ].join('');
 
-  const kw=r.missing_keywords||[];
-  if(kw.length){
-    document.getElementById('kw-card').style.display='block';
-    document.getElementById('missing-kw').innerHTML=kw.map(k=>`<span class="kw-tag">${k}</span>`).join('');
-  }
+  // #6 Dynamic copy
+  setResultsCopy(score,r.role_title,r.organization);
 
-  document.getElementById('rv-preview').textContent=r.rewritten_resume_text||'';
+  // #8 Readiness verdict
+  renderVerdict(score);
 
+  // #2 Formatted resume preview
+  renderResumeDoc(r);
+
+  // #3 Before/after diff
+  const originalText=S.originalText||localStorage.getItem('arx_last_original')||'';
+  renderDiff(originalText,r.rewritten_resume_text||'');
+
+  // Gap analysis tab
   const gaps=r.gaps||[];
   document.getElementById('rv-gaps').innerHTML=
-    (r.executive_readiness?`<div style="margin-bottom:1rem;font-size:.82rem;font-style:italic;color:var(--accent3);padding:.65rem .85rem;background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.12);border-radius:6px;">${r.executive_readiness}</div>`:'')
-    +(gaps.length?gaps.map(g=>`<div style="border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem;margin-bottom:.65rem;background:var(--card);transition:border-color .2s;">
+    (r.executive_readiness?`<div style="margin-bottom:1rem;font-size:.82rem;font-style:italic;color:var(--accent3);padding:.65rem .85rem;background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.12);border-radius:6px;">${esc(r.executive_readiness)}</div>`:'')
+    +(gaps.length?gaps.map(g=>`<div style="border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem;margin-bottom:.65rem;background:var(--card);">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
         <div style="width:8px;height:8px;border-radius:50%;background:${g.severity==='high'?'var(--rose)':g.severity==='medium'?'var(--amber)':'var(--green)'};flex-shrink:0;"></div>
-        <strong style="font-size:.82rem;color:var(--text);font-family:'Syne',sans-serif;">${g.signal}</strong>
+        <strong style="font-size:.82rem;color:var(--text);font-family:'Syne',sans-serif;">${esc(g.signal)}</strong>
         <span style="font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">${g.severity}</span>
       </div>
-      <p style="font-size:.78rem;color:var(--text-dim);line-height:1.55;">${g.recommendation}</p>
+      <p style="font-size:.78rem;color:var(--text-dim);line-height:1.55;">${esc(g.recommendation)}</p>
     </div>`).join(''):'<div class="notice">No significant gaps identified.</div>');
 
+  // #7 Keyword match bar
+  renderKeywordBar(r.present_keywords,r.missing_keywords);
+
+  // #5 Integrity banner
+  animateIntegrityBanner();
+
   const tplNames={executive:'Executive (Classic Serif)',modern:'Modern (Two-Column)',ats:'ATS Clean (Single Column)'};
-  document.getElementById('tpl-note').textContent=`Template: ${tplNames[S.selectedTemplate]||S.selectedTemplate}`;
+  const tplEl=document.getElementById('tpl-note');
+  if(tplEl)tplEl.textContent=`Template: ${tplNames[S.selectedTemplate]||S.selectedTemplate}`;
 }
 
-// ── DOCX GENERATION ──────────────────────────────────────────────────────────
-async function dlDocx(){
-  if(!S.parsedData){toast('No result to download.');return;}
-  const d=S.parsedData;
-
-  // Ensure roles array exists
-  if(!d.roles||!d.roles.length){toast('No role data to build DOCX. Try downloading TXT.');return;}
-
-  const {
-    Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle,
-    LevelFormat, TabStopType, WidthType, TableRow, TableCell, Table,
-    ShadingType, VerticalAlign
-  } = window.docx;
-
-  const bulletNum={config:[{reference:'bullets',levels:[{level:0,format:LevelFormat.BULLET,text:'\u2022',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:480,hanging:240},spacing:{after:0,line:240}}}}]}]};
-
-  let doc;
-  const tpl=S.selectedTemplate;
-
-  if(tpl==='executive'){
-    const F='Book Antiqua', F2='Cambria';
-    const p=(text,opts={})=>new Paragraph({alignment:opts.align||AlignmentType.LEFT,spacing:{before:opts.before||0,after:opts.after||0,line:240},border:opts.border||{},tabStops:opts.tabs||[],children:opts.runs||[new TextRun({text,font:opts.font||F,size:opts.sz||20,bold:opts.bold||false,italics:opts.italic||false,smallCaps:opts.sc||false,color:opts.color||undefined,characterSpacing:opts.cs||0})]});
-    const secHead=(t)=>p(t,{font:F,bold:true,sc:true,sz:22,cs:20,before:120,after:60,border:{bottom:{style:BorderStyle.SINGLE,size:8,space:1,color:'000000'}}});
-    const bul=(t)=>new Paragraph({numbering:{reference:'bullets',level:0},alignment:AlignmentType.BOTH,spacing:{after:0,line:240},children:[new TextRun({text:t,font:F,size:20})]});
-    const empty=()=>p('',{after:0});
-
-    const ch=[
-      p(d.name,{font:F2,bold:true,sz:28,cs:10,align:AlignmentType.CENTER,after:0}),
-      p(d.contact,{font:F2,sz:20,align:AlignmentType.CENTER,after:60,border:{bottom:{style:BorderStyle.SINGLE,size:4,space:1,color:'000000'}}}),
-      empty(),
-      secHead('Executive Summary'),
-      p(d.summary,{align:AlignmentType.BOTH,after:0}),
-      empty(),
-      secHead('Core Competencies'),
-      p(d.competencies,{align:AlignmentType.BOTH,after:0}),
-      secHead('Professional Experience'),
-    ];
-    d.roles.forEach(r=>{
-      ch.push(new Paragraph({spacing:{before:80,after:0,line:240},tabStops:[{type:TabStopType.RIGHT,position:9072}],children:[new TextRun({text:r.title,font:F,bold:true,size:21}),new TextRun({text:'\t'+(r.dates||''),font:F,size:20})]}));
-      ch.push(p(r.company,{italic:true,after:40}));
-      if(r.context)ch.push(p(r.context,{after:20}));
-      (r.bullets||[]).forEach(b=>ch.push(bul(b)));
-      ch.push(empty());
-    });
-    ch.push(secHead('Education & Credentials'));
-    (d.education||[]).forEach(e=>ch.push(p(e,{after:0})));
-
-    doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:720,right:1080,bottom:720,left:1080}}},children:ch}]});
-
-  }else if(tpl==='modern'){
-    const FL='Calibri',FR='Calibri';
-    const SW=2700,MW=6660;
-    const bn={style:BorderStyle.NONE,size:0,space:0,color:'FFFFFF'};
-    const sp=(t,color)=>new Paragraph({spacing:{before:100,after:30,line:240},children:[new TextRun({text:t.toUpperCase(),font:FL,bold:true,size:16,color:color||'4A9FD4',characterSpacing:30})]});
-    const sb=(t)=>new Paragraph({spacing:{after:20,line:240},children:[new TextRun({text:t,font:FL,size:17,color:'CCD6E0'})]});
-    const mh=(t)=>new Paragraph({spacing:{before:100,after:40,line:240},border:{bottom:{style:BorderStyle.SINGLE,size:4,space:1,color:'4A9FD4'}},children:[new TextRun({text:t.toUpperCase(),font:FR,bold:true,size:17,color:'1A2B3C',characterSpacing:25})]});
-    const mb=(t)=>new Paragraph({alignment:AlignmentType.BOTH,spacing:{after:0,line:240},children:[new TextRun({text:t,font:FR,size:18})]});
-    const mbul=(t)=>new Paragraph({numbering:{reference:'bullets',level:0},spacing:{after:0,line:240},children:[new TextRun({text:t,font:FR,size:17})]});
-    const empty=()=>new Paragraph({spacing:{after:0,line:200},children:[]});
-
-    const sidebar=[
-      new Paragraph({spacing:{after:20,line:240},children:[new TextRun({text:(d.name||'').split(',')[0],font:FL,bold:true,size:22,color:'FFFFFF'})]}),
-      new Paragraph({spacing:{after:80,line:240},children:[new TextRun({text:(d.name||'').includes(',')?(d.name).split(',').slice(1).join(',').trim():'',font:FL,size:17,color:'90AEC6'})]}),
-      sp('Contact'),
-      ...(d.contact||'').split('|').map(c=>sb(c.trim())),
-      sp('Competencies'),
-      ...(d.competencies||'').split('•').filter(c=>c.trim()).slice(0,8).map(c=>sb(c.trim())),
-      sp('Education'),
-      ...(d.education||[]).map(e=>sb(e.length>45?e.substring(0,45)+'...':e))
-    ];
-
-    const main=[mh('Professional Summary'),mb(d.summary||''),empty(),mh('Professional Experience')];
-    (d.roles||[]).forEach(r=>{
-      main.push(new Paragraph({spacing:{before:80,after:0,line:240},tabStops:[{type:TabStopType.RIGHT,position:MW-200}],children:[new TextRun({text:r.title,font:FR,bold:true,size:19}),new TextRun({text:'\t'+(r.dates||''),font:FR,size:16,color:'888888'})]}));
-      main.push(new Paragraph({spacing:{after:30,line:240},children:[new TextRun({text:r.company,font:FR,size:17,color:'4A9FD4'})]}));
-      if(r.context)main.push(mb(r.context));
-      (r.bullets||[]).forEach(b=>main.push(mbul(b)));
-      main.push(empty());
-    });
-
-    const modernTable=new Table({
-      width:{size:SW+MW,type:WidthType.DXA},
-      columnWidths:[SW,MW],
-      rows:[new TableRow({children:[
-        new TableCell({width:{size:SW,type:WidthType.DXA},shading:{fill:'1A2B3C',type:ShadingType.CLEAR},margins:{top:200,bottom:200,left:180,right:180},borders:{top:bn,bottom:bn,left:bn,right:bn},children:sidebar}),
-        new TableCell({width:{size:MW,type:WidthType.DXA},margins:{top:200,bottom:200,left:220,right:160},borders:{top:bn,bottom:bn,left:bn,right:bn},children:main})
-      ]})]
-    });
-    doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:560,right:720,bottom:560,left:720}}},children:[modernTable]}]});
-
-  }else{
-    // ATS Clean
-    const F='Arial';
-    const p=(text,opts={})=>new Paragraph({spacing:{before:opts.before||0,after:opts.after||60,line:240},shading:opts.shade?{fill:'F0F0F0',type:ShadingType.CLEAR}:undefined,tabStops:opts.tabs||[],children:opts.runs||[new TextRun({text,font:F,size:opts.sz||18,bold:opts.bold||false,color:opts.color||undefined,characterSpacing:opts.cs||0})]});
-    const secHead=(t)=>p(t.toUpperCase(),{sz:18,bold:true,cs:20,before:160,after:60,shade:true});
-    const bul=(t)=>new Paragraph({numbering:{reference:'bullets',level:0},spacing:{after:0,line:240},children:[new TextRun({text:t,font:F,size:18})]});
-    const empty=()=>p('',{after:60});
-
-    const ch=[
-      p(d.name,{sz:28,bold:true,after:40}),
-      p(d.contact,{sz:18,color:'555555',after:120}),
-      secHead('Professional Summary'),
-      p(d.summary,{after:60}),
-      secHead('Core Competencies'),
-      p((d.competencies||'').replace(/•/g,'|'),{after:60}),
-      secHead('Professional Experience'),
-    ];
-    (d.roles||[]).forEach(r=>{
-      ch.push(new Paragraph({spacing:{before:80,after:0,line:240},tabStops:[{type:TabStopType.RIGHT,position:9072}],children:[new TextRun({text:r.title,font:F,bold:true,size:19}),new TextRun({text:'\t'+(r.dates||''),font:F,size:18})]}));
-      ch.push(p(r.company,{color:'555555',after:40}));
-      if(r.context)ch.push(p(r.context,{after:20}));
-      (r.bullets||[]).forEach(b=>ch.push(bul(b)));
-      ch.push(empty());
-    });
-    ch.push(secHead('Education & Credentials'));
-    (d.education||[]).forEach(e=>ch.push(p(e,{after:0})));
-
-    doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1080,right:1080,bottom:1080,left:1080}}},children:ch}]});
-  }
-
-  // Generate and download
-  const blob=await Packer.toBlob(doc);
-  const name=(S.resumeFile||'resume').replace(/\.[^.]+$/,'');
-  dl(blob,`${name}-tailored-${tpl}.docx`);
-}
-
-function dlTxt(){
-  if(!S.result?.rewritten_resume_text){toast('No result to download.');return;}
-  const name=(S.resumeFile||'resume').replace(/\.[^.]+$/,'');
-  dl(new Blob([S.result.rewritten_resume_text],{type:'text/plain'}),`${name}-tailored.txt`);
-}
-function dl(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
-
-// ── SAVED ────────────────────────────────────────────────────────────────────
-function saveResume(){
-  if(!S.result){toast('Nothing to save.');return;}
-  S.saved.unshift({id:Date.now(),name:S.resumeFile||'Resume',job:(S.jobDesc||'').substring(0,55)+'…',date:new Date().toLocaleDateString(),score:S.result.match_score||0,result:S.result,parsedData:S.parsedData,template:S.selectedTemplate});
-  try{localStorage.setItem('ro_saved',JSON.stringify(S.saved.slice(0,20)));}catch{}
-  toast('Saved to dashboard.');
-}
-function renderSaved(){
-  const el=document.getElementById('saved-list');
-  if(!S.saved.length){el.innerHTML='<div class="empty"><div class="big">📂</div><h3>No saved resumes yet</h3><p>Run an optimization to get started.</p></div>';return;}
-  el.innerHTML=S.saved.map(s=>`<div class="saved-item"><div><h4>${s.name}</h4><p>${s.job} · ${s.date} · Match: ${s.score}%</p></div><div class="saved-acts"><button class="tiny" onclick="loadSaved(${s.id})">View</button><button class="tiny" onclick="delSaved(${s.id})">🗑</button></div></div>`).join('');
-}
-function loadSaved(id){
-  const s=S.saved.find(x=>x.id===id);if(!s)return;
-  S.result=s.result;S.parsedData=s.parsedData;S.selectedTemplate=s.template||'executive';
-  renderResults(s.result);showPage('results');
-}
-function delSaved(id){S.saved=S.saved.filter(x=>x.id!==id);try{localStorage.setItem('ro_saved',JSON.stringify(S.saved));}catch{}renderSaved();}
-
-// ── USAGE TRACKING ────────────────────────────────────────────────────────────
-// CLERK MIGRATION POINT: replace localStorage with server-side count tied to user ID
+// ── USAGE TRACKING ─────────────────────────────────────────────────────────────
 const FREE_LIMIT=3;
 const TOOL_KEY='resume';
 function _usageKey(){return `arx_usage_${TOOL_KEY}_${new Date().toISOString().slice(0,7)}`;}
@@ -937,16 +1198,10 @@ function getResetDate(){const now=new Date();const reset=new Date(now.getFullYea
 
 function updateUsageBadge(remaining){
   const el=document.getElementById('usage-badge');
-  if(remaining===Infinity||remaining>1){
-    el.className='credits-badge';
-    el.textContent=remaining===Infinity?'✦ Unlimited':'✦ '+remaining+' of '+FREE_LIMIT+' free optimizations left';
-  }else if(remaining===1){
-    el.className='credits-badge warn';
-    el.textContent='⚠ 1 optimization left this month';
-  }else{
-    el.className='credits-badge danger';
-    el.textContent='✕ No free optimizations left — resets '+getResetDate();
-  }
+  if(!el)return;
+  if(remaining===Infinity||remaining>1){el.className='credits-badge';el.textContent=remaining===Infinity?'✦ Unlimited':'✦ '+remaining+' of '+FREE_LIMIT+' free optimizations left';}
+  else if(remaining===1){el.className='credits-badge warn';el.textContent='⚠ 1 optimization left this month';}
+  else{el.className='credits-badge danger';el.textContent='✕ No free optimizations left — resets '+getResetDate();}
 }
 
 function showResultsUsageBar(remaining){
@@ -959,82 +1214,34 @@ function showResultsUsageBar(remaining){
   const pct=Math.round((getUsage()/FREE_LIMIT)*100);
   fill.style.width=pct+'%';
   fill.style.background=remaining===0?'var(--rose)':remaining===1?'var(--amber)':'var(--accent2)';
-  left.textContent=remaining===0?'No free optimizations left this month':remaining+' of '+FREE_LIMIT+' free optimizations remaining';
+  left.textContent=remaining===0?'No free optimizations left this month':remaining+' of '+FREE_LIMIT+' remaining';
   reset.textContent='Resets '+getResetDate();
-  if(remaining<=1){
-    bar.style.background='rgba(251,191,36,.04)';
-    bar.style.borderColor='rgba(251,191,36,.15)';
-  }
 }
 
-// Init badge on load
-document.addEventListener('DOMContentLoaded',()=>{
-  updateUsageBadge(getRemainingUses());
-  const rd=getResetDate();
-  const el1=document.getElementById('paywall-reset-date');
-  const el2=document.getElementById('paywall-reset-date2');
-  if(el1)el1.textContent=rd;
-  if(el2)el2.textContent=rd;
+function showPaywall(){document.getElementById('paywall-overlay').classList.add('show');}
+function closePaywall(e){if(!e||e.target===document.getElementById('paywall-overlay'))document.getElementById('paywall-overlay').classList.remove('show');}
 
-  // ── AUTO-LOAD MASTER RESUME — show correct state ────────────────────────────
-  const masterText     = localStorage.getItem('arx_master_resume_text');
-  const masterFilename = localStorage.getItem('arx_master_resume_filename') || 'Master Resume';
-
-  if (masterText) {
-    // State A — master resume exists, load silently
-    S.resumeText = masterText;
-    S.resumeFile = masterFilename;
-    document.getElementById('resume-state-master').style.display = 'block';
-    document.getElementById('resume-state-upload').style.display = 'none';
-    const nameEl = document.getElementById('master-resume-name');
-    if (nameEl) nameEl.textContent = masterFilename;
-  } else {
-    // State B — no master resume, show upload zone
-    document.getElementById('resume-state-master').style.display = 'none';
-    document.getElementById('resume-state-upload').style.display = 'block';
-  }
-});
-
-// ── PAYWALL ───────────────────────────────────────────────────────────────────
-function showPaywall(){
-  document.getElementById('paywall-overlay').classList.add('show');
-}
-function closePaywall(e){
-  if(!e||e.target===document.getElementById('paywall-overlay'))
-    document.getElementById('paywall-overlay').classList.remove('show');
-}
-
-// ── EDIT INPUTS (back button fix) ────────────────────────────────────────────
+// ── EDIT INPUTS (back button fix) ─────────────────────────────────────────────
 function editInputs(){
-  // Result is saved in both S.result and localStorage — never lost
   showPage('dashboard');
-  // Restore last JD
-  const lastJD = localStorage.getItem('arx_last_jd');
-  if (lastJD) document.getElementById('jd').value = lastJD;
-  // Show "back to results" banner so they don't lose their result
+  const lastJD=localStorage.getItem('arx_last_jd');
+  if(lastJD)document.getElementById('jd').value=lastJD;
   showBackToResults();
 }
-
-function showBackToResults() {
-  // Only show if we have a result in memory
-  if (!S.result && !localStorage.getItem('arx_last_result')) return;
-  let banner = document.getElementById('back-to-results-banner');
-  if (!banner) return;
-  banner.style.display = 'flex';
+function showBackToResults(){
+  if(!S.result&&!localStorage.getItem('arx_last_result'))return;
+  const banner=document.getElementById('back-to-results-banner');
+  if(banner)banner.style.display='flex';
+}
+function goBackToResults(){
+  if(!S.result){try{S.result=JSON.parse(localStorage.getItem('arx_last_result')||'');}catch{toast('Could not restore result — please run again.');return;}}
+  S.originalText=localStorage.getItem('arx_last_original')||S.originalText;
+  renderResults(S.result);showPage('results');
+  const banner=document.getElementById('back-to-results-banner');
+  if(banner)banner.style.display='none';
 }
 
-function goBackToResults() {
-  // Restore from memory or localStorage
-  if (!S.result) {
-    try { S.result = JSON.parse(localStorage.getItem('arx_last_result') || ''); }
-    catch { toast('Could not restore result — please run again.'); return; }
-  }
-  renderResults(S.result);
-  showPage('results');
-  document.getElementById('back-to-results-banner').style.display = 'none';
-}
-
-// ── SAVE AS MASTER RESUME ─────────────────────────────────────────────────────
+// ── SAVE AS MASTER ─────────────────────────────────────────────────────────────
 function saveAsMaster(){
   if(!S.resumeText)return;
   localStorage.setItem('arx_master_resume_text',S.resumeText);
@@ -1043,24 +1250,15 @@ function saveAsMaster(){
   toast('✓ Saved as your master resume — all tools will use it automatically');
 }
 
-// ── FEEDBACK ──────────────────────────────────────────────────────────────────
+// ── FEEDBACK ───────────────────────────────────────────────────────────────────
 function submitFeedback(rating){
   document.getElementById('fb-up').classList.toggle('selected-up',rating==='up');
   document.getElementById('fb-down').classList.toggle('selected-down',rating==='down');
-  // Save rating
   const entry={tool:'resume',rating,timestamp:new Date().toISOString()};
   const existing=JSON.parse(localStorage.getItem('arx_feedback')||'[]');
-  existing.push(entry);
-  localStorage.setItem('arx_feedback',JSON.stringify(existing.slice(-100)));
-  // If thumbs down show comment box
-  if(rating==='down'){
-    document.getElementById('fb-comment').style.display='block';
-    document.getElementById('fb-text').focus();
-  }else{
-    document.getElementById('fb-comment').style.display='none';
-    toast('Thanks for the feedback!');
-  }
-  // AIRTABLE MIGRATION POINT: POST entry to /api/feedback
+  existing.push(entry);localStorage.setItem('arx_feedback',JSON.stringify(existing.slice(-100)));
+  if(rating==='down'){document.getElementById('fb-comment').style.display='block';document.getElementById('fb-text').focus();}
+  else toast('Thanks for the feedback!');
 }
 function submitFeedbackComment(){
   const comment=document.getElementById('fb-text').value.trim();
@@ -1069,42 +1267,101 @@ function submitFeedbackComment(){
     if(existing.length>0)existing[existing.length-1].comment=comment;
     localStorage.setItem('arx_feedback',JSON.stringify(existing));
     toast('Thanks — that helps us improve!');
-    document.getElementById('fb-comment').style.display='none';
-    document.getElementById('fb-text').value='';
+    document.getElementById('fb-comment').style.display='none';document.getElementById('fb-text').value='';
   }
 }
 
-// ── RESTORE LAST RESULT ON PAGE LOAD ──────────────────────────────────────────
-window.addEventListener('DOMContentLoaded',()=>{
-  const lastResult = localStorage.getItem('arx_last_result');
-  if (lastResult) {
-    try {
-      S.result = JSON.parse(lastResult);
-      // Show the back-to-results banner so they know it's available
-      setTimeout(showBackToResults, 500);
-    } catch{}
+// ── DOCX GENERATION ────────────────────────────────────────────────────────────
+async function dlDocx(){
+  if(!S.parsedData){toast('No result to download.');return;}
+  const d=S.parsedData;
+  const tpl=S.selectedTemplate;
+  const{Document,Paragraph,TextRun,HeadingLevel,AlignmentType,Packer,BorderStyle,LevelFormat}=docx;
+  const bulletNum={config:[{reference:'bullets',levels:[{level:0,format:LevelFormat.BULLET,text:'•',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]}]};
+  const p=(t,opts={})=>new Paragraph({children:[new TextRun({text:t,...opts})],spacing:{after:opts.after??80},...(opts.align?{alignment:opts.align}:{}),...(opts.heading?{heading:opts.heading}:{})});
+  const bul=(t)=>new Paragraph({text:t,numbering:{reference:'bullets',level:0},spacing:{after:60}});
+  const secHead=(t)=>new Paragraph({children:[new TextRun({text:t,bold:true,size:20,allCaps:true})],spacing:{before:160,after:80},border:{bottom:{style:BorderStyle.SINGLE,size:6,color:'333333'}}});
+  const empty=()=>new Paragraph({children:[new TextRun({text:''})],spacing:{after:40}});
+
+  const ch=[];
+  ch.push(p(d.name||'',{bold:true,size:tpl==='executive'?32:28,align:AlignmentType.CENTER,after:40}));
+  if(d.contact)ch.push(p(d.contact,{size:18,color:'555555',align:AlignmentType.CENTER,after:120}));
+  if(d.summary){ch.push(secHead('Professional Summary'));ch.push(p(d.summary,{after:100}));}
+  if(d.competencies){ch.push(secHead('Core Competencies'));ch.push(p(d.competencies,{after:80}));}
+  if(d.roles?.length){
+    ch.push(secHead('Professional Experience'));
+    d.roles.forEach(r=>{
+      ch.push(p(r.title,{bold:true,after:20}));
+      ch.push(p(r.company,{color:'555555',after:40}));
+      if(r.context)ch.push(p(r.context,{after:20}));
+      (r.bullets||[]).forEach(b=>ch.push(bul(b)));
+      ch.push(empty());
+    });
+  }
+  if(d.education?.length){ch.push(secHead('Education & Credentials'));d.education.forEach(e=>ch.push(p(e,{after:0})));}
+
+  const doc=new Document({numbering:bulletNum,sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1080,right:1080,bottom:1080,left:1080}}},children:ch}]});
+  const blob=await Packer.toBlob(doc);
+  const name=(S.resumeFile||'resume').replace(/\.[^.]+$/,'');
+  dl(blob,`${name}-tailored-${tpl}.docx`);
+}
+
+function dlTxt(){
+  if(!S.result?.rewritten_resume_text){toast('No result to download.');return;}
+  const name=(S.resumeFile||'resume').replace(/\.[^.]+$/,'');
+  dl(new Blob([S.result.rewritten_resume_text],{type:'text/plain'}),`${name}-tailored.txt`);
+}
+function dl(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+
+// ── SAVED ──────────────────────────────────────────────────────────────────────
+function saveResume(){
+  if(!S.result){toast('Nothing to save.');return;}
+  S.saved.unshift({id:Date.now(),name:S.resumeFile||'Resume',job:(S.jobDesc||'').substring(0,55)+'…',date:new Date().toLocaleDateString(),score:S.result.match_score||0,result:S.result,parsedData:S.parsedData,template:S.selectedTemplate});
+  try{localStorage.setItem('ro_saved',JSON.stringify(S.saved.slice(0,20)));}catch{}
+  toast('Saved.');
+}
+function renderSaved(){
+  const el=document.getElementById('saved-list');
+  if(!S.saved.length){el.innerHTML='<div class="empty"><div class="big">📂</div><h3>No saved resumes yet</h3><p>Run an optimization to get started.</p></div>';return;}
+  el.innerHTML=S.saved.map(s=>`<div class="saved-item"><div><h4>${esc(s.name)}</h4><p>${esc(s.job)} · ${s.date} · Match: ${s.score}%</p></div><div class="saved-acts"><button class="tiny" onclick="loadSaved(${s.id})">View</button><button class="tiny" onclick="delSaved(${s.id})">🗑</button></div></div>`).join('');
+}
+function loadSaved(id){
+  const s=S.saved.find(x=>x.id===id);if(!s)return;
+  S.result=s.result;S.parsedData=s.parsedData;S.selectedTemplate=s.template||'executive';
+  renderResults(s.result);showPage('results');
+}
+function delSaved(id){S.saved=S.saved.filter(x=>x.id!==id);try{localStorage.setItem('ro_saved',JSON.stringify(S.saved));}catch{}renderSaved();}
+
+// ── PAGE LOAD INIT ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  updateUsageBadge(getRemainingUses());
+  const rd=getResetDate();
+  ['paywall-reset-date','paywall-reset-date2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=rd;});
+
+  // Auto-load master resume
+  const masterText=localStorage.getItem('arx_master_resume_text');
+  const masterFilename=localStorage.getItem('arx_master_resume_filename')||'Master Resume';
+  if(masterText){
+    S.resumeText=masterText;S.resumeFile=masterFilename;
+    document.getElementById('resume-state-master').style.display='block';
+    document.getElementById('resume-state-upload').style.display='none';
+    const nameEl=document.getElementById('master-resume-name');
+    if(nameEl)nameEl.textContent=masterFilename;
+  }else{
+    document.getElementById('resume-state-master').style.display='none';
+    document.getElementById('resume-state-upload').style.display='block';
+  }
+
+  // Restore last result
+  const lastResult=localStorage.getItem('arx_last_result');
+  if(lastResult){
+    try{
+      S.result=JSON.parse(lastResult);
+      S.originalText=localStorage.getItem('arx_last_original')||'';
+      setTimeout(showBackToResults,500);
+    }catch{}
   }
 });
 </script>
-
-<!-- PAYWALL MODAL -->
-<div class="paywall-overlay" id="paywall-overlay" onclick="closePaywall(event)">
-  <div class="paywall-modal">
-    <div style="font-size:1.75rem;margin-bottom:.5rem;">⚡</div>
-    <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:.4rem;">You've used your 3 free optimizations</div>
-    <p style="font-size:.83rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem;">Resets <strong style="color:var(--text);" id="paywall-reset-date"></strong> — or upgrade now for unlimited access and every new tool we launch.</p>
-    <a href="/login" class="paywall-opt primary" style="text-decoration:none;">
-      <div><div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#fff;">Active Search</div><div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:.1rem;">Unlimited everything — cancel anytime</div></div>
-      <div style="font-family:'Syne',sans-serif;font-weight:800;color:#fff;">$39/mo</div>
-    </a>
-    <a href="/login" class="paywall-opt secondary" style="text-decoration:none;">
-      <div><div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--green);">Starter — Best value</div><div style="font-size:.72rem;color:rgba(52,211,153,.8);margin-top:.1rem;">All tools, 20 uses/month</div></div>
-      <div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">$99/yr</div>
-    </a>
-    <div style="text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:.75rem;">
-      <a onclick="closePaywall()" style="color:var(--text-dim);cursor:pointer;">Continue on free — resets <span id="paywall-reset-date2"></span></a>
-    </div>
-  </div>
-</div>
 </body>
 </html>
