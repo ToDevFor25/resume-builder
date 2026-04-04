@@ -257,17 +257,54 @@ textarea::placeholder{color:var(--text-muted);}
     </div>
     <div class="two-col">
       <div>
-        <div class="card" style="margin-bottom:1rem;">
-          <div class="card-title">📄 Resume</div>
-          <div class="card-sub">Upload your existing resume. We extract the content and rewrite it — you choose the output format.</div>
-          <div class="upload-zone" id="uz" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
-            <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
-            <div class="upload-icon">📎</div>
-            <strong>Drop resume here or click to browse</strong>
-            <p>DOCX · PDF · TXT · RTF</p>
+        <!-- RESUME CARD — layout adapts based on whether master resume exists -->
+        <div class="card" style="margin-bottom:1rem;" id="resume-card">
+
+          <!-- STATE A: Master resume loaded (shown when profile resume exists) -->
+          <div id="resume-state-master" style="display:none;">
+            <div style="display:flex;align-items:center;gap:.85rem;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(56,189,248,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📋</div>
+              <div style="flex:1;">
+                <div style="font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.1rem;" id="master-resume-name">Master Resume</div>
+                <div style="font-size:.74rem;color:var(--text-muted);">Loaded from your profile — used automatically</div>
+              </div>
+              <a href="#" onclick="window.location.href='/profile';return false;" style="font-size:.72rem;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0;">Update ↗</a>
+            </div>
+            <!-- Expandable swap option -->
+            <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);">
+              <button onclick="toggleResumeSwap()" style="background:none;border:none;font-size:.74rem;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;gap:.3rem;" id="swap-toggle">
+                <span id="swap-toggle-icon">▸</span> Use a different resume for this session
+              </button>
+              <div id="swap-zone" style="display:none;margin-top:.65rem;">
+                <div class="upload-zone" id="uz" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" style="padding:1rem;">
+                  <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
+                  <div style="font-size:1.2rem;margin-bottom:.3rem;">📎</div>
+                  <strong style="font-size:.8rem;">Drop a different resume here</strong>
+                  <p style="font-size:.72rem;">DOCX · PDF · TXT · RTF · replaces master resume for this session only</p>
+                </div>
+                <div id="file-ok" style="display:none" class="file-ok">✅ <span id="fname">file</span> — using this instead of master resume</div>
+              </div>
+            </div>
           </div>
-          <div id="file-ok" style="display:none" class="file-ok">✅ <span id="fname">file</span></div>
+
+          <!-- STATE B: No master resume (shown for new users) -->
+          <div id="resume-state-upload" style="display:none;">
+            <div class="card-title">📄 Resume</div>
+            <div class="card-sub">Upload your resume for this session.</div>
+            <div class="upload-zone" id="uz-b" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)">
+              <input type="file" id="rf" accept=".pdf,.docx,.txt,.rtf" onchange="onFile(event)"/>
+              <div class="upload-icon">📎</div>
+              <strong id="uz-title">Drop resume here or click to browse</strong>
+              <p id="uz-sub">DOCX · PDF · TXT · RTF</p>
+            </div>
+            <div id="file-ok-b" style="display:none" class="file-ok">✅ <span id="fname-b">file</span></div>
+            <div style="margin-top:.65rem;padding:.55rem .8rem;background:var(--bg3);border-radius:var(--radius);font-size:.75rem;color:var(--text-muted);line-height:1.5;">
+              💡 Save time — <a href="#" onclick="window.location.href='/profile';return false;" style="color:var(--accent);text-decoration:none;font-weight:600;">upload a master resume in your Profile</a> and it loads here automatically every time.
+            </div>
+          </div>
+
         </div>
+
         <div class="card">
           <div class="card-title">💼 Job Description</div>
           <div class="card-sub">Paste anything — full LinkedIn page, job board listing, or just the description.</div>
@@ -469,10 +506,22 @@ function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files
 function onDragOver(e){e.preventDefault();document.getElementById('uz').classList.add('drag');}
 function onDragLeave(){document.getElementById('uz').classList.remove('drag');}
 function onFile(e){if(e.target.files[0])processFile(e.target.files[0]);}
+// Toggle the swap zone in State A
+function toggleResumeSwap() {
+  const zone   = document.getElementById('swap-zone');
+  const icon   = document.getElementById('swap-toggle-icon');
+  const isOpen = zone.style.display === 'block';
+  zone.style.display = isOpen ? 'none' : 'block';
+  icon.textContent   = isOpen ? '▸' : '▾';
+}
+
 async function processFile(f){
   S.resumeFile=f.name;
-  document.getElementById('fname').textContent=f.name;
-  document.getElementById('file-ok').style.display='flex';
+  // Update whichever file-ok indicator is visible
+  const fok  = document.getElementById('file-ok')  || document.getElementById('file-ok-b');
+  const fname= document.getElementById('fname')     || document.getElementById('fname-b');
+  if (fok)  { fok.style.display='flex'; }
+  if (fname){ fname.textContent=f.name; }
   const ext=f.name.split('.').pop().toLowerCase();
   if(ext==='docx'){
     try{const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});S.resumeText=r.value;}
@@ -611,7 +660,7 @@ JOB: ${jd.substring(0,2000)}`,
     renderResults(S.result);
     showPage('results');
 
-    // Show master resume prompt if no master resume saved yet
+    // Show master resume prompt only if no master resume saved yet (State B)
     if(!localStorage.getItem('arx_master_resume_text')){
       setTimeout(()=>document.getElementById('master-prompt').classList.add('show'),1200);
     }
@@ -860,6 +909,24 @@ document.addEventListener('DOMContentLoaded',()=>{
   const el2=document.getElementById('paywall-reset-date2');
   if(el1)el1.textContent=rd;
   if(el2)el2.textContent=rd;
+
+  // ── AUTO-LOAD MASTER RESUME — show correct state ────────────────────────────
+  const masterText     = localStorage.getItem('arx_master_resume_text');
+  const masterFilename = localStorage.getItem('arx_master_resume_filename') || 'Master Resume';
+
+  if (masterText) {
+    // State A — master resume exists, load silently
+    S.resumeText = masterText;
+    S.resumeFile = masterFilename;
+    document.getElementById('resume-state-master').style.display = 'block';
+    document.getElementById('resume-state-upload').style.display = 'none';
+    const nameEl = document.getElementById('master-resume-name');
+    if (nameEl) nameEl.textContent = masterFilename;
+  } else {
+    // State B — no master resume, show upload zone
+    document.getElementById('resume-state-master').style.display = 'none';
+    document.getElementById('resume-state-upload').style.display = 'block';
+  }
 });
 
 // ── PAYWALL ───────────────────────────────────────────────────────────────────
