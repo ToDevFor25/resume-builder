@@ -216,6 +216,13 @@ textarea::placeholder{color:var(--text-muted);}
 <div class="toast" id="toast"></div>
 
 <div class="loader" id="loader">
+  <!-- Cancel window — visible for first 3 seconds -->
+  <div id="cancel-window" style="position:absolute;top:1.5rem;right:1.5rem;">
+    <button id="cancel-btn" onclick="cancelOptimization()" style="display:flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;">
+      <span id="cancel-countdown" style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--amber);min-width:14px;text-align:center;">3</span>
+      Cancel — no credit used
+    </button>
+  </div>
   <div class="spinner"></div>
   <div class="loader-title" id="loader-title">Analyzing resume</div>
   <div class="lsteps">
@@ -452,6 +459,7 @@ const S={
   selectedTemplate:'executive',
   result:null,
   parsedData:null,
+  cancelled:false,
   saved:JSON.parse(localStorage.getItem('ro_saved')||'[]')
 };
 
@@ -503,7 +511,14 @@ function showLoader(){document.getElementById('loader').classList.add('show');}
 function hideLoader(){document.getElementById('loader').classList.remove('show');}
 function setTitle(t){document.getElementById('loader-title').textContent=t;}
 async function tick(n,d=800){await wait(d);document.getElementById('ls'+n).classList.add('on');}
-function resetLoader(){for(let i=1;i<=5;i++)document.getElementById('ls'+i).classList.remove('on');}
+function resetLoader(){
+  for(let i=1;i<=5;i++)document.getElementById('ls'+i).classList.remove('on');
+  // Reset cancel button for fresh run
+  const btn=document.getElementById('cancel-btn');
+  if(btn){btn.style.display='flex';btn.style.opacity='1';btn.style.pointerEvents='auto';}
+  const cd=document.getElementById('cancel-countdown');
+  if(cd)cd.textContent='3';
+}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 
 // ── FILE HANDLING ────────────────────────────────────────────────────────────
@@ -511,6 +526,47 @@ function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files
 function onDragOver(e){e.preventDefault();document.getElementById('uz').classList.add('drag');}
 function onDragLeave(){document.getElementById('uz').classList.remove('drag');}
 function onFile(e){if(e.target.files[0])processFile(e.target.files[0]);}
+// ── CANCEL WINDOW ─────────────────────────────────────────────────────────────
+let cancelTimer = null;
+let cancelCountdownInterval = null;
+
+function startCancelCountdown() {
+  const btn      = document.getElementById('cancel-btn');
+  const countdown= document.getElementById('cancel-countdown');
+  const window_  = document.getElementById('cancel-window');
+  if (!btn) return;
+
+  let seconds = 3;
+  btn.style.display = 'flex';
+  countdown.textContent = seconds;
+
+  cancelCountdownInterval = setInterval(() => {
+    seconds--;
+    if (seconds <= 0) {
+      clearInterval(cancelCountdownInterval);
+      // Fade out the cancel button — pipeline is committed
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+      setTimeout(() => { btn.style.display = 'none'; }, 400);
+    } else {
+      countdown.textContent = seconds;
+    }
+  }, 1000);
+}
+
+function cancelOptimization() {
+  S.cancelled = true;
+  clearInterval(cancelCountdownInterval);
+  hideLoader();
+  // Reset button state for next run
+  const btn = document.getElementById('cancel-btn');
+  if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+  // Restore JD in the textarea
+  if (S.jobDesc) document.getElementById('jd').value = S.jobDesc;
+  toast('Optimization cancelled — no credit used.');
+  resetPipe();
+}
+
 // Toggle the swap zone in State A
 function toggleResumeSwap() {
   const zone   = document.getElementById('swap-zone');
@@ -565,7 +621,9 @@ async function generate(){
   }
 
   S.jobDesc=jd;
+  S.cancelled=false;
   resetPipe();resetLoader();showLoader();
+  startCancelCountdown();
 
   try{
     setPipe(1,'done');setPipe(2,'active');
@@ -652,7 +710,10 @@ JOB: ${jd.substring(0,2000)}`,
     setTitle('Building your document');
     await wait(800);
 
-    // ── INCREMENT USAGE ──────────────────────────────────────────────────────
+    // Check if user cancelled during the pipeline
+    if(S.cancelled){ hideLoader(); return; }
+
+    // ── INCREMENT USAGE — only on successful completion ──────────────────────
     const newCount=incrementUsage();
     const newRemaining=getRemainingUses();
     updateUsageBadge(newRemaining);
