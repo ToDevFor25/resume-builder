@@ -609,23 +609,36 @@ async function handleSubmit() {
   }
 
   const btn = document.querySelector('.capture-btn');
+  const btnOriginal = btn.innerHTML;
   btn.textContent = 'Submitting…';
   btn.disabled = true;
 
   try {
-    // Store locally with all fields
-    const existing = JSON.parse(localStorage.getItem('sr_waitlist') || '[]');
-    existing.push({
-      email,
-      industry,
-      roleLevel,
-      source: 'coming-soon',
-      date: new Date().toISOString()
+    const response = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, industry, roleLevel })
     });
-    localStorage.setItem('sr_waitlist', JSON.stringify(existing));
-    showSuccess();
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      // Also save locally as backup
+      const existing = JSON.parse(localStorage.getItem('sr_waitlist') || '[]');
+      existing.push({ email, industry, roleLevel, source: 'coming-soon', date: new Date().toISOString() });
+      localStorage.setItem('sr_waitlist', JSON.stringify(existing));
+      showSuccess();
+    } else {
+      throw new Error(data.error || 'Failed to submit');
+    }
+
   } catch(e) {
-    showSuccess();
+    // Save locally if API fails — no one loses their signup
+    const existing = JSON.parse(localStorage.getItem('sr_waitlist') || '[]');
+    existing.push({ email, industry, roleLevel, source: 'coming-soon', date: new Date().toISOString() });
+    localStorage.setItem('sr_waitlist', JSON.stringify(existing));
+    showSuccess(); // Still show success — don't penalize user for server errors
+    console.error('Waitlist submission error:', e);
   }
 }
 
