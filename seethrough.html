@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SeeThrough — Ascend RX</title>
+<title>SeeThrough — StretchRole</title>
 <script async crossorigin="anonymous"
   data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
   src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
@@ -161,8 +161,31 @@ textarea.input::placeholder{color:var(--text-muted);}
 .legit-banner.possible-scam .legit-signal-dot,.legit-banner.red-flag .legit-signal-dot{background:var(--rose);}
 .legit-disclaimer{font-size:.68rem;color:var(--text-muted);margin-top:.65rem;font-style:italic;padding-top:.65rem;border-top:1px solid rgba(255,255,255,.05);}
 
-/* ACTION BUTTONS */
-.actions-row{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.25rem;}
+/* MASTER RESUME SIGNAL BAR */
+.resume-signal{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:.78rem;}
+.resume-signal.has-resume{background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.15);}
+.resume-signal.no-resume{background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.18);}
+.resume-signal-icon{font-size:1rem;flex-shrink:0;}
+.resume-signal-text{flex:1;line-height:1.5;}
+.resume-signal-text strong{color:var(--text);}
+.resume-signal-text span{color:var(--text-muted);}
+.resume-signal-action{font-size:.72rem;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0;cursor:pointer;}
+/* SCORE CONTEXT */
+.score-context{font-size:.68rem;color:var(--text-muted);margin-top:.4rem;line-height:1.4;text-align:center;font-style:italic;}
+/* GAP FUNNEL CTA */
+.gap-funnel{background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(56,189,248,.04));border:1px solid rgba(56,189,248,.2);border-radius:12px;padding:1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.gap-funnel-left{}
+.gap-funnel-score{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-bottom:.2rem;}
+.gap-funnel-score span{color:var(--rose);}
+.gap-funnel-message{font-size:.78rem;color:var(--text-dim);line-height:1.5;}
+.gap-funnel-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.1rem;background:linear-gradient(135deg,var(--accent2),#0284c7);border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 0 16px rgba(56,189,248,.2);white-space:nowrap;flex-shrink:0;}
+.gap-funnel-btn:hover{box-shadow:0 0 28px rgba(56,189,248,.35);transform:translateY(-1px);}
+.gap-funnel-btn.strong{background:linear-gradient(135deg,var(--green),#059669);}
+/* SWAP ZONE */
+.resume-swap{display:none;margin-top:.65rem;padding:.75rem;background:var(--bg3);border-radius:8px;border:1px solid var(--border);}
+.resume-swap input[type=file]{display:none;}
+.resume-swap-btn{font-size:.72rem;font-weight:600;padding:.3rem .7rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;transition:all .15s;}
+.resume-swap-btn:hover{border-color:var(--border-bright);color:var(--text);}
 
 /* LOADER */
 .loader{display:none;position:fixed;inset:0;background:rgba(8,12,20,.92);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
@@ -200,8 +223,8 @@ textarea.input::placeholder{color:var(--text-muted);}
 <nav>
   <div class="nav-left">
     <a class="nav-logo" href="#" onclick="window.location.href='/dashboard';return false;">
-      <div class="nav-logo-mark">ARX</div>
-      <span class="nav-logo-text">Ascend <span>RX</span></span>
+      <div class="nav-logo-mark">SR</div>
+      <span class="nav-logo-text">Stretch<span>Role</span></span>
     </a>
     <div class="nav-divider"></div>
     <span class="nav-module">👁 SeeThrough</span>
@@ -231,11 +254,36 @@ textarea.input::placeholder{color:var(--text-muted);}
 
   <!-- INPUT -->
   <div class="input-card animate-in">
+
+    <!-- MASTER RESUME SIGNAL BAR -->
+    <div id="resume-signal-bar" class="resume-signal has-resume" style="display:none;">
+      <div class="resume-signal-icon">📋</div>
+      <div class="resume-signal-text">
+        <strong id="signal-filename">Master Resume</strong><br>
+        <span>Scoring your match against this resume — for the most accurate results</span>
+      </div>
+      <a class="resume-signal-action" onclick="toggleResumeSwap()">Swap ↓</a>
+    </div>
+    <div id="resume-signal-bar-empty" class="resume-signal no-resume" style="display:none;">
+      <div class="resume-signal-icon">⚠️</div>
+      <div class="resume-signal-text">
+        <strong>No resume on file</strong><br>
+        <span>Match scores will be estimated from your career level — <a href="#" onclick="window.location.href='/profile';return false;" style="color:var(--accent);text-decoration:none;font-weight:600;">upload a master resume</a> for real scoring</span>
+      </div>
+    </div>
+    <!-- Swap zone -->
+    <div class="resume-swap" id="resume-swap-zone">
+      <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.5rem;">Upload a different resume for this analysis:</div>
+      <input type="file" id="swap-file-input" accept=".pdf,.docx,.txt,.rtf" onchange="onSwapFile(event)"/>
+      <button class="resume-swap-btn" onclick="document.getElementById('swap-file-input').click()">📎 Choose file</button>
+      <span id="swap-file-name" style="font-size:.72rem;color:var(--text-muted);margin-left:.5rem;"></span>
+    </div>
+
     <label class="form-label">Job Posting, Recruiting Email, or Text Message</label>
     <textarea class="input" id="jd-input" placeholder="Paste anything here — a full job posting, a recruiter email, a LinkedIn message, even a text. We'll figure out what it is and tell you if it's worth your time…" style="min-height:180px;"></textarea>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;flex-wrap:wrap;gap:.75rem;">
-      <p style="font-size:.75rem;color:var(--text-muted);">Results calibrated to your profile: <strong style="color:var(--text-dim);" id="profile-summary">Leadership → Executive · Operations</strong></p>
-      <button class="btn-primary" onclick="runDecoder()">🔍 SeeThrough This Posting →</button>
+      <p style="font-size:.75rem;color:var(--text-muted);">Calibrated to: <strong style="color:var(--text-dim);" id="profile-summary">Leadership → Executive · Operations</strong></p>
+      <button class="btn-primary" onclick="runDecoder()">👁 SeeThrough This Posting →</button>
     </div>
   </div>
 
@@ -263,6 +311,7 @@ textarea.input::placeholder{color:var(--text-muted);}
         </div>
         <div class="match-title" id="res-verdict">Analyzing…</div>
         <div class="match-sub" id="res-verdict-sub"></div>
+        <div class="score-context" id="score-context">Based on your current resume — before optimization</div>
       </div>
       <div class="role-card">
         <div class="role-title" id="res-role-title">Role Title</div>
@@ -342,10 +391,18 @@ textarea.input::placeholder{color:var(--text-muted);}
       </div>
     </div>
 
+    <!-- GAP FUNNEL — connects SeeThrough to Resume Tailor -->
+    <div class="gap-funnel" id="gap-funnel">
+      <div class="gap-funnel-left">
+        <div class="gap-funnel-score">Current match: <span id="funnel-score">—</span></div>
+        <div class="gap-funnel-message" id="funnel-message">Run this role through Resume Tailor to close the gap — your rewritten resume typically scores 80–95%.</div>
+      </div>
+      <button class="gap-funnel-btn" id="funnel-btn" onclick="goToOptimizer()">✦ Optimize for this role →</button>
+    </div>
+
     <!-- ACTIONS -->
     <div class="actions-row">
       <button class="btn-secondary" onclick="resetDecoder()">↺ SeeThrough another posting</button>
-      <button class="btn-primary" onclick="goToOptimizer()">📄 Optimize resume for this role →</button>
     </div>
 
     <!-- FEEDBACK BAR -->
@@ -364,10 +421,10 @@ textarea.input::placeholder{color:var(--text-muted);}
 </div>
 
 <script>
-// ── PROFILE ──────────────────────────────────────────────────────────────────
-// Dual-layer: Clerk metadata (primary) + localStorage (fallback)
-// CLERK MIGRATION POINT: already reads from Clerk if available
+// ── PROFILE — Dual-layer: Clerk (primary) + localStorage (fallback) ──────────
 let clerkMeta = {};
+let sessionResumeText = null; // set if user swaps resume for this session
+
 window.addEventListener('load', async () => {
   try {
     await window.__clerk_loaded;
@@ -377,14 +434,44 @@ window.addEventListener('load', async () => {
       if (clerk.user) clerkMeta = clerk.user.publicMetadata || {};
     }
   } catch(e) { console.warn('Clerk:', e); }
+
+  // Init master resume signal bar
+  const masterText = getMasterResumeText();
+  const masterFilename = clerkMeta.masterResumeFilename || localStorage.getItem('arx_master_resume_filename') || 'Master Resume';
+  if (masterText) {
+    document.getElementById('resume-signal-bar').style.display = 'flex';
+    document.getElementById('resume-signal-bar-empty').style.display = 'none';
+    document.getElementById('signal-filename').textContent = masterFilename;
+  } else {
+    document.getElementById('resume-signal-bar').style.display = 'none';
+    document.getElementById('resume-signal-bar-empty').style.display = 'flex';
+  }
 });
 
-function getProfile() {
-  const local = JSON.parse(localStorage.getItem('arx_profile') || '{}');
-  return Object.keys(clerkMeta).length > 2 ? clerkMeta : local;
-}
 function getMasterResumeText() {
-  return clerkMeta.masterResumeText || localStorage.getItem('arx_master_resume_text') || null;
+  return sessionResumeText || clerkMeta.masterResumeText || localStorage.getItem('arx_master_resume_text') || null;
+}
+
+function toggleResumeSwap() {
+  const zone = document.getElementById('resume-swap-zone');
+  zone.style.display = zone.style.display === 'block' ? 'none' : 'block';
+}
+
+async function onSwapFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById('swap-file-name').textContent = 'Parsing…';
+  try {
+    sessionResumeText = await file.text();
+    document.getElementById('swap-file-name').textContent = '✓ ' + file.name;
+    document.getElementById('signal-filename').textContent = file.name + ' (this session)';
+    document.getElementById('resume-signal-bar').style.display = 'flex';
+    document.getElementById('resume-signal-bar-empty').style.display = 'none';
+    document.getElementById('resume-swap-zone').style.display = 'none';
+    toast('Resume swapped for this analysis');
+  } catch(err) {
+    document.getElementById('swap-file-name').textContent = 'Could not read file — try TXT or DOCX';
+  }
 }
 
 const profile = JSON.parse(localStorage.getItem('arx_profile') || '{}');
@@ -571,6 +658,43 @@ function renderResults(d) {
   document.getElementById('kw-have').innerHTML    = (d.keywords_present || []).map(k => `<span class="kw-tag have">${k}</span>`).join('');
   document.getElementById('kw-missing').innerHTML = (d.keywords_missing  || []).map(k => `<span class="kw-tag missing">${k}</span>`).join('');
 
+  // ── GAP FUNNEL — connects score to Resume Tailor ──────────────────────────
+  const score = d.match_score || 0;
+  const funnelScore = document.getElementById('funnel-score');
+  const funnelMsg   = document.getElementById('funnel-message');
+  const funnelBtn   = document.getElementById('funnel-btn');
+  const gapFunnel   = document.getElementById('gap-funnel');
+  const scoreCtx    = document.getElementById('score-context');
+
+  if (funnelScore) funnelScore.textContent = score + '%';
+
+  // Update score context label based on whether we have a real resume
+  const hasMasterResume = !!getMasterResumeText();
+  if (scoreCtx) {
+    scoreCtx.textContent = hasMasterResume
+      ? 'Based on your current resume — before optimization'
+      : 'Estimated from your career level — upload a resume for real scoring';
+  }
+
+  // Funnel message and button vary by score
+  if (score >= 80) {
+    if (funnelMsg) funnelMsg.textContent = 'Strong match already — optimize your resume to make it competition-proof for this specific role.';
+    if (funnelBtn) { funnelBtn.textContent = '✦ Optimize for this role →'; funnelBtn.className = 'gap-funnel-btn strong'; }
+    if (gapFunnel) gapFunnel.style.borderColor = 'rgba(52,211,153,.25)';
+    if (document.getElementById('funnel-score')) document.getElementById('funnel-score').style.color = 'var(--green)';
+  } else if (score >= 55) {
+    if (funnelMsg) funnelMsg.textContent = 'Good foundation — run through Resume Tailor to close the gaps and push your match score above 85%.';
+    if (funnelBtn) funnelBtn.className = 'gap-funnel-btn';
+  } else {
+    if (funnelMsg) funnelMsg.textContent = `Your current resume matches ${score}% of this role. Resume Tailor can typically push this to 80–95% by aligning your language and keywords.`;
+    if (funnelBtn) funnelBtn.className = 'gap-funnel-btn';
+  }
+
+  // Store the JD and score so Resume Tailor can pick them up
+  sessionStorage.setItem('arx_jd_prefill', document.getElementById('jd-input').value);
+  sessionStorage.setItem('arx_st_score', String(score));
+  sessionStorage.setItem('arx_st_role', d.role_title || '');
+
   document.getElementById('results-wrap').style.display = 'block';
   document.getElementById('results-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
 }
@@ -584,12 +708,12 @@ function renderList(id, items, color) {
 function resetDecoder() {
   document.getElementById('jd-input').value = '';
   document.getElementById('results-wrap').style.display = 'none';
+  sessionResumeText = null; // clear any swapped resume
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goToOptimizer() {
-  // Pass JD to optimizer via sessionStorage
-  sessionStorage.setItem('arx_jd_prefill', document.getElementById('jd-input').value);
+  // JD already stored in sessionStorage by renderResults — navigate directly
   window.location.href = '/app';
 }
 
