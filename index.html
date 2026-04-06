@@ -744,8 +744,8 @@ footer{
 }
 
 .reveal{
-  opacity:0;
-  transform:translateY(16px);
+  opacity:1;
+  transform:none;
   transition:opacity .55s ease,transform .55s ease;
 }
 
@@ -1026,9 +1026,17 @@ footer{
 // ── SCROLL REVEAL ──────────────────────────────────────────────────────────────
 const observer = new IntersectionObserver(
   (entries) => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }),
-  { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  { threshold: 0.01, rootMargin: '0px 0px 0px 0px' }
 );
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Also trigger on load for anything already in viewport
+window.addEventListener('load', () => {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) el.classList.add('visible');
+  });
+});
 
 // ── FORM SUBMIT ────────────────────────────────────────────────────────────────
 async function handleSubmit() {
