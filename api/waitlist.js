@@ -7,7 +7,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, industry, roleLevel } = req.body || {};
+  const { email, name, industry, roleLevel } = req.body || {};
 
   if (!email || !email.includes('@') || !email.includes('.')) {
     return res.status(400).json({ error: 'Valid email required' });
@@ -24,6 +24,7 @@ module.exports = async function handler(req, res) {
 
   // Only send non-empty fields
   const fields = { Email: email, Source: 'coming-soon' };
+  if (name)      fields['Name']       = name;
   if (industry)  fields['Industry']   = industry;
   if (roleLevel) fields['Role Level'] = roleLevel;
 
@@ -46,9 +47,8 @@ module.exports = async function handler(req, res) {
     }
 
     return res.status(200).json({ success: true, id: data.id });
-
   } catch (err) {
-    console.error('Waitlist error:', err.message);
-    return res.status(500).json({ error: 'Server error', message: err.message });
+    console.error('Unexpected error:', err);
+    return res.status(500).json({ error: 'Unexpected server error' });
   }
 };
