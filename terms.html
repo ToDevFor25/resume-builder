@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Terms of Service — StretchRole</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#080c14; --bg2:#0d1520; --bg3:#111d2e;
+  --card:#0f1a28;
+  --border:rgba(56,139,253,0.12); --border-bright:rgba(56,189,248,0.28);
+  --accent:#38bdf8; --accent2:#0ea5e9; --accent3:#7dd3fc;
+  --green:#34d399; --text:#e2eaf4; --text-muted:#64748b; --text-dim:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.3;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:99px;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,3rem);background:rgba(8,12,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--accent2),#a78bfa);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;}
+.nav-logo-text{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);}
+.nav-logo-text span{color:var(--accent);}
+.nav-back{font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.4rem .85rem;border:1px solid var(--border);border-radius:6px;transition:all .15s;}
+.nav-back:hover{color:var(--text);border-color:var(--border-bright);}
+
+/* LAYOUT */
+.page-wrap{position:relative;z-index:1;display:grid;grid-template-columns:220px 1fr;max-width:1000px;margin:0 auto;padding:3rem clamp(1.5rem,4vw,2.5rem) 5rem;gap:4rem;}
+
+/* SIDEBAR TOC */
+.toc{position:sticky;top:80px;align-self:start;}
+.toc-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.85rem;}
+.toc-links{display:flex;flex-direction:column;gap:.2rem;}
+.toc-link{font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.3rem .65rem;border-radius:5px;border-left:2px solid transparent;transition:all .15s;line-height:1.4;}
+.toc-link:hover{color:var(--text-dim);border-left-color:var(--border-bright);}
+.toc-link.active{color:var(--accent);border-left-color:var(--accent2);}
+
+/* CONTENT */
+.doc-content{}
+.doc-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
+.doc-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.15);border-radius:99px;padding:.28rem .8rem;margin-bottom:1rem;}
+.doc-title{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.02em;color:var(--text);margin-bottom:.6rem;}
+.doc-meta{font-size:.8rem;color:var(--text-muted);}
+.doc-meta a{color:var(--accent);text-decoration:none;}
+
+/* SECTIONS */
+.doc-section{margin-bottom:2.5rem;scroll-margin-top:80px;}
+.doc-section h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;}
+.doc-section h2 .sec-num{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text-muted);background:var(--bg3);padding:.18rem .45rem;border-radius:4px;border:1px solid var(--border);}
+.doc-section p{font-size:.9rem;color:var(--text-dim);margin-bottom:.85rem;line-height:1.75;}
+.doc-section p:last-child{margin-bottom:0;}
+.doc-section ul{list-style:none;margin:.5rem 0 .85rem;display:flex;flex-direction:column;gap:.4rem;}
+.doc-section ul li{font-size:.9rem;color:var(--text-dim);padding-left:1.25rem;position:relative;line-height:1.65;}
+.doc-section ul li::before{content:'';position:absolute;left:0;top:.65em;width:5px;height:5px;border-radius:50%;background:var(--border-bright);}
+.doc-section strong{color:var(--text);font-weight:500;}
+
+/* HIGHLIGHT BOX */
+.highlight-box{background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.12);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1rem 0;font-size:.85rem;color:var(--text-dim);line-height:1.65;}
+.highlight-box strong{color:var(--accent3);}
+
+/* PLACEHOLDER */
+.placeholder{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:.2rem .5rem;font-family:'DM Mono',monospace;font-size:.8rem;color:#fbbf24;}
+
+/* FOOTER */
+.doc-footer{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.doc-footer p{font-size:.78rem;color:var(--text-muted);}
+.doc-footer a{color:var(--accent);text-decoration:none;}
+
+@media(max-width:768px){
+  .page-wrap{grid-template-columns:1fr;gap:2rem;}
+  .toc{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-mark">SR</div>
+    <span class="nav-logo-text">Stretch<span>Role</span></span>
+  </a>
+  <a href="/" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- TOC -->
+  <aside class="toc">
+    <div class="toc-label">Contents</div>
+    <div class="toc-links">
+      <a href="#acceptance" class="toc-link">1. Acceptance</a>
+      <a href="#description" class="toc-link">2. Service description</a>
+      <a href="#accounts" class="toc-link">3. User accounts</a>
+      <a href="#acceptable-use" class="toc-link">4. Acceptable use</a>
+      <a href="#ip" class="toc-link">5. Intellectual property</a>
+      <a href="#your-content" class="toc-link">6. Your content</a>
+      <a href="#payment" class="toc-link">7. Payment & billing</a>
+      <a href="#disclaimers" class="toc-link">8. Disclaimers</a>
+      <a href="#limitation" class="toc-link">9. Limitation of liability</a>
+      <a href="#indemnification" class="toc-link">10. Indemnification</a>
+      <a href="#termination" class="toc-link">11. Termination</a>
+      <a href="#governing-law" class="toc-link">12. Governing law</a>
+      <a href="#changes" class="toc-link">13. Changes to terms</a>
+      <a href="#contact" class="toc-link">14. Contact</a>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="doc-content">
+    <div class="doc-header">
+      <div class="doc-eyebrow">Legal</div>
+      <h1 class="doc-title">Terms of Service</h1>
+      <p class="doc-meta">
+        Last updated: April 2, 2026 &nbsp;·&nbsp;
+        StretchRole LLC &nbsp;·&nbsp;
+        Questions? <a href="/cdn-cgi/l/email-protection#e3b88f8684828fa3829080868d87919bcd808c8ebe">[<span class="__cf_email__" data-cfemail="99f5fcfef8f5d9f8eafafcf7fdebe1b7faf6f4">[email&#160;protected]</span>]</a>
+      </p>
+    </div>
+
+    <div class="highlight-box">
+      <strong>Plain English summary:</strong> By using StretchRole, you agree to these terms. We provide AI-powered career tools — we don't guarantee job outcomes. You own your data. We never fabricate your experience. You can cancel anytime.
+    </div>
+
+    <div class="doc-section" id="acceptance">
+      <h2><span class="sec-num">01</span> Acceptance of Terms</h2>
+      <p>By accessing or using StretchRole (the "Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service.</p>
+      <p>These Terms constitute a legally binding agreement between you and StretchRole LLC, a limited liability company organized under the laws of the State of Oklahoma ("Company," "we," "us," or "our"), formed on <span class="placeholder">[formation date — update when LLC is formed]</span>.</p>
+      <p>You must be at least 18 years of age to use this Service. By using the Service, you represent and warrant that you meet this requirement.</p>
+    </div>
+
+    <div class="doc-section" id="description">
+      <h2><span class="sec-num">02</span> Description of Service</h2>
+      <p>StretchRole is an AI-powered career platform designed for healthcare operations professionals. The Service includes, but is not limited to:</p>
+      <ul>
+        <li>AI-assisted resume optimization and rewriting</li>
+        <li>Interview coaching and preparation tools</li>
+        <li>Job description analysis and decoding</li>
+        <li>Salary negotiation simulation and coaching</li>
+        <li>Reference letter generation assistance</li>
+        <li>Promotion preparation tools and materials</li>
+      </ul>
+      <p>The Service is provided on an "as is" basis. Features, availability, and pricing are subject to change with reasonable notice to users.</p>
+    </div>
+
+    <div class="doc-section" id="accounts">
+      <h2><span class="sec-num">03</span> User Accounts</h2>
+      <p>To access most features of the Service, you must create an account using a supported third-party authentication provider (Google, LinkedIn, Microsoft, or Apple). You are responsible for maintaining the security of your account and for all activities that occur under your account.</p>
+      <p>You agree to:</p>
+      <ul>
+        <li>Provide accurate and complete information when creating your account</li>
+        <li>Maintain the security of your login credentials</li>
+        <li>Promptly notify us of any unauthorized use of your account</li>
+        <li>Not share your account with any third party</li>
+      </ul>
+      <p>We reserve the right to suspend or terminate accounts that violate these Terms or that we believe may compromise the security or integrity of the Service.</p>
+    </div>
+
+    <div class="doc-section" id="acceptable-use">
+      <h2><span class="sec-num">04</span> Acceptable Use</h2>
+      <p>You agree to use the Service only for lawful purposes and in accordance with these Terms. You agree not to:</p>
+      <ul>
+        <li>Use the Service to create fraudulent, misleading, or deceptive career materials</li>
+        <li>Submit false information with the intent to misrepresent your professional background to employers</li>
+        <li>Attempt to reverse engineer, decompile, or extract the underlying AI models or prompts</li>
+        <li>Use automated systems, bots, or scripts to access the Service in ways that exceed normal usage</li>
+        <li>Resell, redistribute, or sublicense access to the Service without written permission</li>
+        <li>Use the Service in any way that violates applicable federal, state, or local laws</li>
+        <li>Attempt to gain unauthorized access to any portion of the Service or its infrastructure</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>Important:</strong> StretchRole's AI tools are designed to help you present your real experience more effectively. The Service will never fabricate companies, job titles, dates, degrees, certifications, or metrics not present in your original resume. Using AI-generated content to misrepresent your qualifications to employers is your sole responsibility.
+      </div>
+    </div>
+
+    <div class="doc-section" id="ip">
+      <h2><span class="sec-num">05</span> Intellectual Property</h2>
+      <p>The Service, including its design, code, AI systems, prompts, branding, and all content created by StretchRole, is the exclusive property of StretchRole LLC and is protected by applicable intellectual property laws.</p>
+      <p>We grant you a limited, non-exclusive, non-transferable, revocable license to access and use the Service for your personal, non-commercial career development purposes, subject to these Terms.</p>
+      <p>You may not copy, modify, distribute, sell, or lease any part of the Service or its content without our prior written consent.</p>
+    </div>
+
+    <div class="doc-section" id="your-content">
+      <h2><span class="sec-num">06</span> Your Content</h2>
+      <p>You retain full ownership of all content you submit to the Service, including your resume, career history, job descriptions, career profile data (role level, target level, and professional focus), and any other materials ("Your Content").</p>
+      <p>By submitting Your Content, you grant us a limited, non-exclusive license to process and use that content solely for the purpose of providing the Service to you. We will not:</p>
+      <ul>
+        <li>Sell Your Content to third parties</li>
+        <li>Use Your Content to train AI models without your explicit consent</li>
+        <li>Share Your Content with other users or third parties except as required to operate the Service</li>
+        <li>Retain Your Content beyond what is necessary to provide the Service</li>
+        <li>Use your career profile data (current level, target level, focus area) for any purpose other than personalizing your experience within the Service</li>
+      </ul>
+      <p>If you use voice input features, your audio is processed entirely within your browser using the Web Speech API and is never transmitted to or stored by StretchRole. Only the resulting text transcript is treated as Your Content.</p>
+      <p>You represent and warrant that you have the right to submit Your Content and that doing so does not violate any third-party rights or applicable laws.</p>
+    </div>
+
+    <div class="doc-section" id="payment">
+      <h2><span class="sec-num">07</span> Payment and Billing</h2>
+      <p>StretchRole offers both free and paid subscription tiers. Paid subscriptions are billed on a monthly or annual basis, as selected at checkout.</p>
+      <ul>
+        <li><strong>Free Tier:</strong> Available with limited usage as described on the pricing page. No credit card required.</li>
+        <li><strong>Pro Tier:</strong> Billed monthly or annually at the rates displayed at the time of purchase.</li>
+        <li><strong>Concierge Tier:</strong> Billed monthly at the rate displayed at the time of purchase.</li>
+      </ul>
+      <p>All payments are processed securely through Stripe. By subscribing to a paid tier, you authorize us to charge your payment method on a recurring basis until you cancel.</p>
+      <p><strong>Cancellation:</strong> You may cancel your subscription at any time from your account settings. Cancellation takes effect at the end of your current billing period. We do not provide refunds for partial billing periods except where required by law.</p>
+      <p><strong>Price changes:</strong> We will provide at least 30 days' notice before changing subscription prices. Continued use of the Service after a price change constitutes acceptance of the new pricing.</p>
+    </div>
+
+    <div class="doc-section" id="disclaimers">
+      <h2><span class="sec-num">08</span> Disclaimers</h2>
+      <p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.</p>
+      <p>We do not warrant that:</p>
+      <ul>
+        <li>The Service will be uninterrupted, error-free, or completely secure</li>
+        <li>AI-generated content will be accurate, complete, or suitable for your specific situation</li>
+        <li>Use of the Service will result in job interviews, offers, salary increases, or career advancement</li>
+        <li>The Service will meet every individual user's specific career needs</li>
+      </ul>
+      <p>Career outcomes depend on many factors outside our control, including employer preferences, market conditions, and individual qualifications. StretchRole is a tool to help you present yourself effectively — it does not guarantee any specific outcome.</p>
+    </div>
+
+    <div class="doc-section" id="limitation">
+      <h2><span class="sec-num">09</span> Limitation of Liability</h2>
+      <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, STRETCHROLE LLC AND ITS MEMBERS, OFFICERS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICE.</p>
+      <p>Our total cumulative liability to you for any claims arising out of or related to these Terms or the Service shall not exceed the greater of (a) the total amount you paid us in the 12 months preceding the claim, or (b) one hundred dollars ($100).</p>
+      <p>Some jurisdictions do not allow the exclusion or limitation of certain damages, so some of the above limitations may not apply to you.</p>
+    </div>
+
+    <div class="doc-section" id="indemnification">
+      <h2><span class="sec-num">10</span> Indemnification</h2>
+      <p>You agree to indemnify, defend, and hold harmless StretchRole LLC and its members, officers, employees, and agents from and against any claims, liabilities, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or related to:</p>
+      <ul>
+        <li>Your use of the Service</li>
+        <li>Your violation of these Terms</li>
+        <li>Your Content</li>
+        <li>Your violation of any third-party rights</li>
+        <li>Any misrepresentation of your professional qualifications to employers using materials generated by the Service</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="termination">
+      <h2><span class="sec-num">11</span> Termination</h2>
+      <p>You may terminate your account at any time by contacting us or using the account deletion option in your settings. Upon termination, your right to use the Service ceases immediately.</p>
+      <p>We reserve the right to suspend or terminate your access to the Service at any time, with or without notice, for any reason, including if we reasonably believe you have violated these Terms. In the event of termination for cause, no refunds will be issued.</p>
+      <p>Provisions of these Terms that by their nature should survive termination shall survive, including intellectual property rights, disclaimers, limitations of liability, and indemnification obligations.</p>
+    </div>
+
+    <div class="doc-section" id="governing-law">
+      <h2><span class="sec-num">12</span> Governing Law and Dispute Resolution</h2>
+      <p>These Terms shall be governed by and construed in accordance with the laws of the State of Oklahoma, without regard to its conflict of law provisions.</p>
+      <p>Any dispute arising out of or relating to these Terms or the Service shall first be addressed through good-faith negotiation. If the dispute cannot be resolved informally, it shall be submitted to binding arbitration in Oklahoma City, Oklahoma in accordance with the rules of the American Arbitration Association. The arbitrator's decision shall be final and binding.</p>
+      <p>Notwithstanding the foregoing, either party may seek injunctive or other equitable relief in a court of competent jurisdiction to prevent irreparable harm.</p>
+    </div>
+
+    <div class="doc-section" id="changes">
+      <h2><span class="sec-num">13</span> Changes to These Terms</h2>
+      <p>We may update these Terms from time to time. When we make material changes, we will notify you by updating the "Last updated" date at the top of this page and, where appropriate, by sending a notification to the email address associated with your account.</p>
+      <p>Your continued use of the Service after any changes become effective constitutes your acceptance of the new Terms. If you do not agree to the revised Terms, you must stop using the Service.</p>
+    </div>
+
+    <div class="doc-section" id="contact">
+      <h2><span class="sec-num">14</span> Contact</h2>
+      <p>If you have questions about these Terms of Service, please contact us:</p>
+      <ul>
+        <li><strong>Email:</strong> <span legal@stretchrole.com</li>
+        <li><strong>Company:</strong> StretchRole LLC</li>
+        <li><strong>State of formation:</strong> Oklahoma</li>
+      </ul>
+    </div>
+
+    <div class="doc-footer">
+      <p>© 2026 StretchRole LLC. All rights reserved.</p>
+      <p><a href="/privacy">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms">Terms of Service</a> &nbsp;·&nbsp; <a href="/">Home</a></p>
+    </div>
+
+  </main>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Highlight active TOC item on scroll
+const sections = document.querySelectorAll('.doc-section');
+const tocLinks = document.querySelectorAll('.toc-link');
+const observer = new IntersectionObserver((entries) => {
+  e
