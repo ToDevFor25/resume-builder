@@ -52,11 +52,9 @@ nav{
   background:rgba(255,255,255,.94);
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
-  padding:0 clamp(1.25rem,5vw,3rem);
   height:58px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
 }
 
 .logo{
@@ -100,11 +98,14 @@ nav{
   border-radius:99px;
 }
 
+/* ── NAV INNER ── */
+.nav-inner{max-width:940px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
+
 /* ── MAIN WRAPPER ── */
 .wrap{
-  max-width:1080px;
+  max-width:940px;
   margin:0 auto;
-  padding:0 clamp(1.25rem,5vw,3rem);
+  padding:0 clamp(1.5rem,5vw,2.5rem);
   position:relative;
   z-index:1;
 }
@@ -112,7 +113,7 @@ nav{
 /* ── HERO ── */
 .hero{
   padding:5rem 0 3.5rem;
-  max-width:720px;
+  max-width:680px;
 }
 
 .category-tag{
@@ -196,7 +197,7 @@ h1 em{
 .capture-row{
   display:flex;
   gap:.45rem;
-  max-width:520px;
+  max-width:500px;
   margin-bottom:.5rem;
 }
 
@@ -427,7 +428,6 @@ h1 em{
   border:1px solid rgba(255,255,255,.06);
   position:relative;
   overflow:hidden;
-  max-width:780px;
 }
 
 .preview-card::before{
@@ -775,16 +775,18 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <a href="/" class="logo">
-    <div class="logo-mark">
-      <svg viewBox="0 0 16 16">
-        <path d="M2 12L8 4L14 12" stroke-linejoin="round"/>
-        <path d="M5 12L8 8L11 12"/>
-      </svg>
-    </div>
-    <span class="logo-text">StretchRole</span>
-  </a>
-  <span class="nav-pill">Coming Soon</span>
+  <div style="max-width:940px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,2.5rem);">
+    <a href="/" class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 16 16">
+          <path d="M2 12L8 4L14 12" stroke-linejoin="round"/>
+          <path d="M5 12L8 8L11 12"/>
+        </svg>
+      </div>
+      <span class="logo-text">StretchRole</span>
+    </a>
+    <span class="nav-pill">Coming Soon</span>
+  </div>
 </nav>
 
 <div class="wrap">
@@ -1083,4 +1085,17 @@ async function handleSubmit() {
 }
 
 function showSuccess() {
-  document.getElementById('capture-form-inner').classList.add
+  document.getElementById('capture-form-inner').classList.add('hide');
+  document.getElementById('capture-success').classList.add('show');
+  // Scroll success into view
+  document.getElementById('capture-success').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Enter key submit
+document.getElementById('email-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleSubmit();
+});
+</script>
+
+</body>
+</html>
