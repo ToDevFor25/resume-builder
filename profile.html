@@ -4,7 +4,9 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Profile — StretchRole</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script async crossorigin="anonymous"
   data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
   src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
@@ -12,354 +14,390 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-:root{--bg:#080c14;--bg2:#0d1520;--bg3:#111d2e;--card:#0f1a28;--border:rgba(56,139,253,0.12);--border-bright:rgba(56,189,248,0.3);--accent:#38bdf8;--accent2:#0ea5e9;--accent3:#7dd3fc;--green:#34d399;--amber:#fbbf24;--rose:#fb7185;--purple:#a78bfa;--text:#e2eaf4;--text-muted:#64748b;--text-dim:#94a3b8;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35;}
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:99px;}
-nav{position:sticky;top:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.25rem,4vw,2rem);background:rgba(8,12,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
-.nav-logo-mark{width:26px;height:26px;background:linear-gradient(135deg,var(--accent2),var(--purple));border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:8px;font-weight:800;color:#fff;}
-.nav-logo-text{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);}
-.nav-logo-text span{color:var(--accent);}
-.nav-links{display:flex;align-items:center;gap:.5rem;}
-.nav-link{font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.35rem .75rem;border:1px solid transparent;border-radius:6px;transition:all .15s;}
-.nav-link:hover{color:var(--text);border-color:var(--border);}
-.main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:2rem clamp(1.25rem,4vw,2rem) 4rem;}
-.page-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:.4rem;}
-.page-sub{font-size:.88rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;}
-.section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.75rem;margin-bottom:1.25rem;}
-.section-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.25rem;}
-.section-sub{font-size:.78rem;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.5;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1rem;}
-.field{display:flex;flex-direction:column;gap:.3rem;}
-.field label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
-.field select{padding:.65rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);outline:none;cursor:pointer;transition:border-color .18s;}
-.field select:focus{border-color:var(--accent2);}
-.account-row{display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border);}
-.account-row:last-child{border-bottom:none;}
-.account-label{font-size:.82rem;color:var(--text-muted);width:100px;flex-shrink:0;}
-.account-value{font-size:.85rem;color:var(--text);font-weight:500;}
-.avatar-circle{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0;}
-/* Resume section */
-.resume-current{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:1rem;}
-.resume-current.has-resume{border-color:rgba(52,211,153,.2);}
-.resume-icon{font-size:1.5rem;flex-shrink:0;}
-.resume-info{flex:1;}
-.resume-name{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--text);}
-.resume-meta{font-size:.72rem;color:var(--text-muted);margin-top:.15rem;}
-.resume-actions{display:flex;gap:.5rem;}
-.upload-zone{border:1.5px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2);position:relative;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent2);background:rgba(14,165,233,.04);}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.upload-zone.uploaded{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.03);}
-.founding-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:99px;padding:.3rem .85rem;font-size:.72rem;font-weight:700;color:var(--amber);}
-/* Buttons */
-.btn-primary{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.25rem;background:linear-gradient(135deg,var(--accent2),#0284c7);border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 0 16px rgba(56,189,248,.18);}
-.btn-primary:hover{box-shadow:0 0 26px rgba(56,189,248,.32);transform:translateY(-1px);}
-.btn-ghost{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1rem;background:transparent;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--text-dim);cursor:pointer;transition:all .18s;}
-.btn-ghost:hover{border-color:var(--border-bright);color:var(--text);}
-.btn-danger{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1rem;background:transparent;border:1px solid rgba(251,113,133,.25);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--rose);cursor:pointer;transition:all .18s;}
-.btn-danger:hover{background:rgba(251,113,133,.06);border-color:rgba(251,113,133,.4);}
-.save-row{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem;flex-wrap:wrap;gap:.75rem;}
-.saved-note{font-size:.75rem;color:var(--green);display:none;}
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg2);color:var(--text);padding:.6rem 1.4rem;border-radius:8px;font-size:.82rem;opacity:0;transition:all .28s;z-index:500;pointer-events:none;white-space:nowrap;border:1px solid var(--border);border-left:3px solid var(--accent);box-shadow:0 8px 32px rgba(0,0,0,.4);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-@media(max-width:600px){.field-row{grid-template-columns:1fr;}}
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --white:#fff;--off:#F9F9F8;--off2:#F4F4F2;
+  --ink:#111;--muted:#525252;--light:#8a8a8a;--lighter:#c4c4c4;
+  --border:#E5E5E5;--border2:#D4D4D4;
+  --accent:#1B4FD8;--accent-light:#EEF2FF;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --red:#DC2626;--red-bg:#FEF2F2;
+  --sidebar-width:232px;--topbar-height:60px;
+  --radius:10px;--radius-sm:7px;--radius-lg:14px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow:0 2px 8px rgba(0,0,0,.07);
+}
+html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-width);min-height:100vh;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
+.sidebar-logo{padding:18px 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;text-decoration:none;}
+.logo-mark{width:30px;height:30px;background:var(--ink);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-mark svg{width:15px;height:15px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.logo-text{font-family:'Instrument Serif',serif;font-size:1.05rem;color:var(--ink);}
+.sidebar-section{padding:16px 10px 6px;}
+.sidebar-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);padding:0 8px;margin-bottom:4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .13s;margin-bottom:1px;color:var(--muted);font-size:.82rem;text-decoration:none;border:1px solid transparent;}
+.nav-item:hover{background:var(--off);color:var(--ink);}
+.nav-item.active{background:var(--accent-light);color:var(--accent);border-color:rgba(27,79,216,.12);}
+.nav-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.nav-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.nav-badge{margin-left:auto;font-size:.6rem;font-weight:600;padding:.18rem .45rem;border-radius:99px;}
+.nav-badge.live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.nav-badge.soon{background:var(--off2);color:var(--lighter);border:1px solid var(--border);}
+.sidebar-footer{margin-top:auto;padding:12px 10px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .13s;text-decoration:none;}
+.user-card:hover{border-color:var(--border2);background:var(--off);}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;color:white;flex-shrink:0;}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:.78rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-plan{font-size:.68rem;color:var(--accent);}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{height:var(--topbar-height);background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.75rem;position:sticky;top:0;z-index:50;}
+.topbar-left h1{font-family:'Instrument Serif',serif;font-size:1.15rem;font-weight:400;color:var(--ink);}
+.topbar-left p{font-size:.75rem;color:var(--light);margin-top:.05rem;}
+.topbar-right{display:flex;align-items:center;gap:.6rem;}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.78rem;font-weight:400;cursor:pointer;transition:all .13s;border:none;font-family:'DM Sans',sans-serif;text-decoration:none;white-space:nowrap;}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--ink);border-color:var(--border2);background:var(--off);}
+.btn-primary{background:var(--accent);color:white;font-weight:500;}
+.btn-primary:hover{background:#1540b8;}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid #FECACA;}
+.btn-danger:hover{background:#fee2e2;}
+
+/* ── CONTENT ── */
+.content{padding:1.75rem;max-width:720px;}
+.page-title{font-family:'Instrument Serif',serif;font-size:1.5rem;font-weight:400;color:var(--ink);letter-spacing:-.015em;margin-bottom:.3rem;}
+.page-sub{font-size:.85rem;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:2rem;}
+
+/* ── SECTION CARD ── */
+.section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:1.25rem;box-shadow:var(--shadow-sm);}
+.section-title{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.2rem;}
+.section-sub{font-size:.75rem;color:var(--light);font-weight:300;line-height:1.5;margin-bottom:1.25rem;}
+.section-divider{height:1px;background:var(--border);margin:1.25rem 0;}
+
+/* ── ACCOUNT ROW ── */
+.account-row{display:flex;align-items:center;gap:1rem;}
+.account-avatar{width:44px;height:44px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:500;color:white;flex-shrink:0;}
+.account-info{flex:1;}
+.account-name{font-size:.95rem;font-weight:500;color:var(--ink);margin-bottom:.15rem;}
+.account-email{font-size:.78rem;color:var(--light);}
+.founding-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.62rem;font-weight:600;padding:.2rem .5rem;background:#FFFBEB;color:#D97706;border:1px solid #FDE68A;border-radius:99px;margin-top:.3rem;}
+
+/* ── FORM ELEMENTS ── */
+.form-group{margin-bottom:1rem;}
+.form-label{font-size:.75rem;font-weight:500;color:var(--ink);margin-bottom:.4rem;display:block;}
+.form-select{width:100%;padding:.6rem .85rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.83rem;color:var(--ink);background:var(--white);outline:none;cursor:pointer;transition:border-color .13s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath fill='none' stroke='%23c4c4c4' stroke-width='1.5' stroke-linecap='round' d='M1 1l4.5 4.5L10 1'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85rem center;}
+.form-select:focus{border-color:var(--accent);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+
+/* ── RESUME SECTION ── */
+.resume-status{display:flex;align-items:center;gap:1rem;padding:1rem 1.1rem;background:var(--off);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;}
+.resume-status.has-resume{border-color:var(--green-border);background:var(--green-bg);}
+.resume-status-icon{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;}
+.resume-status.has-resume .resume-status-icon{background:var(--green-bg);border-color:var(--green-border);}
+.resume-status-info{flex:1;}
+.resume-status-name{font-size:.83rem;font-weight:500;color:var(--ink);margin-bottom:.1rem;}
+.resume-status-meta{font-size:.72rem;color:var(--light);}
+.resume-status.has-resume .resume-status-name{color:var(--green);}
+.resume-actions{display:flex;gap:.5rem;flex-shrink:0;}
+
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all .15s;background:var(--white);}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light);}
+.upload-zone-text{font-size:.83rem;font-weight:500;color:var(--ink);margin-bottom:.25rem;}
+.upload-zone-sub{font-size:.72rem;color:var(--light);}
+
+/* ── DANGER ZONE ── */
+.danger-zone{background:var(--red-bg);border:1px solid #FECACA;border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.danger-title{font-size:.82rem;font-weight:500;color:var(--red);margin-bottom:.3rem;}
+.danger-sub{font-size:.75rem;color:#991b1b;font-weight:300;margin-bottom:1rem;line-height:1.5;}
+.danger-actions{display:flex;gap:.6rem;flex-wrap:wrap;}
+
+/* ── SAVE TOAST ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:.55rem 1.25rem;border-radius:var(--radius-sm);font-size:.78rem;opacity:0;transition:all .25s;z-index:500;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.15);}
+.toast.show{opacity:1;}
+
+@media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;}.form-row{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-<div class="toast" id="toast"></div>
 
-<nav>
-  <a class="nav-logo" href="#" onclick="window.location.href='/dashboard';return false;">
-    <div class="nav-logo-mark">SR</div>
-    <span class="nav-logo-text">Stretch<span>Role</span></span>
-  </a>
-  <div class="nav-links">
-    <a href="#" onclick="window.location.href='/dashboard';return false;" class="nav-link">← Dashboard</a>
-    <a href="#" onclick="window.location.href='/#pricing';return false;" class="nav-link">Pricing</a>
-  </div>
-</nav>
+<div style="display:flex;">
 
-<div class="main">
-  <h1 class="page-title">Your Profile</h1>
-  <p class="page-sub">Everything the platform knows about you. Update your career settings, manage your master resume, and control your account.</p>
-
-  <!-- ACCOUNT INFO -->
-  <div class="section">
-    <div class="section-title">Account</div>
-    <div class="section-sub">Your identity from the provider you used to sign in.</div>
-    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
-      <div class="avatar-circle" id="user-avatar">?</div>
-      <div>
-        <div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);" id="user-name">Loading…</div>
-        <div style="font-size:.78rem;color:var(--text-muted);" id="user-email"></div>
-      </div>
-      <div id="founding-badge-wrap" style="margin-left:auto;display:none;">
-        <div class="founding-badge">⭐ Founding Member — Price Locked</div>
-      </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="/homepage" class="sidebar-logo">
+      <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
+      <span class="logo-text">StretchRole</span>
+    </a>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <a class="nav-item" href="/dashboard"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg></span>Dashboard</a>
     </div>
-  </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Career Tools</div>
+      <a class="nav-item" href="/app"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="1.5"/><path d="M3 4.5h8M3 7h5"/></svg></span>Resume Optimizer<span class="nav-badge live">Live</span></a>
+      <a class="nav-item" href="/seethrough"><span class="nav-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="2.5"/><path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/></svg></span>SeeThrough<span class="nav-badge live">Live</span></a>
+      <a class="nav-item" href="/interview"><span class="nav-icon"><svg viewBox="0 0 14 14"><path d="M2 10V5a5 5 0 0110 0v5"/></svg></span>Interview Coach<span class="nav-badge live">Live</span></a>
+      <a class="nav-item" href="/reference"><span class="nav-icon"><svg viewBox="0 0 14 14"><path d="M2 2h10v10H2z"/><path d="M4 5h6M4 7.5h4"/></svg></span>Reference Writer<span class="nav-badge live">Live</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item active" href="/profile"><span class="nav-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg></span>Profile</a>
+      <a class="nav-item" href="/pricing"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M1 6h12"/></svg></span>Billing</a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="/profile" class="user-card">
+        <div class="avatar" id="sidebar-avatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-name">Loading…</div>
+          <div class="user-plan" id="sidebar-plan">Free Plan</div>
+        </div>
+      </a>
+    </div>
+  </aside>
 
-  <!-- CAREER PROFILE -->
-  <div class="section">
-    <div class="section-title">Career Profile</div>
-    <div class="section-sub">Used by every tool to calibrate results to your specific career transition.</div>
-    <div class="field-row">
-      <div class="field">
-        <label>Current Level</label>
-        <select id="sel-current">
-          <option value="entry">Entry Level — CNA, Coordinator, Medical Assistant</option>
-          <option value="mid">Mid Level — Charge Nurse, Specialist, Supervisor</option>
-          <option value="senior">Senior Level — Senior Specialist, Clinical Lead, Program Manager</option>
-          <option value="leadership" selected>Leadership — Manager, Director, Department Head</option>
-          <option value="executive">Executive — VP, SVP, CNO, COO, CEO, C-Suite</option>
-        </select>
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>Profile</h1>
+        <p>Manage your career settings and master resume</p>
       </div>
-      <div class="field">
-        <label>Target Level</label>
-        <select id="sel-target">
-          <option value="mid">Mid Level</option>
-          <option value="senior">Senior Level</option>
-          <option value="leadership">Leadership</option>
-          <option value="executive" selected>Executive — VP / C-Suite</option>
-        </select>
+      <div class="topbar-right">
+        <a href="/dashboard" class="btn btn-ghost">← Dashboard</a>
+        <a href="/pricing" class="btn btn-ghost">Pricing</a>
       </div>
     </div>
-    <div class="field">
-      <label>Primary Focus Area</label>
-      <select id="sel-focus">
-        <option value="operations" selected>Operations — Throughput, efficiency, ops leadership</option>
-        <option value="nursing">Nursing — Clinical nursing leadership</option>
-        <option value="finance">Finance — Revenue cycle, budgets, financial ops</option>
-        <option value="quality">Quality — Quality, compliance, patient safety</option>
-        <option value="strategy">Strategy — Growth, planning, innovation</option>
-        <option value="other">Other — IT, HR, supply chain, etc.</option>
-      </select>
-    </div>
-    <div class="save-row">
-      <span class="saved-note" id="profile-saved">✓ Profile saved</span>
-      <button class="btn-primary" onclick="saveProfile()">Save Career Profile</button>
-    </div>
-  </div>
 
-  <!-- MASTER RESUME -->
-  <div class="section">
-    <div class="section-title">Master Resume</div>
-    <div class="section-sub">Your master resume is used automatically across every tool — SeeThrough gets real match scores, Interview Coach knows your background, Reference Writer knows your accomplishments. Update it anytime here.</div>
+    <div class="content">
+      <div class="page-title">Your Profile</div>
+      <p class="page-sub">Everything the platform knows about you. Update your career settings, manage your master resume, and control your account.</p>
 
-    <!-- Current resume status -->
-    <div class="resume-current" id="resume-current">
-      <div class="resume-icon" id="resume-icon">📋</div>
-      <div class="resume-info">
-        <div class="resume-name" id="resume-filename">No master resume uploaded</div>
-        <div class="resume-meta" id="resume-meta">Upload your resume below to unlock personalized analysis across all tools</div>
+      <!-- ACCOUNT -->
+      <div class="section-card">
+        <div class="section-title">Account</div>
+        <div class="section-sub">Your identity from the provider you used to sign in.</div>
+        <div class="account-row">
+          <div class="account-avatar" id="profile-avatar">?</div>
+          <div class="account-info">
+            <div class="account-name" id="profile-name">Loading…</div>
+            <div class="account-email" id="profile-email">—</div>
+            <div id="founding-badge" style="display:none;" class="founding-badge">⭐ Founding Member — Price Locked</div>
+          </div>
+        </div>
       </div>
-      <div class="resume-actions" id="resume-actions"></div>
-    </div>
 
-    <!-- Upload zone -->
-    <div class="upload-zone" id="resume-upload-zone"
-      ondrop="dropResume(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
-      <input type="file" id="resume-input" accept=".pdf,.docx,.txt,.rtf" onchange="fileSelected(event)"/>
-      <div style="font-size:1.6rem;margin-bottom:.5rem;">📄</div>
-      <div style="font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.2rem;" id="upload-title">Drop your resume here or click to replace</div>
-      <div style="font-size:.72rem;color:var(--text-muted);">PDF · DOCX · TXT · RTF</div>
-    </div>
+      <!-- CAREER PROFILE -->
+      <div class="section-card">
+        <div class="section-title">Career Profile</div>
+        <div class="section-sub">Used by every tool to calibrate results to your specific career transition.</div>
 
-    <div style="margin-top:.85rem;font-size:.75rem;color:var(--text-muted);line-height:1.6;">
-      Your resume is stored securely and used only to personalize your results. It is never shared with employers, recruiters, or third parties.
-    </div>
-  </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Current Level</label>
+            <select class="form-select" id="current-level" onchange="profileChanged()">
+              <option value="">Select your current level</option>
+              <option value="entry">Entry Level — CNA, Coordinator, Medical Assistant</option>
+              <option value="mid">Mid Level — Charge Nurse, Specialist, Supervisor</option>
+              <option value="senior">Senior Level — Senior Specialist, Clinical Lead, Program Manager</option>
+              <option value="leadership">Leadership — Manager, Director, Department Head</option>
+              <option value="executive">Executive — VP, SVP, CNO, COO, CEO, C-Suite</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Level</label>
+            <select class="form-select" id="target-level" onchange="profileChanged()">
+              <option value="">Select your target level</option>
+              <option value="mid">Mid Level</option>
+              <option value="senior">Senior Level</option>
+              <option value="leadership">Leadership — Manager, Director</option>
+              <option value="executive">Executive — VP / C-Suite</option>
+            </select>
+          </div>
+        </div>
 
-  <!-- DANGER ZONE -->
-  <div class="section" style="border-color:rgba(251,113,133,.15);">
-    <div class="section-title" style="color:var(--rose);">Danger Zone</div>
-    <div class="section-sub">These actions are permanent.</div>
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
-      <button class="btn-danger" onclick="deleteResume()">🗑 Delete master resume</button>
-      <button class="btn-danger" onclick="deleteAccount()">Delete account</button>
-    </div>
-  </div>
+        <div class="form-group">
+          <label class="form-label">Primary Focus Area</label>
+          <select class="form-select" id="focus-area" onchange="profileChanged()">
+            <option value="">Select your focus area</option>
+            <option value="operations">Operations — Throughput, efficiency, ops leadership</option>
+            <option value="nursing">Nursing — Clinical nursing leadership</option>
+            <option value="finance">Finance — Revenue cycle, budgets, financial ops</option>
+            <option value="quality">Quality — Quality, compliance, patient safety</option>
+            <option value="strategy">Strategy — Growth, planning, innovation</option>
+            <option value="other">Other — IT, HR, supply chain, etc.</option>
+          </select>
+        </div>
 
+        <button class="btn btn-primary" id="save-profile-btn" onclick="saveProfile()">Save Career Profile</button>
+      </div>
+
+      <!-- MASTER RESUME -->
+      <div class="section-card">
+        <div class="section-title">Master Resume</div>
+        <div class="section-sub">Used automatically across every tool — SeeThrough gets real match scores, Interview Coach knows your background, Reference Writer knows your accomplishments. Update it anytime here.</div>
+
+        <div class="resume-status" id="resume-status">
+          <div class="resume-status-icon" id="resume-status-icon">📋</div>
+          <div class="resume-status-info">
+            <div class="resume-status-name" id="resume-status-name">No master resume uploaded</div>
+            <div class="resume-status-meta" id="resume-status-meta">Upload your resume below to unlock personalized analysis across all tools</div>
+          </div>
+          <div class="resume-actions" id="resume-actions" style="display:none;">
+            <button class="btn btn-ghost" onclick="deleteResume()">Remove</button>
+          </div>
+        </div>
+
+        <div class="upload-zone" id="upload-zone"
+          onclick="document.getElementById('resume-input').click()"
+          ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave()">
+          <div class="upload-zone-text" id="upload-zone-text">Drop your resume here or click to browse</div>
+          <div class="upload-zone-sub">PDF · DOCX · TXT · RTF</div>
+        </div>
+        <input type="file" id="resume-input" accept=".pdf,.docx,.txt,.rtf" style="display:none" onchange="onFileChange(event)"/>
+
+        <div style="margin-top:.75rem;font-size:.72rem;color:var(--lighter);line-height:1.6;">Your resume is stored securely and used only to personalize your results. It is never shared with employers, recruiters, or third parties.</div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div class="danger-zone">
+        <div class="danger-title">Danger Zone</div>
+        <div class="danger-sub">These actions are permanent and cannot be undone.</div>
+        <div class="danger-actions">
+          <button class="btn btn-danger" onclick="deleteResume()">Delete master resume</button>
+          <button class="btn btn-danger" onclick="confirmDeleteAccount()">Delete account</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-let clerkUser=null;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let profileDirty = false;
 
-window.addEventListener('load',async()=>{
-  try{
-    await window.__clerk_loaded;
-    const clerk=window.Clerk;
-    if(clerk){
-      await clerk.load();
-      clerkUser=clerk.user;
-      if(!clerkUser){window.location.href='/login';return;}
-      loadUserData();
-    }
-  }catch(e){
-    console.warn('Clerk:',e);
-    loadFromLocalStorage();
-  }
-});
+function profileChanged(){ profileDirty = true; }
 
-function loadUserData(){
-  // Account info
-  const name=clerkUser.fullName||clerkUser.firstName||'User';
-  const email=clerkUser.primaryEmailAddress?.emailAddress||'';
-  const initials=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('user-avatar').textContent=initials;
-  document.getElementById('user-name').textContent=name;
-  document.getElementById('user-email').textContent=email;
-
-  // Founding member badge
-  const meta=clerkUser.publicMetadata||{};
-  if(meta.foundingMember){
-    document.getElementById('founding-badge-wrap').style.display='block';
-  }
-
-  // Career profile
-  const cur=meta.currentLevel||getLocal('currentLevel','leadership');
-  const tgt=meta.targetLevel||getLocal('targetLevel','executive');
-  const foc=meta.focus||getLocal('focus','operations');
-  document.getElementById('sel-current').value=cur;
-  document.getElementById('sel-target').value=tgt;
-  document.getElementById('sel-focus').value=foc;
-
-  // Master resume
-  const filename=meta.masterResumeFilename||localStorage.getItem('arx_master_resume_filename');
-  const hasResume=!!(meta.masterResumeText||localStorage.getItem('arx_master_resume_text'));
-  updateResumeUI(hasResume,filename);
+function loadProfile(){
+  const p = JSON.parse(localStorage.getItem('arx_profile')||'{}');
+  if(p.currentLevel) document.getElementById('current-level').value = p.currentLevel;
+  if(p.targetLevel)  document.getElementById('target-level').value = p.targetLevel;
+  if(p.focus)        document.getElementById('focus-area').value = p.focus;
+  updateResumeStatus();
 }
 
-function loadFromLocalStorage(){
-  document.getElementById('user-name').textContent='Your Profile';
-  document.getElementById('user-email').textContent='Sign in to sync across devices';
-  try{
-    const p=JSON.parse(localStorage.getItem('arx_profile')||'{}');
-    if(p.currentLevel)document.getElementById('sel-current').value=p.currentLevel;
-    if(p.targetLevel)document.getElementById('sel-target').value=p.targetLevel;
-    if(p.focus)document.getElementById('sel-focus').value=p.focus;
-    if(p.foundingMember)document.getElementById('founding-badge-wrap').style.display='block';
-  }catch(e){}
-  const filename=localStorage.getItem('arx_master_resume_filename');
-  const hasResume=!!localStorage.getItem('arx_master_resume_text');
-  updateResumeUI(hasResume,filename);
-}
-
-function getLocal(key,fallback){
-  try{return JSON.parse(localStorage.getItem('arx_profile')||'{}')[key]||fallback;}
-  catch{return fallback;}
-}
-
-function updateResumeUI(has,filename){
-  const card=document.getElementById('resume-current');
-  const icon=document.getElementById('resume-icon');
-  const name=document.getElementById('resume-filename');
-  const meta=document.getElementById('resume-meta');
-  const actions=document.getElementById('resume-actions');
-  const title=document.getElementById('upload-title');
-  if(has&&filename){
-    card.classList.add('has-resume');
-    icon.textContent='📄';
-    name.textContent=filename;
-    meta.textContent='Active — used automatically across all tools';
-    actions.innerHTML='';
-    title.textContent='Drop a new resume to replace it';
-  }else{
-    card.classList.remove('has-resume');
-    icon.textContent='📋';
-    name.textContent='No master resume uploaded';
-    meta.textContent='Upload your resume to unlock personalized analysis';
-    actions.innerHTML='';
-    title.textContent='Drop your resume here or click to upload';
-  }
-}
-
-async function saveProfile(){
-  const data={
-    currentLevel:document.getElementById('sel-current').value,
-    targetLevel:document.getElementById('sel-target').value,
-    focus:document.getElementById('sel-focus').value,
-    savedAt:new Date().toISOString()
+function saveProfile(){
+  const p = {
+    currentLevel: document.getElementById('current-level').value,
+    targetLevel:  document.getElementById('target-level').value,
+    focus:        document.getElementById('focus-area').value,
+    onboarded: true
   };
-  // Save to localStorage
-  const existing=JSON.parse(localStorage.getItem('arx_profile')||'{}');
-  localStorage.setItem('arx_profile',JSON.stringify({...existing,...data}));
-  // Save to Clerk
-  if(clerkUser){
-    try{
-      await clerkUser.update({publicMetadata:{...clerkUser.publicMetadata,...data}});
-    }catch(e){console.warn('Clerk save:',e);}
-  }
-  const note=document.getElementById('profile-saved');
-  note.style.display='block';
-  setTimeout(()=>note.style.display='none',3000);
+  localStorage.setItem('arx_profile', JSON.stringify(p));
+  profileDirty = false;
   showToast('Career profile saved');
 }
 
-// Resume upload
-function dragOver(e){e.preventDefault();document.getElementById('resume-upload-zone').classList.add('drag');}
-function dragLeave(){document.getElementById('resume-upload-zone').classList.remove('drag');}
-function dropResume(e){e.preventDefault();dragLeave();const f=e.dataTransfer.files[0];if(f)parseFile(f);}
-function fileSelected(e){if(e.target.files[0])parseFile(e.target.files[0]);}
-
-async function parseFile(file){
-  document.getElementById('upload-title').textContent='Parsing…';
-  const ext=file.name.split('.').pop().toLowerCase();
-  let text='';
-  try{
-    if(ext==='docx'){const ab=await file.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});text=r.value;}
-    else if(ext==='pdf'){
-      const ab=await file.arrayBuffer();
-      const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-      for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n';}
-    }else{text=await file.text();}
-    // Save
-    localStorage.setItem('arx_master_resume_text',text);
-    localStorage.setItem('arx_master_resume_filename',file.name);
-    if(clerkUser){
-      try{await clerkUser.update({publicMetadata:{...clerkUser.publicMetadata,masterResumeText:text,masterResumeFilename:file.name,masterResumeUpdatedAt:new Date().toISOString()}});}
-      catch(e){console.warn('Clerk resume save:',e);}
-    }
-    document.getElementById('resume-upload-zone').classList.add('uploaded');
-    updateResumeUI(true,file.name);
-    showToast('Master resume saved — all tools updated');
-  }catch(e){
-    document.getElementById('upload-title').textContent='Could not read file — try a different format';
-    showToast('Could not parse file. Try PDF or DOCX.');
+function updateResumeStatus(){
+  const text = localStorage.getItem('arx_master_resume_text');
+  const name = localStorage.getItem('arx_master_resume_name') || 'master-resume.pdf';
+  const status = document.getElementById('resume-status');
+  const icon = document.getElementById('resume-status-icon');
+  const nameEl = document.getElementById('resume-status-name');
+  const meta = document.getElementById('resume-status-meta');
+  const actions = document.getElementById('resume-actions');
+  const zoneText = document.getElementById('upload-zone-text');
+  if(text){
+    status.classList.add('has-resume');
+    icon.textContent = '✓';
+    nameEl.textContent = name;
+    meta.textContent = 'Active — used automatically across all tools';
+    actions.style.display = 'flex';
+    zoneText.textContent = 'Drop a new resume here to replace it';
+  } else {
+    status.classList.remove('has-resume');
+    icon.textContent = '📋';
+    nameEl.textContent = 'No master resume uploaded';
+    meta.textContent = 'Upload your resume below to unlock personalized analysis across all tools';
+    actions.style.display = 'none';
+    zoneText.textContent = 'Drop your resume here or click to browse';
   }
 }
 
-async function deleteResume(){
-  if(!confirm('Delete your master resume? Tools will revert to profile-based estimates.'))return;
+function deleteResume(){
+  if(!confirm('Remove your master resume? Tools will fall back to estimated analysis until you upload again.')) return;
   localStorage.removeItem('arx_master_resume_text');
-  localStorage.removeItem('arx_master_resume_filename');
-  if(clerkUser){
-    try{
-      const meta={...clerkUser.publicMetadata};
-      delete meta.masterResumeText;delete meta.masterResumeFilename;delete meta.masterResumeUpdatedAt;
-      await clerkUser.update({publicMetadata:meta});
-    }catch(e){}
-  }
-  updateResumeUI(false,null);
-  document.getElementById('resume-upload-zone').classList.remove('uploaded');
-  document.getElementById('upload-title').textContent='Drop your resume here or click to upload';
-  showToast('Master resume deleted');
+  localStorage.removeItem('arx_master_resume_name');
+  updateResumeStatus();
+  showToast('Master resume removed');
 }
 
-function deleteAccount(){
-  if(!confirm('Are you sure? This permanently deletes your account and all data. This cannot be undone.'))return;
-  showToast('To fully delete your account, email support@stretchrole.com');
+function confirmDeleteAccount(){
+  if(!confirm('Delete your account? This is permanent and cannot be undone.')) return;
+  try{
+    localStorage.clear();
+    window.Clerk && window.Clerk.signOut && window.Clerk.signOut();
+  }catch(e){}
+  window.location.href = '/homepage';
 }
 
-let tt;
+// File upload
+function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files[0];if(f)processFile(f);}
+function onDragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag');}
+function onDragLeave(){document.getElementById('upload-zone').classList.remove('drag');}
+function onFileChange(e){if(e.target.files[0])processFile(e.target.files[0]);}
+
+async function processFile(f){
+  const ext = f.name.split('.').pop().toLowerCase();
+  let text = '';
+  try{
+    if(ext==='docx'){const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});text=r.value;}
+    else if(ext==='pdf'){const ab=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n';}}
+    else{text=await f.text();}
+    localStorage.setItem('arx_master_resume_text',text);
+    localStorage.setItem('arx_master_resume_name',f.name);
+    updateResumeStatus();
+    showToast('Master resume updated');
+  }catch(e){showToast('Could not read file — try a different format');}
+}
+
+// Clerk
+window.addEventListener('load', async ()=>{
+  try{
+    await window.__clerk_loaded;
+    const clerk = window.Clerk;
+    if(!clerk) return;
+    await clerk.load();
+    if(!clerk.user){ window.location.href='/login'; return; }
+    const u = clerk.user;
+    const name = u.fullName||u.firstName||'You';
+    const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    const email = u.primaryEmailAddress?.emailAddress||'';
+    ['profile-avatar','sidebar-avatar'].forEach(id=>document.getElementById(id).textContent=initials);
+    document.getElementById('profile-name').textContent = name;
+    document.getElementById('profile-email').textContent = email;
+    document.getElementById('sidebar-name').textContent = name;
+    const meta = u.publicMetadata||{};
+    if(meta.foundingMember) document.getElementById('founding-badge').style.display='inline-flex';
+    if(meta.plan&&meta.plan!=='free') document.getElementById('sidebar-plan').textContent = meta.plan;
+    if(meta.masterResumeText&&!localStorage.getItem('arx_master_resume_text')){
+      localStorage.setItem('arx_master_resume_text',meta.masterResumeText);
+    }
+  }catch(e){console.warn('Clerk:',e);}
+  loadProfile();
+});
+
+let toastTimer;
 function showToast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('show');
-  clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),3500);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
 }
 </script>
 </body>
