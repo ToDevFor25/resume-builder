@@ -4,333 +4,123 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Privacy Policy — StretchRole</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap" rel="stylesheet"/>
 <style>
+*{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --white:#ffffff;
-  --off:#FAFAFA;
-  --ink:#111111;
-  --muted:#525252;
-  --light:#A3A3A3;
-  --border:#E5E5E5;
-  --accent:#1B4FD8;
-  --accent-light:#EEF2FF;
+  --white:#fff;--off:#F9F9F8;--ink:#111;--muted:#525252;--light:#8a8a8a;--lighter:#c4c4c4;
+  --border:#E5E5E5;--accent:#1B4FD8;--radius:10px;--radius-sm:7px;--radius-lg:14px;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);min-height:100vh;line-height:1.7;-webkit-font-smoothing:antialiased;}
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
-nav{position:sticky;top:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,3rem);background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.nav-logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
-.nav-logo-mark svg{width:14px;height:14px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;}
-.nav-logo-text{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--ink);}
-.nav-back{font-size:.78rem;color:var(--muted);text-decoration:none;padding:.4rem .85rem;border:1px solid var(--border);border-radius:6px;transition:all .15s;}
-.nav-back:hover{color:var(--ink);border-color:#999;}
-.page-wrap{display:grid;grid-template-columns:220px 1fr;max-width:1000px;margin:0 auto;padding:3rem clamp(1.5rem,4vw,2.5rem) 5rem;gap:4rem;}
-.toc{position:sticky;top:80px;align-self:start;}
-.toc-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--light);margin-bottom:.85rem;}
-.toc-links{display:flex;flex-direction:column;gap:.2rem;}
-.toc-link{font-size:.78rem;color:var(--muted);text-decoration:none;padding:.3rem .65rem;border-radius:5px;border-left:2px solid transparent;transition:all .15s;line-height:1.4;}
-.toc-link:hover{color:var(--ink);border-left-color:var(--border);}
-.toc-link.active{color:var(--accent);border-left-color:var(--accent);}
-.doc-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
-.doc-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-light);border:1px solid rgba(27,79,216,.15);border-radius:99px;padding:.28rem .8rem;margin-bottom:1rem;}
-.doc-title{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;letter-spacing:-.01em;color:var(--ink);margin-bottom:.6rem;}
-.doc-meta{font-size:.8rem;color:var(--light);}
-.doc-meta a{color:var(--accent);text-decoration:none;}
-.doc-section{margin-bottom:2.5rem;scroll-margin-top:80px;}
-.doc-section h2{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;}
-.doc-section h2 .sec-num{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--light);background:var(--off);padding:.18rem .45rem;border-radius:4px;border:1px solid var(--border);}
-.doc-section p{font-size:.9rem;color:var(--muted);margin-bottom:.85rem;line-height:1.75;}
-.doc-section p:last-child{margin-bottom:0;}
-.doc-section ul{list-style:none;margin:.5rem 0 .85rem;display:flex;flex-direction:column;gap:.4rem;}
-.doc-section ul li{font-size:.9rem;color:var(--muted);padding-left:1.25rem;position:relative;line-height:1.65;}
-.doc-section ul li::before{content:'';position:absolute;left:0;top:.65em;width:5px;height:5px;border-radius:50%;background:var(--border);}
-.doc-section strong{color:var(--ink);font-weight:500;}
-.highlight-box{background:var(--accent-light);border:1px solid rgba(27,79,216,.15);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1rem 0;font-size:.85rem;color:var(--muted);line-height:1.65;}
-.highlight-box strong{color:var(--accent);}
-.green-box{background:#F0FDF4;border:1px solid #BBF7D0;border-left:3px solid #16A34A;border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1rem 0;font-size:.85rem;color:var(--muted);line-height:1.65;}
-.green-box strong{color:#16A34A;}
-.placeholder{background:#FEF9C3;border:1px solid #FDE047;border-radius:6px;padding:.2rem .5rem;font-family:'DM Mono',monospace;font-size:.8rem;color:#854D0E;}
-.data-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem;}
-.data-table th{text-align:left;padding:.6rem .85rem;background:var(--off);color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--border);}
-.data-table td{padding:.65rem .85rem;border:1px solid var(--border);color:var(--muted);vertical-align:top;line-height:1.5;}
-.data-table tr:hover td{background:var(--off);}
-.doc-footer{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
-.doc-footer p{font-size:.78rem;color:var(--light);}
-.doc-footer a{color:var(--accent);text-decoration:none;}
-@media(max-width:768px){
-  .page-wrap{grid-template-columns:1fr;gap:2rem;}
-  .toc{display:none;}
-  .data-table{font-size:.75rem;}
-}
+html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;}
+nav{height:60px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,3rem);}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;}
+.logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{width:14px;height:14px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.logo-text{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--ink);}
+nav a.back{font-size:.78rem;color:var(--light);text-decoration:none;transition:color .13s;}
+nav a.back:hover{color:var(--ink);}
+.shell{max-width:680px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+.page-eyebrow{font-size:.67rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);margin-bottom:.75rem;}
+.page-title{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:var(--ink);margin-bottom:.5rem;letter-spacing:-.02em;}
+.page-meta{font-size:.78rem;color:var(--lighter);margin-bottom:2.5rem;}
+.prose h2{font-family:'Instrument Serif',serif;font-size:1.15rem;font-weight:400;color:var(--ink);margin:2rem 0 .65rem;letter-spacing:-.01em;}
+.prose p{font-size:.88rem;color:var(--muted);line-height:1.8;margin-bottom:.85rem;font-weight:300;}
+.prose strong{color:var(--ink);font-weight:500;}
+.prose ul{list-style:none;margin-bottom:.85rem;}
+.prose ul li{font-size:.88rem;color:var(--muted);line-height:1.8;padding:.2rem 0;padding-left:1.1rem;position:relative;font-weight:300;}
+.prose ul li::before{content:'—';position:absolute;left:0;color:var(--lighter);}
+.divider{height:1px;background:var(--border);margin:2.5rem 0;}
+.contact-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:2rem;}
+.contact-card p{font-size:.85rem;color:var(--muted);line-height:1.7;font-weight:300;}
+.contact-card a{color:var(--accent);text-decoration:none;}
+footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--lighter);}
+footer a{color:var(--lighter);text-decoration:none;}footer a:hover{color:var(--muted);}
 </style>
 </head>
 <body>
-
 <nav>
-  <a class="nav-logo" href="/">
-    <div class="nav-logo-mark">
-      <svg viewBox="0 0 14 14"><path d="M2 11 L7 4 L12 11" stroke-linejoin="round"/><path d="M4.5 11 L7 7.5 L9.5 11"/></svg>
-    </div>
-    <span class="nav-logo-text">StretchRole</span>
+  <a href="/homepage" class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
+    <span class="logo-text">StretchRole</span>
   </a>
-  <a href="/" class="nav-back">← Back to home</a>
+  <a href="/homepage" class="back">← Back</a>
 </nav>
 
-<div class="page-wrap">
+<div class="shell">
+  <div class="page-eyebrow">Legal</div>
+  <h1 class="page-title">Privacy Policy</h1>
+  <p class="page-meta">Last updated April 2025 &nbsp;·&nbsp; Effective immediately</p>
 
-  <aside class="toc">
-    <div class="toc-label">Contents</div>
-    <div class="toc-links">
-      <a href="#overview" class="toc-link">1. Overview</a>
-      <a href="#what-we-collect" class="toc-link">2. What we collect</a>
-      <a href="#how-we-use" class="toc-link">3. How we use it</a>
-      <a href="#what-we-dont" class="toc-link">4. What we don't do</a>
-      <a href="#third-parties" class="toc-link">5. Third parties</a>
-      <a href="#data-retention" class="toc-link">6. Data retention</a>
-      <a href="#security" class="toc-link">7. Security</a>
-      <a href="#your-rights" class="toc-link">8. Your rights</a>
-      <a href="#ccpa" class="toc-link">9. CCPA (California)</a>
-      <a href="#cookies" class="toc-link">10. Cookies</a>
-      <a href="#children" class="toc-link">11. Children</a>
-      <a href="#changes" class="toc-link">12. Changes</a>
-      <a href="#contact" class="toc-link">13. Contact</a>
-    </div>
-  </aside>
+  <div class="prose">
 
-  <main class="doc-content">
-    <div class="doc-header">
-      <div class="doc-eyebrow">Legal</div>
-      <h1 class="doc-title">Privacy Policy</h1>
-      <p class="doc-meta">
-        Last updated: April 2, 2026 &nbsp;·&nbsp;
-        StretchRole LLC &nbsp;·&nbsp;
-        Questions? <a href="mailto:hello@stretchrole.com">hello@stretchrole.com</a>
-      </p>
-    </div>
+    <p>StretchRole ("we," "our," or "us") is committed to protecting the privacy of healthcare professionals who use our career positioning platform. This policy explains what we collect, how we use it, and your rights.</p>
 
-    <div class="green-box">
-      <strong>Our privacy commitment in plain English:</strong> We collect only what we need to run the platform. We never sell your data. We never use your resume to train AI models. Your career history is yours — we're just here to help you present it better.
-    </div>
+    <h2>What we collect</h2>
+    <p>We collect only what's necessary to provide and improve the service:</p>
+    <ul>
+      <li><strong>Account information</strong> — your name, email, and profile image from the OAuth provider you choose (LinkedIn, Google, or Apple). We never see or store your social login password.</li>
+      <li><strong>Career profile data</strong> — your current level, target level, and focus area that you set during onboarding or in your Profile.</li>
+      <li><strong>Resume content</strong> — the text of any resume you upload as your master resume or for a specific session. This is used solely to power your tool results.</li>
+      <li><strong>Usage data</strong> — which tools you use and when, so we can enforce plan limits and improve the product. We do not sell this data.</li>
+      <li><strong>Feedback</strong> — thumbs up/down ratings you submit on tool results.</li>
+    </ul>
 
-    <div class="doc-section" id="overview">
-      <h2><span class="sec-num">01</span> Overview</h2>
-      <p>This Privacy Policy describes how StretchRole LLC ("StretchRole," "we," "us," or "our") collects, uses, and protects information about you when you use our website at stretchrole.com and our career platform services (collectively, the "Service").</p>
-      <p>By using the Service, you agree to the collection and use of information as described in this Privacy Policy. This policy applies to all users of StretchRole, including free and paid subscribers.</p>
-    </div>
+    <h2>How we use your data</h2>
+    <ul>
+      <li>To deliver personalized results from our AI tools (resume optimization, interview prep, job analysis, reference letters)</li>
+      <li>To authenticate your account and maintain your session</li>
+      <li>To enforce plan limits and manage billing (via Stripe)</li>
+      <li>To improve our models and product over time using aggregated, anonymized signals</li>
+      <li>To send transactional emails (e.g. receipt of a purchase). We do not send marketing email without explicit opt-in.</li>
+    </ul>
 
-    <div class="doc-section" id="what-we-collect">
-      <h2><span class="sec-num">02</span> What We Collect</h2>
-      <p>We collect information in the following categories:</p>
+    <h2>What we never do</h2>
+    <ul>
+      <li>We never sell your personal data or resume content to employers, recruiters, or any third party</li>
+      <li>We never share your identity with any employer or job board without your explicit action</li>
+      <li>We never use your resume content to train AI models without anonymization and aggregation</li>
+      <li>We never store your OAuth passwords — authentication is handled entirely by Clerk</li>
+    </ul>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>What it includes</th>
-            <th>How we get it</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Account information</strong></td>
-            <td>Name, email address, profile photo, and authentication provider (Google, LinkedIn, Microsoft, or Apple)</td>
-            <td>Provided by your chosen sign-in provider at login</td>
-          </tr>
-          <tr>
-            <td><strong>Resume and career content</strong></td>
-            <td>Resume text, job descriptions you paste, career history, and any materials you submit for processing</td>
-            <td>Submitted directly by you when using the tools</td>
-          </tr>
-          <tr>
-            <td><strong>Usage data</strong></td>
-            <td>Pages visited, features used, tool interactions, session duration, and optimization history</td>
-            <td>Automatically collected as you use the Service</td>
-          </tr>
-          <tr>
-            <td><strong>Payment information</strong></td>
-            <td>Billing name, last four digits of card, billing address, and transaction history</td>
-            <td>Collected and stored securely by Stripe — we never store full card numbers</td>
-          </tr>
-          <tr>
-            <td><strong>Master resume</strong></td>
-            <td>Your uploaded resume, stored as structured career data (name, contact, work history, education, competencies) in your account profile</td>
-            <td>Uploaded by you during onboarding or from your Profile settings. Stored persistently in your account so every tool can use it automatically. You can update or delete it at any time from your Profile. Never shared with employers, recruiters, or third parties.</td>
-          </tr>
-          <tr>
-            <td><strong>Career profile data</strong></td>
-            <td>Your current role level, target role level, and professional focus area (e.g., Operations, Nursing, Finance)</td>
-            <td>Provided by you during onboarding or updated in account settings. Stored securely in your user profile and used solely to personalize tool outputs. Never shared or sold.</td>
-          </tr>
-          <tr>
-            <td><strong>Voice input</strong></td>
-            <td>Speech-to-text transcription if you use voice mode in any StretchRole tool</td>
-            <td>Audio is processed locally in your browser via the Web Speech API. Audio is never transmitted to our servers and is never stored. Only the resulting text transcript is processed — identical to typed input.</td>
-          </tr>
-          <tr>
-            <td><strong>Device and technical data</strong></td>
-            <td>Browser type, operating system, IP address, and referring URL</td>
-            <td>Automatically collected via standard web server logs</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <h2>Third-party services</h2>
+    <p>We use a small set of trusted third-party services to operate StretchRole:</p>
+    <ul>
+      <li><strong>Clerk</strong> — authentication and identity management. Subject to Clerk's privacy policy.</li>
+      <li><strong>Anthropic</strong> — AI model provider. Prompts and resume content are sent to Anthropic's API to generate results. Anthropic's data retention policies apply.</li>
+      <li><strong>Stripe</strong> — payment processing. We never store full card numbers. Subject to Stripe's privacy policy.</li>
+      <li><strong>Vercel</strong> — hosting and serverless infrastructure. Anonymized request logs may be retained per Vercel's policy.</li>
+    </ul>
 
-    <div class="doc-section" id="how-we-use">
-      <h2><span class="sec-num">03</span> How We Use Your Information</h2>
-      <p>We use the information we collect for the following purposes:</p>
-      <ul>
-        <li><strong>To provide the Service</strong> — processing your resume, generating optimized content, and delivering tool outputs</li>
-        <li><strong>To manage your account</strong> — authentication, account settings, and subscription management</li>
-        <li><strong>To process payments</strong> — billing, invoicing, and subscription management via Stripe</li>
-        <li><strong>To improve the Service</strong> — understanding how features are used to make them better (using aggregated, anonymized data only)</li>
-        <li><strong>To communicate with you</strong> — transactional emails (receipts, account updates), and with your consent, product news and updates</li>
-        <li><strong>To ensure security</strong> — detecting and preventing fraud, abuse, and unauthorized access</li>
-        <li><strong>To comply with legal obligations</strong> — responding to lawful requests from government authorities</li>
-      </ul>
-    </div>
+    <h2>Data retention</h2>
+    <p>Your account data is retained as long as your account is active. You can delete your master resume or your entire account at any time from your Profile page. Upon account deletion, we remove your personal data within 30 days, except where retention is required by law.</p>
 
-    <div class="doc-section" id="what-we-dont">
-      <h2><span class="sec-num">04</span> What We Don't Do</h2>
-      <div class="green-box">
-        <strong>We make these commitments clearly and without qualification:</strong>
-      </div>
-      <ul>
-        <li>We do <strong>not</strong> sell your personal data to third parties — ever</li>
-        <li>We do <strong>not</strong> use your resume or career content to train AI models without your explicit, opt-in consent</li>
-        <li>We do <strong>not</strong> share your resume or career content with other users of the platform</li>
-        <li>We do <strong>not</strong> share your career profile data (role level, target level, focus area) with employers, recruiters, or staffing agencies</li>
-        <li>We do <strong>not</strong> transmit, record, or store voice audio — all speech processing happens locally in your browser</li>
-        <li>We do <strong>not</strong> share your information with employers, recruiters, or staffing agencies</li>
-        <li>We do <strong>not</strong> use your data for behavioral advertising or sell it to data brokers</li>
-        <li>We do <strong>not</strong> store your full payment card information — Stripe handles all payment data</li>
-      </ul>
-    </div>
+    <h2>Cookies and local storage</h2>
+    <p>We use browser <strong>localStorage</strong> to store your career profile preferences and usage counts on your device. We use session cookies set by Clerk for authentication. We do not use advertising cookies or third-party tracking pixels.</p>
 
+    <h2>Your rights</h2>
+    <p>Depending on your location, you may have rights to access, correct, export, or delete your personal data. To exercise any of these rights, contact us at the address below. We will respond within 30 days.</p>
 
-    <div class="doc-section" id="third-parties">
-      <h2><span class="sec-num">05</span> Third-Party Services</h2>
-      <p>StretchRole uses the following third-party services which may process your data:</p>
-      <ul>
-        <li><strong>Anthropic Claude API</strong> — processes resume and job description content to generate AI outputs. Content is not stored by Anthropic for training without consent.</li>
-        <li><strong>Clerk</strong> — handles authentication and stores your identity (name, email, OAuth provider). <a href="https://clerk.com/privacy" target="_blank">Clerk Privacy Policy</a></li>
-        <li><strong>Vercel</strong> — hosts the application and processes all web requests. <a href="https://vercel.com/legal/privacy-policy" target="_blank">Vercel Privacy Policy</a></li>
-        <li><strong>Airtable</strong> — stores early access waitlist submissions (email, industry, role level). <a href="https://www.airtable.com/privacy" target="_blank">Airtable Privacy Policy</a></li>
-        <li><strong>Stripe</strong> — processes payments when you subscribe to a paid plan. StretchRole does not store your payment card details. <a href="https://stripe.com/privacy" target="_blank">Stripe Privacy Policy</a></li>
-        <li><strong>GitHub</strong> — stores application source code. Does not process user personal data.</li>
-      </ul>
-      <p>We select third-party services that maintain strong privacy and security standards. We do not sell your data to any third party.</p>
-    </div>
-    <!-- replaced below -->
-    <div class="doc-section" id="third-parties-old" style="display:none;">
-      <h2><span class="sec-num">05</span> Third-Party Services</h2>
-      <p>We use a limited set of trusted third-party services to operate the platform. Each has its own privacy practices:</p>
-      <ul>
-        <li><strong>Anthropic (Claude API)</strong> — powers the AI processing of your resume and career content. Content sent to the API is subject to Anthropic's API data usage policy. Anthropic does not use API inputs to train models by default.</li>
-        <li><strong>Stripe</strong> — handles all payment processing. Your payment information is stored and managed by Stripe under their privacy policy and PCI DSS compliance.</li>
-        <li><strong>Clerk</strong> — manages user authentication via Google, LinkedIn, Microsoft, and Apple sign-in. Clerk stores your authentication data securely.</li>
-        <li><strong>Vercel</strong> — hosts the Service infrastructure. Vercel may log standard request data for security and performance purposes.</li>
-        <li><strong>Analytics provider</strong> — we use a privacy-first analytics tool (such as Plausible or Fathom) that does not use cookies, does not track individuals across sites, and does not sell data.</li>
-      </ul>
-      <p>We do not use Google Analytics, Facebook Pixel, or other advertising-focused tracking tools.</p>
-    </div>
+    <h2>Children</h2>
+    <p>StretchRole is intended for working professionals. We do not knowingly collect data from anyone under 18. If you believe a minor has created an account, please contact us immediately.</p>
 
-    <div class="doc-section" id="data-retention">
-      <h2><span class="sec-num">06</span> Data Retention</h2>
-      <p>We retain your data for as long as your account is active or as needed to provide the Service. Specifically:</p>
-      <ul>
-        <li><strong>Account data</strong> — retained while your account is active. Deleted within 30 days of account deletion request.</li>
-        <li><strong>Career profile data</strong> — current level, target level, and focus area are stored in your user profile and retained while your account is active. You may update or delete this data at any time from your account settings.</li>
-        <li><strong>Resume and career content</strong> — retained as long as you have an active account and have saved content in your history. You can delete individual saves at any time.</li>
-        <li><strong>Payment records</strong> — retained for 7 years as required by applicable tax and financial regulations.</li>
-        <li><strong>Usage logs</strong> — retained for up to 12 months for security and performance purposes, then deleted or anonymized.</li>
-      </ul>
-      <p>When you delete your account, we will delete or anonymize your personal data within 30 days, except where retention is required by law.</p>
-    </div>
+    <h2>Changes to this policy</h2>
+    <p>We may update this policy as the product evolves. Material changes will be communicated via email or an in-app notice at least 14 days before taking effect. Continued use of the platform after that date constitutes acceptance.</p>
 
-    <div class="doc-section" id="security">
-      <h2><span class="sec-num">07</span> Security</h2>
-      <p>We take data security seriously and implement industry-standard measures to protect your information, including:</p>
-      <ul>
-        <li>HTTPS encryption for all data in transit</li>
-        <li>Secure, access-controlled infrastructure through Vercel</li>
-        <li>Authentication managed through Clerk with industry-standard OAuth 2.0 protocols</li>
-        <li>Payment data handled exclusively by Stripe's PCI DSS-compliant systems</li>
-        <li>Limited employee access to user data on a need-to-know basis</li>
-      </ul>
-      <p>No method of transmission over the internet or electronic storage is 100% secure. While we strive to protect your data, we cannot guarantee absolute security. If you believe your account has been compromised, please contact us immediately at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a>.</p>
-    </div>
+    <div class="divider"></div>
 
-    <div class="doc-section" id="your-rights">
-      <h2><span class="sec-num">08</span> Your Rights</h2>
-      <p>Regardless of where you are located, you have the following rights with respect to your personal data:</p>
-      <ul>
-        <li><strong>Access</strong> — request a copy of the personal data we hold about you</li>
-        <li><strong>Correction</strong> — request that we correct inaccurate or incomplete data</li>
-        <li><strong>Deletion</strong> — request that we delete your personal data (subject to legal retention requirements)</li>
-        <li><strong>Portability</strong> — request your data in a machine-readable format</li>
-        <li><strong>Objection</strong> — object to our processing of your data for certain purposes</li>
-        <li><strong>Withdrawal of consent</strong> — where processing is based on consent, you may withdraw it at any time</li>
-      </ul>
-      <p>To exercise any of these rights, contact us at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a>. We will respond to all requests within 30 days.</p>
-    </div>
-
-    <div class="doc-section" id="ccpa">
-      <h2><span class="sec-num">09</span> California Residents (CCPA)</h2>
-      <p>If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA):</p>
-      <ul>
-        <li><strong>Right to know</strong> — the categories and specific pieces of personal information we collect about you</li>
-        <li><strong>Right to delete</strong> — request deletion of personal information we have collected</li>
-        <li><strong>Right to opt-out</strong> — opt out of the sale of personal information (note: we do not sell personal information)</li>
-        <li><strong>Right to non-discrimination</strong> — we will not discriminate against you for exercising your CCPA rights</li>
-      </ul>
-      <p>To submit a CCPA request, contact us at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a> with the subject line "CCPA Request."</p>
-    </div>
-
-    <div class="doc-section" id="cookies">
-      <h2><span class="sec-num">10</span> Cookies and Tracking</h2>
-      <p>We use a minimal set of cookies necessary to operate the Service:</p>
-      <ul>
-        <li><strong>Session cookies</strong> — maintain your login state while you use the platform. These are deleted when you close your browser.</li>
-        <li><strong>Preference cookies</strong> — remember your settings and preferences across sessions.</li>
-      </ul>
-      <p>We do not use advertising cookies, third-party tracking pixels, or cross-site tracking. Our analytics tool (Plausible or Fathom) is cookieless and privacy-first.</p>
-      <p>You can control cookies through your browser settings. Disabling session cookies will prevent you from staying logged in.</p>
-    </div>
-
-    <div class="doc-section" id="children">
-      <h2><span class="sec-num">11</span> Children's Privacy</h2>
-      <p>The Service is not directed to individuals under the age of 18. We do not knowingly collect personal information from children. If we become aware that a child under 18 has provided us with personal information, we will delete it promptly. If you believe a child has provided us with their information, please contact us at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a>.</p>
-    </div>
-
-    <div class="doc-section" id="changes">
-      <h2><span class="sec-num">12</span> Changes to This Policy</h2>
-      <p>We may update this Privacy Policy from time to time. When we make material changes, we will notify you by updating the "Last updated" date at the top of this page and, where required, by sending a notification to your account email address.</p>
-      <p>We encourage you to review this Privacy Policy periodically. Your continued use of the Service after changes become effective constitutes your acceptance of the updated policy.</p>
-    </div>
-
-    <div class="doc-section" id="contact">
-      <h2><span class="sec-num">13</span> Contact Us</h2>
-      <p>If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:</p>
-      <ul>
-        <li><strong>Privacy inquiries:</strong> <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a></li>
-        <li><strong>Legal inquiries:</strong> <a href="mailto:legal@stretchrole.com">legal@stretchrole.com</a></li>
-        <li><strong>Company:</strong> StretchRole LLC</li>
-        <li><strong>State:</strong> Oklahoma</li>
-      </ul>
-      <p>We are committed to working with you to resolve any privacy concerns. If you feel your concerns have not been addressed, you may have the right to lodge a complaint with your applicable data protection authority.</p>
-    </div>
-
-    <div class="doc-footer">
-      <p>© 2026 StretchRole LLC. All rights reserved.</p>
-      <p><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a> · <a href="/">Home</a></p>
+    <div class="contact-card">
+      <p><strong>Questions or requests?</strong><br/>
+      Contact us at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a> or by mail:<br/><br/>
+      StretchRole LLC<br/>
+      Oklahoma, United States</p>
     </div>
 
   </div>
 </div>
+
+<footer>
+  <a href="/terms">Terms of Service</a> &nbsp;·&nbsp; Privacy Policy &nbsp;·&nbsp; <a href="/homepage">StretchRole</a>
+</footer>
 </body>
 </html>
