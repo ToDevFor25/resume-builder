@@ -3,336 +3,526 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Welcome to StretchRole — Let's set up your profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script async crossorigin="anonymous"
-  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
-  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
-</script>
+<title>Welcome to StretchRole</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-:root{--bg:#080c14;--bg2:#0d1520;--bg3:#111d2e;--card:#0f1a28;--border:rgba(56,139,253,0.12);--border-bright:rgba(56,189,248,0.3);--accent:#38bdf8;--accent2:#0ea5e9;--accent3:#7dd3fc;--green:#34d399;--amber:#fbbf24;--rose:#fb7185;--purple:#a78bfa;--text:#e2eaf4;--text-muted:#64748b;--text-dim:#94a3b8;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow-x:hidden;padding:2rem 1.5rem;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35;}
-.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;}
-.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(14,165,233,.07) 0%,transparent 70%);top:-150px;left:-150px;}
-.orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(167,139,250,.05) 0%,transparent 70%);bottom:-50px;right:-80px;}
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:99px;}
-.shell{position:relative;z-index:1;width:100%;max-width:680px;}
-.steps{display:flex;align-items:center;justify-content:center;margin-bottom:2.5rem;animation:fadeUp .5s ease both;flex-wrap:wrap;gap:.4rem;}
-.step-item{display:flex;align-items:center;}
-.step-dot{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text-muted);transition:all .3s;flex-shrink:0;}
-.step-dot.active{background:rgba(14,165,233,.12);border-color:var(--accent2);color:var(--accent);}
-.step-dot.done{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);}
-.step-dot.done::after{content:'✓';font-size:.7rem;color:var(--green);}
-.step-dot.done span{display:none;}
-.step-label{font-size:.68rem;color:var(--text-muted);margin:0 .4rem;white-space:nowrap;}
-.step-label.active{color:var(--accent);}
-.step-conn{width:20px;height:1px;background:var(--border);margin:0 .1rem;}
-.step-conn.done{background:rgba(52,211,153,.3);}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:2.5rem;position:relative;overflow:hidden;}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.4),transparent);}
-.panel{display:none;animation:fadeUp .4s ease both;}
-.panel.active{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
-.eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.15);border-radius:99px;padding:.28rem .8rem;margin-bottom:1rem;}
-.dot-pulse{width:5px;height:5px;background:var(--accent2);border-radius:50%;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-h1{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:.5rem;line-height:1.2;}
-h1 span{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.sub{font-size:.88rem;color:var(--text-muted);line-height:1.6;margin-bottom:2rem;}
-.level-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem;}
-.lc{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .18s;position:relative;}
-.lc:hover{border-color:var(--border-bright);background:var(--bg3);}
-.lc.sel{border-color:var(--accent2);background:rgba(14,165,233,.07);}
-.lc.sel::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent2);border-radius:3px 0 0 3px;}
-.li{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.ln{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
-.lr{font-size:.75rem;color:var(--text-muted);line-height:1.4;}
-.lchk{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:transparent;transition:all .18s;flex-shrink:0;margin-left:auto;}
-.lc.sel .lchk{background:var(--accent2);border-color:var(--accent2);color:#fff;}
-.focus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:1.75rem;}
-.fc{padding:.9rem .75rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .18s;text-align:center;}
-.fc:hover{border-color:var(--border-bright);}
-.fc.sel{border-color:var(--accent2);background:rgba(14,165,233,.07);}
-.fi{font-size:1.4rem;margin-bottom:.4rem;}
-.fn{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--text);}
-.fd{font-size:.68rem;color:var(--text-muted);margin-top:.15rem;}
-/* Resume step */
-.upload-zone{border:1.5px dashed var(--border);border-radius:12px;padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2);position:relative;margin-bottom:1rem;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent2);background:rgba(14,165,233,.04);}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.upload-zone.uploaded{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.04);}
-.resume-note{background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.12);border-radius:8px;padding:.85rem 1rem;font-size:.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:1.25rem;}
-.resume-note strong{color:var(--accent3);}
-.parsed-box{display:none;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
-.parsed-title{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--green);margin-bottom:.5rem;}
-.parsed-item{font-size:.78rem;color:var(--text-dim);padding:.2rem 0;display:flex;align-items:center;gap:.4rem;}
-.parsed-item::before{content:'✓';color:var(--green);font-size:.7rem;}
-.skip-note{text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:.75rem;}
-.skip-note a{color:var(--text-dim);text-decoration:underline;cursor:pointer;}
-/* Summary step */
-.sum-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem;}
-.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;}
-.sum-icon{font-size:1.4rem;margin-bottom:.35rem;}
-.sum-lbl{font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem;}
-.sum-val{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--text);}
-.res-status{display:flex;align-items:center;gap:.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem;}
-.res-status-icon{font-size:1.4rem;}
-.res-status-body{flex:1;}
-.res-status-name{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--text);}
-.res-status-sub{font-size:.72rem;color:var(--text-muted);margin-top:.1rem;}
-.res-badge{font-size:.65rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;}
-.rb-live{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.2);}
-.rb-skip{background:var(--bg3);color:var(--text-muted);border:1px solid var(--border);}
-.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.75rem;}
-.ti{display:flex;align-items:center;gap:.65rem;padding:.75rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:9px;}
-.ti-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-.ti-name{font-size:.8rem;font-weight:500;color:var(--text);}
-.ti-badge{margin-left:auto;font-size:.6rem;font-weight:700;padding:.18rem .5rem;border-radius:99px;flex-shrink:0;}
-.tb-live{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.2);}
-.tb-soon{background:var(--bg3);color:var(--text-muted);border:1px solid var(--border);}
-/* Progress */
-.prog-wrap{margin-bottom:2rem;animation:fadeUp .5s .1s ease both;opacity:0;}
-.prog-labels{display:flex;justify-content:space-between;margin-bottom:.5rem;}
-.prog-labels span{font-size:.7rem;color:var(--text-muted);}
-.prog-labels strong{font-size:.7rem;color:var(--accent);font-weight:600;}
-.prog-track{height:3px;background:var(--bg3);border-radius:99px;overflow:hidden;}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent3));border-radius:99px;transition:width .5s ease;}
-/* Buttons */
-.btn-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-top:1.25rem;}
-.btn-next{flex:1;padding:.85rem;background:linear-gradient(135deg,var(--accent2),#0284c7);border:none;border-radius:9px;font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 0 24px rgba(56,189,248,.2);display:flex;align-items:center;justify-content:center;gap:.5rem;}
-.btn-next:hover{box-shadow:0 0 36px rgba(56,189,248,.35);transform:translateY(-1px);}
-.btn-next:disabled{opacity:.4;pointer-events:none;box-shadow:none;transform:none;}
-.btn-back{padding:.85rem 1.25rem;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .18s;}
-.btn-back:hover{border-color:var(--border-bright);color:var(--text);}
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --white:#fff;--off:#F9F9F8;--off2:#F4F4F2;
+  --ink:#111;--ink2:#1a1a1a;--muted:#525252;--light:#8a8a8a;--lighter:#c4c4c4;
+  --border:#E5E5E5;--border2:#D4D4D4;
+  --accent:#1B4FD8;--accent-hover:#1540b8;--accent-light:#EEF2FF;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --radius:10px;--radius-sm:7px;--radius-lg:14px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+  --shadow:0 2px 8px rgba(0,0,0,.07);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.1);
+}
+html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+/* ── HEADER ── */
+.header{height:60px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,4vw,2.5rem);}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;}
+.logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{width:14px;height:14px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.logo-text{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--ink);}
+.header-step{font-size:.75rem;color:var(--light);font-family:'DM Mono',monospace;}
+
+/* ── PROGRESS ── */
+.progress-bar{height:3px;background:var(--border);position:relative;}
+.progress-fill{height:100%;background:var(--accent);transition:width .4s ease;border-radius:0 99px 99px 0;}
+
+/* ── SHELL ── */
+.shell{max-width:560px;margin:0 auto;padding:3rem 1.5rem 4rem;}
+
+/* ── STEP DOTS ── */
+.step-dots{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:2.5rem;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all .25s;}
+.step-dot.active{background:var(--accent);width:20px;border-radius:99px;}
+.step-dot.done{background:var(--green);}
+
+/* ── STEP HEADER ── */
+.step-eyebrow{font-size:.67rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);margin-bottom:.75rem;}
+.step-title{font-family:'Instrument Serif',serif;font-size:1.8rem;font-weight:400;line-height:1.15;letter-spacing:-.02em;color:var(--ink);margin-bottom:.5rem;}
+.step-title em{font-style:italic;color:var(--accent);}
+.step-sub{font-size:.85rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:2rem;}
+
+/* ── OPTION CARDS ── */
+.option-grid{display:flex;flex-direction:column;gap:.6rem;margin-bottom:2rem;}
+.option-card{display:flex;align-items:flex-start;gap:.9rem;padding:1rem 1.1rem;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;}
+.option-card:hover{border-color:var(--border2);background:var(--off);}
+.option-card.selected{border-color:var(--accent);background:var(--accent-light);}
+.option-icon{font-size:1.1rem;flex-shrink:0;margin-top:.05rem;}
+.option-text{}
+.option-label{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.15rem;}
+.option-desc{font-size:.75rem;color:var(--muted);font-weight:300;line-height:1.5;}
+.option-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.option-card.selected .option-check{background:var(--accent);border-color:var(--accent);}
+.option-check svg{width:9px;height:9px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;}
+.option-card.selected .option-check svg{opacity:1;}
+
+/* ── FOCUS GRID ── */
+.focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:2rem;}
+.focus-card{padding:.85rem 1rem;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.65rem;}
+.focus-card:hover{border-color:var(--border2);background:var(--off);}
+.focus-card.selected{border-color:var(--accent);background:var(--accent-light);}
+.focus-icon{font-size:.95rem;flex-shrink:0;}
+.focus-text{}
+.focus-label{font-size:.82rem;font-weight:500;color:var(--ink);}
+.focus-desc{font-size:.7rem;color:var(--muted);font-weight:300;}
+
+/* ── RESUME UPLOAD ── */
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:2.5rem;text-align:center;cursor:pointer;transition:all .18s;background:var(--white);margin-bottom:1rem;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light);}
+.upload-zone.has-file{border-style:solid;border-color:var(--green);background:var(--green-bg);}
+.upload-icon{width:40px;height:40px;background:var(--off2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;}
+.upload-icon svg{width:18px;height:18px;stroke:var(--light);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.upload-zone.has-file .upload-icon{background:var(--green-bg);}
+.upload-zone.has-file .upload-icon svg{stroke:var(--green);}
+.upload-title{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.3rem;}
+.upload-sub{font-size:.75rem;color:var(--muted);font-weight:300;}
+.upload-success{font-size:.82rem;font-weight:500;color:var(--green);margin-bottom:.2rem;}
+.upload-filename{font-size:.75rem;color:var(--green);font-weight:300;}
+.skip-link{display:block;text-align:center;font-size:.75rem;color:var(--lighter);cursor:pointer;transition:color .13s;margin-bottom:1.5rem;}
+.skip-link:hover{color:var(--muted);}
+
+/* ── SUMMARY STEP ── */
+.summary-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm);}
+.summary-row{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border);}
+.summary-row:last-child{border-bottom:none;}
+.summary-icon{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--off2);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.summary-label{font-size:.72rem;color:var(--light);font-weight:500;text-transform:uppercase;letter-spacing:.06em;width:100px;flex-shrink:0;}
+.summary-value{font-size:.83rem;color:var(--ink);font-weight:400;}
+.summary-value.empty{color:var(--lighter);font-style:italic;}
+
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:2rem;}
+.tool-item{display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);}
+.tool-icon-wrap{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;}
+.tool-name{font-size:.75rem;color:var(--muted);font-weight:400;}
+.tool-badge{margin-left:auto;font-size:.6rem;font-weight:600;padding:.15rem .4rem;border-radius:99px;}
+.tool-badge.live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.tool-badge.soon{background:var(--off2);color:var(--lighter);border:1px solid var(--border);}
+
+/* ── NAV BUTTONS ── */
+.step-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;}
+.btn-back{display:flex;align-items:center;gap:.4rem;font-size:.83rem;color:var(--muted);background:transparent;border:1px solid var(--border);padding:.65rem 1.1rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .13s;font-family:'DM Sans',sans-serif;}
+.btn-back:hover{color:var(--ink);border-color:var(--border2);}
+.btn-back svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.btn-next{display:flex;align-items:center;gap:.4rem;font-size:.88rem;font-weight:500;color:white;background:var(--accent);border:none;padding:.7rem 1.5rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;flex:1;justify-content:center;}
+.btn-next:hover{background:var(--accent-hover);}
+.btn-next svg{width:13px;height:13px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.btn-next:disabled{opacity:.45;pointer-events:none;}
+
+.pricing-note{text-align:center;margin-top:.85rem;}
+.pricing-note a{font-size:.73rem;color:var(--light);text-decoration:none;transition:color .13s;}
+.pricing-note a:hover{color:var(--muted);}
+
+/* ── STEPS ── */
+.step{display:none;}
+.step.active{display:block;animation:fadeUp .35s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
+
+<div class="header">
+  <a href="/homepage" class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
+    <span class="logo-text">StretchRole</span>
+  </a>
+  <span class="header-step" id="header-step">Step 1 of 4</span>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progress-fill" style="width:25%"></div>
+</div>
+
 <div class="shell">
 
-  <div class="prog-wrap">
-    <div class="prog-labels"><span id="prog-text">Step 1 of 4</span><strong id="prog-pct">25%</strong></div>
-    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:25%"></div></div>
+  <div class="step-dots" id="step-dots">
+    <div class="step-dot active" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+    <div class="step-dot" id="dot-4"></div>
   </div>
 
-  <div class="steps">
-    <div class="step-item"><div class="step-dot active" id="sd1"><span>1</span></div><div class="step-label active" id="sl1">Current level</div></div>
-    <div class="step-conn" id="sc1"></div>
-    <div class="step-item"><div class="step-dot" id="sd2"><span>2</span></div><div class="step-label" id="sl2">Target &amp; focus</div></div>
-    <div class="step-conn" id="sc2"></div>
-    <div class="step-item"><div class="step-dot" id="sd3"><span>3</span></div><div class="step-label" id="sl3">Your resume</div></div>
-    <div class="step-conn" id="sc3"></div>
-    <div class="step-item"><div class="step-dot" id="sd4"><span>4</span></div><div class="step-label" id="sl4">All set</div></div>
+  <!-- STEP 1: Current level -->
+  <div class="step active" id="step-1">
+    <div class="step-eyebrow">Step 1 of 4 — Profile Setup</div>
+    <div class="step-title">Where are you <em>right now?</em></div>
+    <p class="step-sub">Calibrates every tool to your actual career stage — resume language, interview questions, salary benchmarks.</p>
+
+    <div class="option-grid" id="level-options">
+      <div class="option-card" onclick="selectOption('currentLevel','entry',this)">
+        <div class="option-icon">🌱</div>
+        <div class="option-text">
+          <div class="option-label">Entry Level</div>
+          <div class="option-desc">CNA, Medical Assistant, Patient Care Tech, Coordinator I</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+      <div class="option-card" onclick="selectOption('currentLevel','mid',this)">
+        <div class="option-icon">📈</div>
+        <div class="option-text">
+          <div class="option-label">Mid Level</div>
+          <div class="option-desc">Charge Nurse, Specialist, Supervisor, Coordinator II, Team Lead</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+      <div class="option-card" onclick="selectOption('currentLevel','senior',this)">
+        <div class="option-icon">⭐</div>
+        <div class="option-text">
+          <div class="option-label">Senior Level</div>
+          <div class="option-desc">Senior Specialist, Clinical Lead, Department Supervisor, Program Manager</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+      <div class="option-card" onclick="selectOption('currentLevel','leadership',this)">
+        <div class="option-icon">🎯</div>
+        <div class="option-text">
+          <div class="option-label">Leadership</div>
+          <div class="option-desc">Manager, Director, Department Head, Assistant VP, Clinical Manager</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+      <div class="option-card" onclick="selectOption('currentLevel','executive',this)">
+        <div class="option-icon">🏆</div>
+        <div class="option-text">
+          <div class="option-label">Executive</div>
+          <div class="option-desc">VP, SVP, CNO, COO, CFO, CEO, C-Suite, System-Level Leader</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <div></div>
+      <button class="btn-next" id="next-1" onclick="goStep(2)" disabled>
+        Continue
+        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
+      </button>
+    </div>
   </div>
 
-  <div class="card">
+  <!-- STEP 2: Target & focus -->
+  <div class="step" id="step-2">
+    <div class="step-eyebrow">Step 2 of 4 — Your Goal</div>
+    <div class="step-title">Where are you <em>headed?</em></div>
+    <p class="step-sub">Select your target level and primary focus. Every tool calibrates to this specific transition.</p>
 
-    <!-- STEP 1 -->
-    <div class="panel active" id="p1">
-      <div class="eyebrow"><span class="dot-pulse"></span>Step 1 of 4 — Profile Setup</div>
-      <h1>Where are you <span>right now?</span></h1>
-      <p class="sub">Calibrates every tool to your actual career stage — resume language, interview questions, salary benchmarks.</p>
-      <div class="level-list" id="cl">
-        <div class="lc" data-level="entry" onclick="selLevel('c',this)"><div class="li">🌱</div><div><div class="ln">Entry Level</div><div class="lr">CNA, Medical Assistant, Patient Care Tech, Coordinator I</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="mid" onclick="selLevel('c',this)"><div class="li">📈</div><div><div class="ln">Mid Level</div><div class="lr">Charge Nurse, Specialist, Supervisor, Coordinator II, Team Lead</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="senior" onclick="selLevel('c',this)"><div class="li">⭐</div><div><div class="ln">Senior Level</div><div class="lr">Senior Specialist, Clinical Lead, Department Supervisor, Program Manager</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="leadership" onclick="selLevel('c',this)"><div class="li">🎯</div><div><div class="ln">Leadership</div><div class="lr">Manager, Director, Department Head, Assistant VP, Clinical Manager</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="executive" onclick="selLevel('c',this)"><div class="li">🏆</div><div><div class="ln">Executive</div><div class="lr">VP, SVP, CNO, COO, CFO, CEO, C-Suite, System-Level Leader</div></div><div class="lchk">✓</div></div>
+    <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.65rem;">Target level</div>
+    <div class="option-grid" id="target-options" style="margin-bottom:1.5rem;">
+      <div class="option-card" onclick="selectOption('targetLevel','mid',this)">
+        <div class="option-icon">📈</div>
+        <div class="option-text">
+          <div class="option-label">Mid Level</div>
+          <div class="option-desc">Charge Nurse, Specialist, Supervisor, Coordinator II</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
       </div>
-      <div class="btn-row"><button class="btn-back" style="visibility:hidden">← Back</button><button class="btn-next" id="bn1" disabled onclick="goStep(2)">Continue →</button></div>
+      <div class="option-card" onclick="selectOption('targetLevel','senior',this)">
+        <div class="option-icon">⭐</div>
+        <div class="option-text">
+          <div class="option-label">Senior Level</div>
+          <div class="option-desc">Senior Specialist, Clinical Lead, Program Manager</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+      <div class="option-card" onclick="selectOption('targetLevel','leadership',this)">
+        <div class="option-icon">🎯</div>
+        <div class="option-text">
+          <div class="option-label">Leadership</div>
+          <div class="option-desc">Manager, Director, Department Head, Assistant VP</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
+      <div class="option-card" onclick="selectOption('targetLevel','executive',this)">
+        <div class="option-icon">🏆</div>
+        <div class="option-text">
+          <div class="option-label">Executive</div>
+          <div class="option-desc">VP, SVP, CNO, COO, CFO, CEO, C-Suite</div>
+        </div>
+        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
+      </div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="panel" id="p2">
-      <div class="eyebrow"><span class="dot-pulse"></span>Step 2 of 4 — Your Goal</div>
-      <h1>Where are you <span>headed?</span></h1>
-      <p class="sub">Select your target level and primary focus. Every tool calibrates to this specific transition.</p>
-      <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.65rem;">Target Level</div>
-      <div class="level-list" id="tl">
-        <div class="lc" data-level="mid" onclick="selLevel('t',this)"><div class="li">📈</div><div><div class="ln">Mid Level</div><div class="lr">Charge Nurse, Specialist, Supervisor, Coordinator II</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="senior" onclick="selLevel('t',this)"><div class="li">⭐</div><div><div class="ln">Senior Level</div><div class="lr">Senior Specialist, Clinical Lead, Program Manager</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="leadership" onclick="selLevel('t',this)"><div class="li">🎯</div><div><div class="ln">Leadership</div><div class="lr">Manager, Director, Department Head, Assistant VP</div></div><div class="lchk">✓</div></div>
-        <div class="lc" data-level="executive" onclick="selLevel('t',this)"><div class="li">🏆</div><div><div class="ln">Executive</div><div class="lr">VP, SVP, CNO, COO, CFO, CEO, C-Suite</div></div><div class="lchk">✓</div></div>
+    <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.65rem;">Primary focus area</div>
+    <div class="focus-grid" id="focus-options">
+      <div class="focus-card" onclick="selectFocus('operations',this)">
+        <div class="focus-icon">⚙️</div>
+        <div class="focus-text">
+          <div class="focus-label">Operations</div>
+          <div class="focus-desc">Throughput, efficiency, ops</div>
+        </div>
       </div>
-      <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin:.85rem 0 .65rem;">Primary Focus Area</div>
-      <div class="focus-grid">
-        <div class="fc" data-focus="operations" onclick="selFocus(this)"><div class="fi">⚙️</div><div class="fn">Operations</div><div class="fd">Ops, throughput, efficiency</div></div>
-        <div class="fc" data-focus="nursing" onclick="selFocus(this)"><div class="fi">🏥</div><div class="fn">Nursing</div><div class="fd">Clinical nursing leadership</div></div>
-        <div class="fc" data-focus="finance" onclick="selFocus(this)"><div class="fi">📊</div><div class="fn">Finance</div><div class="fd">Revenue cycle, budgets</div></div>
-        <div class="fc" data-focus="quality" onclick="selFocus(this)"><div class="fi">✅</div><div class="fn">Quality</div><div class="fd">Quality, compliance, safety</div></div>
-        <div class="fc" data-focus="strategy" onclick="selFocus(this)"><div class="fi">🎯</div><div class="fn">Strategy</div><div class="fd">Growth, planning, innovation</div></div>
-        <div class="fc" data-focus="other" onclick="selFocus(this)"><div class="fi">➕</div><div class="fn">Other</div><div class="fd">IT, HR, supply chain, etc.</div></div>
+      <div class="focus-card" onclick="selectFocus('nursing',this)">
+        <div class="focus-icon">🏥</div>
+        <div class="focus-text">
+          <div class="focus-label">Nursing</div>
+          <div class="focus-desc">Clinical nursing leadership</div>
+        </div>
       </div>
-      <div class="btn-row"><button class="btn-back" onclick="goStep(1)">← Back</button><button class="btn-next" id="bn2" disabled onclick="goStep(3)">Continue →</button></div>
+      <div class="focus-card" onclick="selectFocus('finance',this)">
+        <div class="focus-icon">📊</div>
+        <div class="focus-text">
+          <div class="focus-label">Finance</div>
+          <div class="focus-desc">Revenue cycle, budgets</div>
+        </div>
+      </div>
+      <div class="focus-card" onclick="selectFocus('quality',this)">
+        <div class="focus-icon">✅</div>
+        <div class="focus-text">
+          <div class="focus-label">Quality</div>
+          <div class="focus-desc">Compliance, safety</div>
+        </div>
+      </div>
+      <div class="focus-card" onclick="selectFocus('strategy',this)">
+        <div class="focus-icon">🎯</div>
+        <div class="focus-text">
+          <div class="focus-label">Strategy</div>
+          <div class="focus-desc">Growth, planning, innovation</div>
+        </div>
+      </div>
+      <div class="focus-card" onclick="selectFocus('other',this)">
+        <div class="focus-icon">➕</div>
+        <div class="focus-text">
+          <div class="focus-label">Other</div>
+          <div class="focus-desc">IT, HR, supply chain</div>
+        </div>
+      </div>
     </div>
 
-    <!-- STEP 3 -->
-    <div class="panel" id="p3">
-      <div class="eyebrow"><span class="dot-pulse"></span>Step 3 of 4 — Master Resume</div>
-      <h1>Upload your <span>master resume.</span></h1>
-      <p class="sub">Upload once — every tool uses it automatically. SeeThrough gets real match scores, Interview Coach knows your background, Reference Writer knows your accomplishments.</p>
-      <div class="resume-note"><strong>Your resume stays private.</strong> Stored securely in your account. Used only to personalize your results. Update or delete anytime from your <strong>Profile</strong>.</div>
-      <div class="upload-zone" id="uz" ondrop="dropResume(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
-        <input type="file" id="rfi" accept=".pdf,.docx,.txt,.rtf" onchange="fileSelected(event)"/>
-        <div style="font-size:2rem;margin-bottom:.65rem;">📄</div>
-        <div style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.3rem;" id="uz-title">Drop your resume here or click to browse</div>
-        <div style="font-size:.75rem;color:var(--text-muted);">PDF · DOCX · TXT · RTF</div>
-      </div>
-      <div class="parsed-box" id="parsed-box">
-        <div class="parsed-title">✓ Resume uploaded successfully</div>
-        <div id="parsed-items"></div>
-      </div>
-      <div class="skip-note">Not ready? <a onclick="skipResume()">Skip for now</a> — add your master resume anytime from your <strong>Profile</strong>.</div>
-      <div class="btn-row" style="margin-top:1.25rem;"><button class="btn-back" onclick="goStep(2)">← Back</button><button class="btn-next" id="bn3" onclick="goStep(4)">Continue →</button></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(1)">
+        <svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>
+        Back
+      </button>
+      <button class="btn-next" id="next-2" onclick="goStep(3)" disabled>
+        Continue
+        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
+      </button>
     </div>
-
-    <!-- STEP 4 -->
-    <div class="panel" id="p4">
-      <div class="eyebrow"><span class="dot-pulse"></span>You're all set</div>
-      <h1>Your platform is <span>ready.</span></h1>
-      <p class="sub">Here's your setup. Update anything anytime from your Profile.</p>
-      <div class="sum-grid">
-        <div class="sum-card"><div class="sum-icon">📍</div><div class="sum-lbl">Current</div><div class="sum-val" id="sc-cur">—</div></div>
-        <div class="sum-card"><div class="sum-icon">🎯</div><div class="sum-lbl">Target</div><div class="sum-val" id="sc-tgt">—</div></div>
-        <div class="sum-card"><div class="sum-icon">⚡</div><div class="sum-lbl">Focus</div><div class="sum-val" id="sc-foc">—</div></div>
-      </div>
-      <div class="res-status">
-        <div class="res-status-icon" id="rs-icon">📋</div>
-        <div class="res-status-body"><div class="res-status-name" id="rs-name">Master Resume</div><div class="res-status-sub" id="rs-sub">Add from your Profile to unlock personalized analysis</div></div>
-        <div class="res-badge" id="rs-badge"></div>
-      </div>
-      <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.75rem;">Your tools</div>
-      <div class="tools-grid">
-        <div class="ti"><div class="ti-icon" style="background:rgba(14,165,233,.1)">📄</div><div class="ti-name">Resume Optimizer</div><div class="ti-badge tb-live">Live</div></div>
-        <div class="ti"><div class="ti-icon" style="background:rgba(52,211,153,.1)">🎯</div><div class="ti-name">Interview Coach</div><div class="ti-badge tb-live">Live</div></div>
-        <div class="ti"><div class="ti-icon" style="background:rgba(34,211,238,.1)">👁</div><div class="ti-name">SeeThrough</div><div class="ti-badge tb-live">Live</div></div>
-        <div class="ti"><div class="ti-icon" style="background:rgba(251,113,133,.1)">✉️</div><div class="ti-name">Reference Writer</div><div class="ti-badge tb-live">Live</div></div>
-        <div class="ti"><div class="ti-icon" style="background:rgba(251,191,36,.1)">💰</div><div class="ti-name">Salary Simulator</div><div class="ti-badge tb-soon">Soon</div></div>
-        <div class="ti"><div class="ti-icon" style="background:rgba(167,139,250,.1)">🚀</div><div class="ti-name">Promo Package</div><div class="ti-badge tb-soon">Soon</div></div>
-      </div>
-      <div class="btn-row"><button class="btn-back" onclick="goStep(3)">← Back</button><button class="btn-next" onclick="finish()">✦ Enter StretchRole →</button></div>
-    </div>
-
   </div>
-  <div style="text-align:center;margin-top:1rem;"><a href="/#pricing" style="font-size:.72rem;color:var(--text-muted);text-decoration:none;">View pricing →</a></div>
+
+  <!-- STEP 3: Resume upload -->
+  <div class="step" id="step-3">
+    <div class="step-eyebrow">Step 3 of 4 — Master Resume</div>
+    <div class="step-title">Upload your <em>master resume.</em></div>
+    <p class="step-sub">Upload once — every tool uses it automatically. SeeThrough gets real match scores, Interview Coach knows your background, Reference Writer knows your accomplishments.</p>
+
+    <div class="upload-zone" id="upload-zone"
+      onclick="document.getElementById('resume-file').click()"
+      ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave()">
+      <div class="upload-icon">
+        <svg viewBox="0 0 18 18"><path d="M3 13v2a1 1 0 001 1h10a1 1 0 001-1v-2M9 3v9M6 6l3-3 3 3"/></svg>
+      </div>
+      <div class="upload-title" id="upload-title">Drop your resume here or click to browse</div>
+      <div class="upload-sub" id="upload-sub">PDF · DOCX · TXT · RTF</div>
+    </div>
+
+    <input type="file" id="resume-file" accept=".pdf,.docx,.txt,.rtf" style="display:none" onchange="onFileChange(event)"/>
+
+    <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;font-size:.75rem;color:var(--muted);line-height:1.6;font-weight:300;margin-bottom:1.25rem;">
+      Your resume stays private. Stored securely in your account. Used only to personalize your results. Update or delete anytime from your Profile.
+    </div>
+
+    <div class="skip-link" onclick="goStep(4)">Not ready? Skip for now — add your master resume anytime from your Profile</div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(2)">
+        <svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>
+        Back
+      </button>
+      <button class="btn-next" id="next-3" onclick="goStep(4)" disabled>
+        Continue
+        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 4: All set -->
+  <div class="step" id="step-4">
+    <div class="step-eyebrow">Step 4 of 4 — Ready</div>
+    <div class="step-title">You're all <em>set.</em></div>
+    <p class="step-sub">Your platform is ready. Here's your setup — update anything anytime from your Profile.</p>
+
+    <div class="summary-card">
+      <div class="summary-row">
+        <div class="summary-icon">📍</div>
+        <div class="summary-label">Current</div>
+        <div class="summary-value" id="sum-current">—</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-icon">🎯</div>
+        <div class="summary-label">Target</div>
+        <div class="summary-value" id="sum-target">—</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-icon">⚡</div>
+        <div class="summary-label">Focus</div>
+        <div class="summary-value" id="sum-focus">—</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-icon">📋</div>
+        <div class="summary-label">Resume</div>
+        <div class="summary-value" id="sum-resume">Not uploaded — add from Profile</div>
+      </div>
+    </div>
+
+    <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.65rem;">Your tools</div>
+    <div class="tools-grid">
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#EEF2FF;color:#1B4FD8;font-size:.7rem;">📄</div>
+        <div class="tool-name">Resume Optimizer</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#ECFEFF;color:#0891B2;font-size:.7rem;">👁</div>
+        <div class="tool-name">SeeThrough</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#F0FDF4;color:#16A34A;font-size:.7rem;">🎯</div>
+        <div class="tool-name">Interview Coach</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#FFF1F2;color:#E11D48;font-size:.7rem;">✉️</div>
+        <div class="tool-name">Reference Writer</div>
+        <span class="tool-badge live">Live</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#FFFBEB;color:#D97706;font-size:.7rem;">💰</div>
+        <div class="tool-name">Salary Simulator</div>
+        <span class="tool-badge soon">Soon</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon-wrap" style="background:#F5F3FF;color:#7C3AED;font-size:.7rem;">🚀</div>
+        <div class="tool-name">Promo Package</div>
+        <span class="tool-badge soon">Soon</span>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(3)">
+        <svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>
+        Back
+      </button>
+      <button class="btn-next" onclick="finish()">
+        Enter StretchRole
+        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
+      </button>
+    </div>
+
+    <div class="pricing-note">
+      <a href="/pricing">View pricing →</a>
+    </div>
+  </div>
+
 </div>
 
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-const P={cur:null,tgt:null,focus:null};
-let resumeText=null,resumeFile=null,skipped=false;
-const LM={entry:'Entry Level',mid:'Mid Level',senior:'Senior Level',leadership:'Leadership',executive:'Executive'};
-const FM={operations:'Operations',nursing:'Nursing',finance:'Finance',quality:'Quality',strategy:'Strategy',other:'Other'};
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// Clerk init
-window.addEventListener('load',async()=>{
-  try{
-    await window.__clerk_loaded;
-    const c=window.Clerk;
-    if(c){await c.load();if(c.user?.publicMetadata?.onboarded)window.location.href='/dashboard';}
-  }catch(e){console.warn('Clerk:',e);}
-});
+const profile = JSON.parse(localStorage.getItem('arx_profile')||'{}');
+let currentStep = 1;
 
-function selLevel(t,el){
-  const g=t==='c'?'cl':'tl';
-  document.querySelectorAll('#'+g+' .lc').forEach(x=>x.classList.remove('sel'));
-  el.classList.add('sel');
-  if(t==='c'){P.cur=el.dataset.level;document.getElementById('bn1').disabled=false;}
-  else{P.tgt=el.dataset.level;chk2();}
-}
-function selFocus(el){
-  document.querySelectorAll('.fc').forEach(x=>x.classList.remove('sel'));
-  el.classList.add('sel');P.focus=el.dataset.focus;chk2();
-}
-function chk2(){document.getElementById('bn2').disabled=!(P.tgt&&P.focus);}
-
-function dragOver(e){e.preventDefault();document.getElementById('uz').classList.add('drag');}
-function dragLeave(){document.getElementById('uz').classList.remove('drag');}
-function dropResume(e){e.preventDefault();dragLeave();const f=e.dataTransfer.files[0];if(f)parseFile(f);}
-function fileSelected(e){if(e.target.files[0])parseFile(e.target.files[0]);}
-
-async function parseFile(file){
-  resumeFile=file.name;
-  document.getElementById('uz-title').textContent='Parsing resume…';
-  const ext=file.name.split('.').pop().toLowerCase();
-  try{
-    if(ext==='docx'){const ab=await file.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});resumeText=r.value;}
-    else if(ext==='pdf'){
-      const ab=await file.arrayBuffer();
-      const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-      let t='';for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();t+=c.items.map(x=>x.str).join(' ')+'\n';}
-      resumeText=t;
-    }else{resumeText=await file.text();}
-    showParsed(file.name);
-  }catch(e){document.getElementById('uz-title').textContent='Could not read file — try a different format';resumeText=null;}
-}
-
-function showParsed(name){
-  const uz=document.getElementById('uz');
-  uz.querySelector('#uz-title').textContent='✓ '+name;
-  uz.classList.add('uploaded');uz.classList.remove('drag');
-  localStorage.setItem('arx_master_resume_text',resumeText);
-  localStorage.setItem('arx_master_resume_filename',name);
-  const words=resumeText.split(/\s+/).length;
-  document.getElementById('parsed-items').innerHTML=[
-    'Contact information detected',
-    'Work history extracted',
-    words+' words parsed',
-    'Ready to use across all tools'
-  ].map(t=>`<div class="parsed-item">${t}</div>`).join('');
-  document.getElementById('parsed-box').style.display='block';
-  skipped=false;
-}
-
-function skipResume(){skipped=true;resumeText=null;goStep(4);}
+const levelLabels = {entry:'Entry Level',mid:'Mid Level',senior:'Senior Level',leadership:'Leadership',executive:'Executive'};
+const focusLabels = {operations:'Operations',nursing:'Nursing',finance:'Finance',quality:'Quality',strategy:'Strategy',other:'Other'};
 
 function goStep(n){
-  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-  document.getElementById('p'+n).classList.add('active');
+  document.getElementById('step-'+currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step-'+n).classList.add('active');
+  // Progress
+  const pcts = {1:25,2:50,3:75,4:100};
+  document.getElementById('progress-fill').style.width = pcts[n]+'%';
+  document.getElementById('header-step').textContent = `Step ${n} of 4`;
+  // Dots
   for(let i=1;i<=4;i++){
-    const d=document.getElementById('sd'+i),l=document.getElementById('sl'+i);
-    d.classList.remove('active','done');l.classList.remove('active');
-    if(i<n)d.classList.add('done');
-    else if(i===n){d.classList.add('active');l.classList.add('active');}
+    const d = document.getElementById('dot-'+i);
+    d.className = 'step-dot' + (i<n?' done':i===n?' active':'');
   }
-  for(let i=1;i<=3;i++)document.getElementById('sc'+i)?.classList.toggle('done',i<n);
-  const pct=Math.round(n/4*100);
-  document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('prog-text').textContent='Step '+n+' of 4';
-  document.getElementById('prog-pct').textContent=pct+'%';
-  if(n===4)fillSummary();
+  if(n===4) renderSummary();
   window.scrollTo(0,0);
 }
 
-function fillSummary(){
-  document.getElementById('sc-cur').textContent=LM[P.cur]||'—';
-  document.getElementById('sc-tgt').textContent=LM[P.tgt]||'—';
-  document.getElementById('sc-foc').textContent=FM[P.focus]||'—';
-  const hasResume=resumeText&&!skipped;
-  const fn=localStorage.getItem('arx_master_resume_filename')||'Resume';
-  document.getElementById('rs-icon').textContent=hasResume?'📄':'📋';
-  document.getElementById('rs-name').textContent=hasResume?fn:'No resume uploaded yet';
-  document.getElementById('rs-sub').textContent=hasResume?'Used across all tools automatically':'Add from your Profile anytime';
-  const b=document.getElementById('rs-badge');
-  b.textContent=hasResume?'Uploaded':'Skipped';
-  b.className='res-badge '+(hasResume?'rb-live':'rb-skip');
+function selectOption(field, value, el){
+  const container = el.parentElement;
+  container.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  profile[field] = value;
+  localStorage.setItem('arx_profile', JSON.stringify(profile));
+  // Enable next button
+  if(field==='currentLevel') document.getElementById('next-1').disabled=false;
+  if(field==='targetLevel') checkStep2();
+}
+
+function selectFocus(value, el){
+  document.querySelectorAll('.focus-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  profile.focus = value;
+  localStorage.setItem('arx_profile', JSON.stringify(profile));
+  checkStep2();
+}
+
+function checkStep2(){
+  document.getElementById('next-2').disabled = !(profile.targetLevel && profile.focus);
+}
+
+function renderSummary(){
+  document.getElementById('sum-current').textContent = levelLabels[profile.currentLevel]||'—';
+  document.getElementById('sum-target').textContent = levelLabels[profile.targetLevel]||'—';
+  document.getElementById('sum-focus').textContent = focusLabels[profile.focus]||'—';
+  const hasResume = !!localStorage.getItem('arx_master_resume_text');
+  const el = document.getElementById('sum-resume');
+  if(hasResume){
+    el.textContent = 'Uploaded ✓';
+    el.style.color = 'var(--green)';
+  } else {
+    el.textContent = 'Not uploaded — add from Profile';
+    el.style.color = 'var(--lighter)';
+  }
+}
+
+// File upload
+function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files[0];if(f)processFile(f);}
+function onDragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag');}
+function onDragLeave(){document.getElementById('upload-zone').classList.remove('drag');}
+function onFileChange(e){if(e.target.files[0])processFile(e.target.files[0]);}
+
+async function processFile(f){
+  const ext = f.name.split('.').pop().toLowerCase();
+  let text = '';
+  try{
+    if(ext==='docx'){const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});text=r.value;}
+    else if(ext==='pdf'){const ab=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n';}}
+    else{text=await f.text();}
+    localStorage.setItem('arx_master_resume_text',text);
+    localStorage.setItem('arx_master_resume_name',f.name);
+    const zone = document.getElementById('upload-zone');
+    zone.classList.add('has-file');
+    document.getElementById('upload-title').innerHTML = '<span style="color:var(--green);font-weight:500;">✓ Resume uploaded successfully</span>';
+    document.getElementById('upload-sub').textContent = f.name;
+    document.getElementById('next-3').disabled = false;
+  }catch(e){alert('Could not read this file. Try a different format.');}
 }
 
 async function finish(){
-  const data={currentLevel:P.cur||'leadership',targetLevel:P.tgt||'executive',focus:P.focus||'operations',onboarded:true,foundingMember:true,joinedAt:new Date().toISOString(),savedAt:new Date().toISOString()};
-  localStorage.setItem('arx_profile',JSON.stringify(data));
+  profile.onboarded = true;
+  localStorage.setItem('arx_profile',JSON.stringify(profile));
+  // Mark onboarded in Clerk if available
   try{
     await window.__clerk_loaded;
-    const c=window.Clerk;
-    if(c?.user){
-      await c.user.update({publicMetadata:{...data,masterResumeText:resumeText||null,masterResumeFilename:localStorage.getItem('arx_master_resume_filename')||null}});
+    const clerk = window.Clerk;
+    if(clerk&&clerk.user){
+      await clerk.user.update({publicMetadata:{...clerk.user.publicMetadata,onboarded:true,currentLevel:profile.currentLevel,targetLevel:profile.targetLevel,focus:profile.focus}});
     }
-  }catch(e){console.warn('Clerk save:',e);}
+  }catch(e){}
   window.location.href='/dashboard';
 }
 </script>
