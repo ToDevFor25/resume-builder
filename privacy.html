@@ -40,17 +40,17 @@ footer a{color:var(--lighter);text-decoration:none;}footer a:hover{color:var(--m
 </head>
 <body>
 <nav>
-  <a href="/homepage" class="logo">
+  <a href="/" class="logo">
     <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
     <span class="logo-text">StretchRole</span>
   </a>
-  <a href="/homepage" class="back">← Back</a>
+  <a href="/" class="back">← Back</a>
 </nav>
 
 <div class="shell">
   <div class="page-eyebrow">Legal</div>
   <h1 class="page-title">Privacy Policy</h1>
-  <p class="page-meta">Last updated April 2025 &nbsp;·&nbsp; Effective immediately</p>
+  <p class="page-meta">Last updated April 2026 &nbsp;·&nbsp; Effective immediately</p>
 
   <div class="prose">
 
@@ -59,19 +59,21 @@ footer a{color:var(--lighter);text-decoration:none;}footer a:hover{color:var(--m
     <h2>What we collect</h2>
     <p>We collect only what's necessary to provide and improve the service:</p>
     <ul>
-      <li><strong>Account information</strong> — your name, email, and profile image from the OAuth provider you choose (LinkedIn, Google, or Apple). We never see or store your social login password.</li>
+      <li><strong>Account information</strong> — your name, email, and profile image from the OAuth provider you choose (Google, LinkedIn, or Apple). We never see or store your social login password. When you sign in using a third-party provider, we receive basic profile information from that provider as authorized by you.</li>
       <li><strong>Career profile data</strong> — your current level, target level, and focus area that you set during onboarding or in your Profile.</li>
       <li><strong>Resume content</strong> — the text of any resume you upload as your master resume or for a specific session. This is used solely to power your tool results.</li>
-      <li><strong>Usage data</strong> — which tools you use and when, so we can enforce plan limits and improve the product. We do not sell this data.</li>
+      <li><strong>Usage and entitlement data</strong> — we track tool usage counts, feature access, and plan entitlements to enforce platform limits and provide functionality based on your subscription.</li>
       <li><strong>Feedback</strong> — thumbs up/down ratings you submit on tool results.</li>
     </ul>
+
+    <p>Your account data, career content, and usage data are stored in a secure database infrastructure managed by trusted third-party providers. This enables persistent accounts, usage tracking, and platform functionality across sessions and devices.</p>
 
     <h2>How we use your data</h2>
     <ul>
       <li>To deliver personalized results from our AI tools (resume optimization, interview prep, job analysis, reference letters)</li>
       <li>To authenticate your account and maintain your session</li>
-      <li>To enforce plan limits and manage billing (via Stripe)</li>
-      <li>To improve our models and product over time using aggregated, anonymized signals</li>
+      <li>To enforce plan limits and manage billing</li>
+      <li>To improve our product over time using aggregated, anonymized signals</li>
       <li>To send transactional emails (e.g. receipt of a purchase). We do not send marketing email without explicit opt-in.</li>
     </ul>
 
@@ -79,14 +81,14 @@ footer a{color:var(--lighter);text-decoration:none;}footer a:hover{color:var(--m
     <ul>
       <li>We never sell your personal data or resume content to employers, recruiters, or any third party</li>
       <li>We never share your identity with any employer or job board without your explicit action</li>
-      <li>We never use your resume content to train AI models without anonymization and aggregation</li>
-      <li>We never store your OAuth passwords — authentication is handled entirely by Clerk</li>
+      <li>We do not use your resume, career content, or personal data to train AI models without your explicit opt-in consent</li>
+      <li>We never store your OAuth passwords — authentication is handled through secure OAuth 2.0 protocols</li>
     </ul>
 
     <h2>Third-party services</h2>
     <p>We use a small set of trusted third-party services to operate StretchRole:</p>
     <ul>
-      <li><strong>Clerk</strong> — authentication and identity management. Subject to Clerk's privacy policy.</li>
+      <li><strong>Supabase</strong> — provides authentication and secure data storage for user accounts, including identity, profile data, usage data, and application state. Authentication is managed through Supabase using industry-standard OAuth 2.0 protocols and secure session management.</li>
       <li><strong>Anthropic</strong> — AI model provider. Prompts and resume content are sent to Anthropic's API to generate results. Anthropic's data retention policies apply.</li>
       <li><strong>Stripe</strong> — payment processing. We never store full card numbers. Subject to Stripe's privacy policy.</li>
       <li><strong>Vercel</strong> — hosting and serverless infrastructure. Anonymized request logs may be retained per Vercel's policy.</li>
@@ -96,7 +98,7 @@ footer a{color:var(--lighter);text-decoration:none;}footer a:hover{color:var(--m
     <p>Your account data is retained as long as your account is active. You can delete your master resume or your entire account at any time from your Profile page. Upon account deletion, we remove your personal data within 30 days, except where retention is required by law.</p>
 
     <h2>Cookies and local storage</h2>
-    <p>We use browser <strong>localStorage</strong> to store your career profile preferences and usage counts on your device. We use session cookies set by Clerk for authentication. We do not use advertising cookies or third-party tracking pixels.</p>
+    <p>We use browser <strong>localStorage</strong> to store minor UI preferences on your device. We use session cookies managed by Supabase for authentication. We do not use advertising cookies or third-party tracking pixels.</p>
 
     <h2>Your rights</h2>
     <p>Depending on your location, you may have rights to access, correct, export, or delete your personal data. To exercise any of these rights, contact us at the address below. We will respond within 30 days.</p>
@@ -111,16 +113,14 @@ footer a{color:var(--lighter);text-decoration:none;}footer a:hover{color:var(--m
 
     <div class="contact-card">
       <p><strong>Questions or requests?</strong><br/>
-      Contact us at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a> or by mail:<br/><br/>
-      StretchRole LLC<br/>
-      Oklahoma, United States</p>
+      Contact us at <a href="mailto:privacy@stretchrole.com">privacy@stretchrole.com</a></p>
     </div>
 
   </div>
 </div>
 
 <footer>
-  <a href="/terms">Terms of Service</a> &nbsp;·&nbsp; Privacy Policy &nbsp;·&nbsp; <a href="/homepage">StretchRole</a>
+  <a href="/terms">Terms of Service</a> &nbsp;·&nbsp; Privacy Policy &nbsp;·&nbsp; <a href="/">StretchRole</a>
 </footer>
 </body>
 </html>
