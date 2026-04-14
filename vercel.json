@@ -1,16 +1,26 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/app",         "destination": "/app.html" },
-    { "source": "/dashboard",   "destination": "/ascendrx.html" },
-    { "source": "/onboarding",  "destination": "/onboarding.html" },
-    { "source": "/login",       "destination": "/login.html" },
-    { "source": "/sso-callback","destination": "/sso-callback.html" },
-    { "source": "/profile",     "destination": "/profile.html" },
-    { "source": "/interview",   "destination": "/interview-coach.html" },
-    { "source": "/seethrough",  "destination": "/seethrough.html" },
-    { "source": "/reference",   "destination": "/reference-writer.html" },
-    { "source": "/privacy",     "destination": "/privacy.html" },
-    { "source": "/terms",       "destination": "/terms.html" }
+    { "source": "/login",        "destination": "/login.html" },
+    { "source": "/sso-callback", "destination": "/sso-callback.html" },
+    { "source": "/app",          "destination": "/app.html" },
+    { "source": "/onboarding",   "destination": "/onboarding.html" },
+    { "source": "/profile",      "destination": "/profile.html" },
+    { "source": "/seethrough",   "destination": "/seethrough.html" },
+    { "source": "/interview",    "destination": "/interview-coach.html" },
+    { "source": "/reference",    "destination": "/reference-writer.html" },
+    { "source": "/dashboard",    "destination": "/dashboard.html" },
+    { "source": "/pricing",      "destination": "/pricing.html" },
+    { "source": "/privacy",      "destination": "/privacy.html" },
+    { "source": "/terms",        "destination": "/terms.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization" }
+      ]
+    }
   ]
 }
