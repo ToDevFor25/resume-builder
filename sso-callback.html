@@ -6,10 +6,7 @@
 <title>Signing in — StretchRole</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<script async crossorigin="anonymous"
-  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
-  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -19,8 +16,17 @@
   --red:#DC2626;--red-bg:#FEF2F2;
   --radius:10px;--radius-sm:7px;--radius-lg:14px;
 }
-html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center;justify-content:center;}
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;text-align:center;width:100%;max-width:360px;box-shadow:0 12px 40px rgba(0,0,0,.08);}
+html,body{
+  font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+}
+.card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:2.5rem;
+  text-align:center;width:100%;max-width:360px;
+  box-shadow:0 12px 40px rgba(0,0,0,.08);
+}
 .logo{display:flex;align-items:center;justify-content:center;gap:.5rem;text-decoration:none;margin-bottom:2rem;}
 .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;}
 .logo-mark svg{width:16px;height:16px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -35,34 +41,33 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink
 .error-icon svg{width:20px;height:20px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .retry-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.55rem 1.1rem;border-radius:var(--radius-sm);font-size:.82rem;font-weight:500;color:white;background:var(--accent);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:1rem;text-decoration:none;transition:background .13s;}
 .retry-btn:hover{background:#1540b8;}
+.debug-note{margin-top:1.25rem;font-size:.68rem;color:var(--lighter);line-height:1.5;}
 #state-loading{display:block;}
 #state-success,#state-error{display:none;}
 </style>
 </head>
 <body>
 <div class="card">
-  <a href="/homepage" class="logo">
+  <a href="/" class="logo">
     <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
     <span class="logo-text">StretchRole</span>
   </a>
 
-  <!-- Loading state -->
   <div id="state-loading">
     <div class="spinner"></div>
     <div class="status-title">Signing you in…</div>
-    <div class="status-sub">Completing authentication. You'll be redirected in a moment.</div>
+    <div class="status-sub">Setting up your account. You'll be redirected momentarily.</div>
   </div>
 
-  <!-- Success state -->
   <div id="state-success">
     <div class="success-icon"><svg viewBox="0 0 20 20"><path d="M4 10l4 4 8-8"/></svg></div>
     <div class="status-title">You're in.</div>
-    <div class="status-sub">Redirecting you now…</div>
+    <div class="status-sub">Redirecting to your workspace…</div>
+    <div class="debug-note" id="debug-note"></div>
   </div>
 
-  <!-- Error state -->
   <div id="state-error">
-    <div class="error-icon"><svg viewBox="0 0 20 20"><path d="M10 6v4M10 14v.01M3 10a7 7 0 1014 0A7 7 0 003 10z"/></svg></div>
+    <div class="error-icon"><svg viewBox="0 0 20 20"><path d="M10 6v4M10 14v.01"/><circle cx="10" cy="10" r="8"/></svg></div>
     <div class="status-title">Sign-in failed</div>
     <div class="status-sub" id="error-msg">Something went wrong. Please try again.</div>
     <a href="/login" class="retry-btn">Try again</a>
@@ -70,37 +75,90 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink
 </div>
 
 <script>
-window.addEventListener('load', async () => {
+// ── SUPABASE INIT ────────────────────────────────────────────────────────────
+const SUPABASE_URL  = window.__SUPABASE_URL__  || 'REPLACE_WITH_SUPABASE_URL';
+const SUPABASE_ANON = window.__SUPABASE_ANON__ || 'REPLACE_WITH_SUPABASE_ANON_KEY';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── POST-LOGIN DESTINATION ───────────────────────────────────────────────────
+// Explicit and deterministic. All successful logins land here.
+// New users: /app (onboarding prompt shown via debug panel flag)
+// Returning users: /app
+// If you later want different destinations, change this one constant.
+const POST_LOGIN_DESTINATION = '/app';
+
+// ── MAIN CALLBACK HANDLER ────────────────────────────────────────────────────
+(async () => {
   try {
-    await window.__clerk_loaded;
-    const clerk = window.Clerk;
-    if (!clerk) throw new Error('Auth not available');
-    await clerk.load();
+    // Supabase JS v2 automatically picks up the OAuth tokens from the URL
+    // hash/query params when getSession() is called after an OAuth redirect.
+    // This is the standard Supabase PKCE flow.
+    const { data: { session }, error: sessionError } = await sb.auth.getSession();
 
-    // Handle the OAuth callback
-    await clerk.handleRedirectCallback({
-      afterSignInUrl: '/dashboard',
-      afterSignUpUrl: '/onboarding'
-    });
+    if (sessionError) throw sessionError;
+    if (!session)     throw new Error('No session established after OAuth callback. The login may have been cancelled or timed out.');
 
-    // Determine where to send the user
-    const user = clerk.user;
-    if (!user) throw new Error('No user after callback');
+    const user = session.user;
 
+    // ── UPSERT USER PROFILE ──────────────────────────────────────────────────
+    // On first login: creates the profile row.
+    // On subsequent logins: updates last_sign_in_at only (upsert is idempotent).
+    // We use ignoreDuplicates:false so updated_at refreshes on every login.
+    const provider = user.app_metadata?.provider || 'unknown';
+    const email    = user.email || user.user_metadata?.email || null;
+    const name     = user.user_metadata?.full_name
+                  || user.user_metadata?.name
+                  || user.user_metadata?.preferred_username
+                  || null;
+    const avatar   = user.user_metadata?.avatar_url || null;
+
+    const { error: upsertError } = await sb
+      .from('profiles')
+      .upsert(
+        {
+          id:             user.id,       // matches auth.users.id (UUID)
+          email:          email,
+          full_name:      name,
+          avatar_url:     avatar,
+          auth_provider:  provider,
+          // plan defaults are set in the DB schema (see supabase-schema.sql)
+          // so we only set them here if not already set
+          updated_at:     new Date().toISOString(),
+        },
+        {
+          onConflict:     'id',          // if row exists, update non-plan fields
+          ignoreDuplicates: false        // always update updated_at
+        }
+      );
+
+    if (upsertError) {
+      // Non-fatal: log it but don't block the user from accessing the app.
+      // The session is valid even if the profile write fails.
+      console.error('Profile upsert failed (non-fatal):', upsertError.message);
+    }
+
+    // ── SHOW SUCCESS + REDIRECT ──────────────────────────────────────────────
     setState('success');
 
-    const meta = user.publicMetadata || {};
-    const dest = meta.onboarded ? '/dashboard' : '/onboarding';
+    const debugNote = document.getElementById('debug-note');
+    if (debugNote) {
+      debugNote.textContent = `Signed in via ${provider} · redirecting…`;
+    }
 
-    setTimeout(() => { window.location.href = dest; }, 800);
+    // Short delay so the user sees the success state before redirect
+    setTimeout(() => {
+      window.location.replace(POST_LOGIN_DESTINATION);
+    }, 900);
 
   } catch (err) {
     console.error('SSO callback error:', err);
     setState('error');
-    const msg = err?.errors?.[0]?.longMessage || err?.message || 'Something went wrong. Please try again.';
-    document.getElementById('error-msg').textContent = msg;
+    document.getElementById('error-msg').textContent =
+      err.message || 'Something went wrong. Please try again.';
   }
-});
+})();
 
 function setState(s) {
   document.getElementById('state-loading').style.display = s === 'loading' ? 'block' : 'none';
