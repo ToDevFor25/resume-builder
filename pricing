@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pricing — StretchRole</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL='https://kamrayznhsjkgjwiuebr.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthbXJheXpuaHNqa2dqd2l1ZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTMxMDAsImV4cCI6MjA5MTc2OTEwMH0.qiIzhIacRa9Xe6SgI6awEP5puu4Z1AuJGVKk7ZEEHr0';
+const{createClient}=supabase;window.sb=createClient(SUPABASE_URL,SUPABASE_ANON);
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --white:#fff;--off:#F9F9F8;--off2:#F4F4F2;
+  --ink:#111;--muted:#525252;--light:#8a8a8a;--lighter:#c4c4c4;
+  --border:#E5E5E5;--border2:#D4D4D4;
+  --accent:#1B4FD8;--accent-light:#EEF2FF;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;
+  --red:#DC2626;--red-bg:#FEF2F2;
+  --sidebar-width:232px;--topbar-height:60px;
+  --radius:10px;--radius-sm:7px;--radius-lg:14px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow:0 2px 8px rgba(0,0,0,.07);--shadow-lg:0 8px 32px rgba(0,0,0,.09);
+}
+html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;}
+#auth-gate{position:fixed;inset:0;background:var(--off);display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .3s;}
+#auth-gate.hidden{opacity:0;pointer-events:none;}
+.gate-spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.sidebar{width:var(--sidebar-width);min-height:100vh;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
+.sidebar-logo{padding:18px 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;text-decoration:none;}
+.logo-mark{width:30px;height:30px;background:var(--ink);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-mark svg{width:15px;height:15px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.logo-text{font-family:'Instrument Serif',serif;font-size:1.05rem;color:var(--ink);}
+.sidebar-section{padding:16px 10px 6px;}
+.sidebar-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);padding:0 8px;margin-bottom:4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);transition:all .13s;margin-bottom:1px;color:var(--muted);font-size:.82rem;text-decoration:none;border:1px solid transparent;}
+.nav-item:hover{background:var(--off);color:var(--ink);}
+.nav-item.active{background:var(--accent-light);color:var(--accent);border-color:rgba(27,79,216,.12);}
+.nav-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.nav-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.nav-badge{margin-left:auto;font-size:.6rem;font-weight:600;padding:.18rem .45rem;border-radius:99px;}
+.nav-badge.live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.sidebar-footer{margin-top:auto;padding:12px 10px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .13s;text-decoration:none;}
+.user-card:hover{border-color:var(--border2);background:var(--off);}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;color:white;flex-shrink:0;}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:.78rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-plan-badge{font-size:.68rem;color:var(--accent);}
+.signout-btn{width:100%;padding:.5rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .13s;margin-top:.5rem;}
+.signout-btn:hover{color:var(--red);border-color:#FECACA;background:var(--red-bg);}
+.main{margin-left:var(--sidebar-width);display:flex;flex-direction:column;min-height:100vh;}
+.topbar{height:var(--topbar-height);background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.75rem;position:sticky;top:0;z-index:50;}
+.topbar-title{font-family:'Instrument Serif',serif;font-size:1.15rem;font-weight:400;color:var(--ink);}
+.topbar-sub{font-size:.75rem;color:var(--light);margin-top:.05rem;}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .9rem;border-radius:var(--radius-sm);font-size:.78rem;font-weight:400;cursor:pointer;transition:all .13s;border:none;font-family:'DM Sans',sans-serif;text-decoration:none;}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--ink);border-color:var(--border2);background:var(--off);}
+.content{padding:1.75rem 1.75rem 3rem;}
+.pricing-header{text-align:center;max-width:540px;margin:0 auto 2.5rem;}
+.pricing-header h1{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:var(--ink);letter-spacing:-.025em;margin-bottom:.5rem;}
+.pricing-header p{font-size:.88rem;color:var(--muted);line-height:1.65;font-weight:300;}
+.billing-toggle{display:flex;align-items:center;justify-content:center;gap:.65rem;margin-bottom:2.5rem;}
+.toggle-label{font-size:.83rem;color:var(--muted);}
+.toggle-track{width:36px;height:20px;background:var(--border2);border-radius:99px;cursor:pointer;position:relative;transition:background .2s;}
+.toggle-track.on{background:var(--accent);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;background:white;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15);}
+.toggle-track.on .toggle-knob{transform:translateX(16px);}
+.savings-badge{font-size:.68rem;font-weight:600;padding:.2rem .5rem;border-radius:99px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:880px;margin:0 auto 2rem;}
+.plan-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);position:relative;display:flex;flex-direction:column;}
+.plan-card.featured{border-color:var(--accent);box-shadow:var(--shadow-lg);}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .8rem;border-radius:99px;white-space:nowrap;}
+.plan-name{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lighter);margin-bottom:.75rem;}
+.plan-price-row{display:flex;align-items:baseline;gap:.3rem;margin-bottom:.25rem;}
+.plan-price{font-family:'DM Mono',monospace;font-size:2.25rem;font-weight:500;color:var(--ink);line-height:1;}
+.plan-price-period{font-size:.78rem;color:var(--muted);}
+.plan-price-note{font-size:.7rem;color:var(--lighter);margin-bottom:1rem;}
+.plan-desc{font-size:.78rem;color:var(--muted);line-height:1.6;font-weight:300;margin-bottom:1.25rem;flex:1;}
+.plan-cta{display:block;width:100%;padding:.75rem;text-align:center;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;border:none;margin-bottom:1.25rem;}
+.plan-cta.current{background:var(--off2);color:var(--lighter);border:1px solid var(--border);cursor:default;}
+.plan-cta.primary{background:var(--accent);color:white;}
+.plan-cta.primary:hover{background:#1540b8;}
+.plan-cta.secondary{background:var(--off);color:var(--ink);border:1px solid var(--border2);}
+.plan-cta.secondary:hover{background:var(--off2);border-color:var(--border2);}
+.plan-features{display:flex;flex-direction:column;gap:.45rem;}
+.plan-feature{display:flex;align-items:flex-start;gap:.5rem;font-size:.75rem;color:var(--muted);line-height:1.5;}
+.plan-feature-dot{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05em;}
+.plan-feature-dot.yes{background:var(--green-bg);border:1px solid var(--green-border);}
+.plan-feature-dot.no{background:var(--off2);border:1px solid var(--border);}
+.plan-feature-dot.yes svg{width:7px;height:7px;stroke:var(--green);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.plan-feature-dot.no svg{width:7px;height:7px;stroke:var(--lighter);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.addon-card{max-width:880px;margin:0 auto 2rem;background:var(--amber-bg);border:1.5px solid var(--amber-border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;}
+.addon-info h3{font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:.3rem;}
+.addon-info p{font-size:.78rem;color:var(--muted);line-height:1.55;font-weight:300;}
+.addon-cta{flex-shrink:0;}
+.addon-price{font-family:'DM Mono',monospace;font-size:1.35rem;font-weight:500;color:var(--amber);display:block;text-align:right;margin-bottom:.35rem;}
+.faq{max-width:600px;margin:0 auto;}
+.faq-title{font-family:'Instrument Serif',serif;font-size:1.1rem;font-weight:400;color:var(--ink);text-align:center;margin-bottom:1.25rem;}
+.faq-item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.5rem;}
+.faq-q{padding:.9rem 1.1rem;font-size:.83rem;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .13s;}
+.faq-q:hover{background:var(--off);}
+.faq-q svg{width:14px;height:14px;stroke:var(--lighter);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;transition:transform .2s;}
+.faq-item.open .faq-q svg{transform:rotate(45deg);}
+.faq-a{display:none;padding:0 1.1rem .9rem;font-size:.8rem;color:var(--muted);line-height:1.65;font-weight:300;}
+.faq-item.open .faq-a{display:block;}
+.current-plan-banner{max-width:880px;margin:0 auto 1.5rem;background:var(--accent-light);border:1px solid rgba(27,79,216,.15);border-radius:var(--radius);padding:.75rem 1.1rem;display:flex;align-items:center;gap:.6rem;font-size:.8rem;color:var(--accent);}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:.55rem 1.25rem;border-radius:var(--radius-sm);font-size:.78rem;opacity:0;transition:all .25s;z-index:500;pointer-events:none;}
+.toast.show{opacity:1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.content{animation:fadeUp .3s ease both;}
+@media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;}.plans-grid{grid-template-columns:1fr;max-width:400px;}.addon-card{flex-direction:column;}.addon-cta{width:100%;}}
+</style>
+</head>
+<body>
+<div id="auth-gate"><div class="gate-spinner"></div></div>
+<div style="display:flex;">
+  <aside class="sidebar">
+    <a href="/" class="sidebar-logo"><div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div><span class="logo-text">StretchRole</span></a>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <a class="nav-item" href="/dashboard"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg></span>Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Career Tools</div>
+      <a class="nav-item" href="/app"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="1.5"/><path d="M3 4.5h8M3 7h5"/></svg></span>Resume Optimizer<span class="nav-badge live">Live</span></a>
+      <a class="nav-item" href="/seethrough"><span class="nav-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="2.5"/><path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z"/></svg></span>SeeThrough<span class="nav-badge live">Live</span></a>
+      <a class="nav-item" href="/interview"><span class="nav-icon"><svg viewBox="0 0 14 14"><path d="M2 10V5a5 5 0 0110 0v5"/></svg></span>Interview Coach<span class="nav-badge live">Live</span></a>
+      <a class="nav-item" href="/reference"><span class="nav-icon"><svg viewBox="0 0 14 14"><path d="M2 2h10v10H2z"/><path d="M4 5h6M4 7.5h4"/></svg></span>Reference Writer<span class="nav-badge live">Live</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="/profile"><span class="nav-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg></span>Profile</a>
+      <a class="nav-item active" href="/pricing"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M1 6h12"/></svg></span>Billing</a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="/profile" class="user-card"><div class="user-avatar" id="sidebar-avatar">?</div><div class="user-info"><div class="user-name" id="sidebar-name">Loading…</div><div class="user-plan-badge" id="sidebar-plan">Free</div></div></a>
+      <button class="signout-btn" onclick="srSignOut()">Sign out</button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><div class="topbar-title">Billing</div><div class="topbar-sub">Choose the plan that fits your search</div></div>
+      <a href="/dashboard" class="btn btn-ghost">← Dashboard</a>
+    </div>
+    <div class="content">
+
+      <div class="pricing-header">
+        <h1>Simple pricing. <em style="font-style:italic;color:var(--accent);">No fluff.</em></h1>
+        <p>Every tool included. Cancel when you land the role.</p>
+      </div>
+
+      <div id="current-plan-banner" style="display:none;" class="current-plan-banner">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3 3 7-7"/></svg>
+        <span id="current-plan-text">You're on the Free plan</span>
+      </div>
+
+      <div class="billing-toggle">
+        <span class="toggle-label">Monthly</span>
+        <div class="toggle-track on" id="billing-toggle" onclick="toggleBilling()"><div class="toggle-knob"></div></div>
+        <span class="toggle-label">Annual</span>
+        <span class="savings-badge">Save 17%</span>
+      </div>
+
+      <div class="plans-grid">
+        <!-- FREE -->
+        <div class="plan-card" id="card-free">
+          <div class="plan-name">Free</div>
+          <div class="plan-price-row"><span class="plan-price">$0</span><span class="plan-price-period">forever</span></div>
+          <div class="plan-price-note">No credit card needed</div>
+          <p class="plan-desc">Try all four tools. 3 uses per tool per month — enough to see what StretchRole can do.</p>
+          <button class="plan-cta current" id="cta-free" onclick="handleCTA('free')">Current plan</button>
+          <div class="plan-features">
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>3 uses/tool/month</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Resume Optimizer</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>SeeThrough</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Reference Writer</div>
+            <div class="plan-feature"><div class="plan-feature-dot no"><svg viewBox="0 0 7 7"><path d="M1.5 1.5l4 4M5.5 1.5l-4 4"/></svg></div><span style="color:var(--lighter);">Interview Coach</span></div>
+          </div>
+        </div>
+
+        <!-- STARTER -->
+        <div class="plan-card featured" id="card-starter">
+          <div class="plan-badge">Most Popular</div>
+          <div class="plan-name">Starter</div>
+          <div class="plan-price-row"><span class="plan-price" id="starter-price">$8</span><span class="plan-price-period">/mo</span></div>
+          <div class="plan-price-note" id="starter-note">billed $99/yr — 2 months free</div>
+          <p class="plan-desc">For the focused job seeker. 20 uses per tool per month — plenty for an active search.</p>
+          <button class="plan-cta primary" id="cta-starter" onclick="handleCTA('starter')">Upgrade to Starter</button>
+          <div class="plan-features">
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>20 uses/tool/month</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Resume Optimizer</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>SeeThrough</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Reference Writer</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>5 Interview Coach sessions/mo</div>
+          </div>
+        </div>
+
+        <!-- ACTIVE SEARCH -->
+        <div class="plan-card" id="card-active">
+          <div class="plan-name">Active Search</div>
+          <div class="plan-price-row"><span class="plan-price" id="active-price">$39</span><span class="plan-price-period">/mo</span></div>
+          <div class="plan-price-note" id="active-note">or $390/yr — cancel when you land</div>
+          <p class="plan-desc">For the serious candidate. Unlimited everything. You're in full pursuit — use every tool as often as you want.</p>
+          <button class="plan-cta secondary" id="cta-active" onclick="handleCTA('active')">Upgrade to Active Search</button>
+          <div class="plan-features">
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div><strong>Unlimited</strong> uses — all tools</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Resume Optimizer — unlimited</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>SeeThrough — unlimited</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Interview Coach — unlimited</div>
+            <div class="plan-feature"><div class="plan-feature-dot yes"><svg viewBox="0 0 7 7"><path d="M1 3.5l1.5 1.5 3.5-3"/></svg></div>Reference Writer — unlimited</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERVIEW PACK ADD-ON -->
+      <div class="addon-card">
+        <div class="addon-info">
+          <h3>🎯 Interview Pack — Add-on</h3>
+          <p>Don't need unlimited everything — just Interview Coach? Get 30 days of unlimited Interview Coach access as a one-time add-on. Works on any plan.</p>
+        </div>
+        <div class="addon-cta">
+          <span class="addon-price">$47 <span style="font-size:.75rem;color:var(--amber);font-family:'DM Sans',sans-serif;">once</span></span>
+          <button class="plan-cta secondary" style="margin-bottom:0;width:180px;padding:.65rem;" onclick="handleCTA('interview_pack')">Add Interview Pack</button>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq">
+        <div class="faq-title">Common questions</div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What counts as a "use"?<svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg></div>
+          <div class="faq-a">One run through any tool is one use. For the Resume Optimizer, that's one full optimization. For SeeThrough, that's one job posting analyzed. For Interview Coach, that's one session or one refiner run. For Reference Writer, that's one letter generated. Uses reset on the 1st of each month.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">When does billing start?<svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg></div>
+          <div class="faq-a">Billing starts when you upgrade. Annual plans are billed upfront for the full year. Monthly plans renew on the same day each month. You can cancel anytime — we don't believe in retention dark patterns.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What's the difference between Starter and Active Search?<svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg></div>
+          <div class="faq-a">Starter is for paced exploration — 20 uses per tool per month is plenty for most people casually looking. Active Search is for the person who is all-in on their job search and wants to use every tool without thinking about limits. If you're submitting multiple applications a week, Active Search pays for itself quickly.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Do I need the Interview Pack if I'm on Active Search?<svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg></div>
+          <div class="faq-a">No — Active Search includes unlimited Interview Coach. The Interview Pack is a standalone add-on for users on Free or Starter plans who want full Interview Coach access without upgrading their entire plan.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Is my data safe?<svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg></div>
+          <div class="faq-a">Yes. Your resume and profile data are stored securely and used only to personalize your results. We never share your data with employers, recruiters, or third parties. See our <a href="/privacy" style="color:var(--accent);">Privacy Policy</a> for full details.</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let isAnnual=true, currentProfile=null;
+
+function hideAuthGate(){const g=document.getElementById('auth-gate');g.classList.add('hidden');setTimeout(()=>g.style.display='none',350);}
+function srSignOut(){sb.auth.signOut().then(()=>window.location.replace('/login'));}
+let tt;function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2800);}
+
+(async()=>{
+  const{data:{session},error}=await sb.auth.getSession();
+  if(error||!session){window.location.replace('/login');return;}
+  const user=session.user;
+  const name=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'You';
+  const initials=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('sidebar-avatar').textContent=initials;
+  document.getElementById('sidebar-name').textContent=name;
+  const{data:profile}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  currentProfile=profile||{plan:'free'};
+  const plan=currentProfile.plan||'free';
+  const planLabel=plan==='active'?'Active Search':plan.charAt(0).toUpperCase()+plan.slice(1);
+  document.getElementById('sidebar-plan').textContent=planLabel;
+  document.getElementById('current-plan-banner').style.display='flex';
+  document.getElementById('current-plan-text').textContent=`You're on the ${planLabel} plan`;
+  updateCTAs(plan);
+  hideAuthGate();
+})();
+
+function updateCTAs(plan){
+  const ctaFree=document.getElementById('cta-free');
+  const ctaStarter=document.getElementById('cta-starter');
+  const ctaActive=document.getElementById('cta-active');
+  // Reset
+  [ctaFree,ctaStarter,ctaActive].forEach(b=>{b.className='plan-cta primary';b.disabled=false;});
+  if(plan==='free'){
+    ctaFree.className='plan-cta current';ctaFree.textContent='Current plan';
+    ctaStarter.textContent='Upgrade to Starter';
+    ctaActive.className='plan-cta secondary';ctaActive.textContent='Upgrade to Active Search';
+  } else if(plan==='starter'){
+    ctaFree.className='plan-cta secondary';ctaFree.textContent='Downgrade';
+    ctaStarter.className='plan-cta current';ctaStarter.textContent='Current plan';
+    ctaActive.className='plan-cta secondary';ctaActive.textContent='Upgrade to Active Search';
+  } else if(plan==='active'){
+    ctaFree.className='plan-cta secondary';ctaFree.textContent='Downgrade';
+    ctaStarter.className='plan-cta secondary';ctaStarter.textContent='Downgrade';
+    ctaActive.className='plan-cta current';ctaActive.textContent='Current plan';
+  }
+}
+
+function toggleBilling(){
+  isAnnual=!isAnnual;
+  document.getElementById('billing-toggle').classList.toggle('on',isAnnual);
+  // Starter
+  document.getElementById('starter-price').textContent=isAnnual?'$8':'$12';
+  document.getElementById('starter-note').textContent=isAnnual?'billed $99/yr — 2 months free':'billed monthly';
+  // Active
+  document.getElementById('active-price').textContent=isAnnual?'$33':'$39';
+  document.getElementById('active-note').textContent=isAnnual?'billed $390/yr — cancel anytime':'billed monthly — cancel anytime';
+}
+
+function handleCTA(plan){
+  // STRIPE STUB — replace with Stripe Checkout links after LLC/Stripe setup
+  const msgs={
+    free:'To downgrade, contact billing@stretchrole.com',
+    starter:'Stripe coming soon — email billing@stretchrole.com to upgrade',
+    active:'Stripe coming soon — email billing@stretchrole.com to upgrade',
+    interview_pack:'Stripe coming soon — email billing@stretchrole.com to add Interview Pack',
+  };
+  showToast(msgs[plan]||'Contact billing@stretchrole.com');
+}
+
+function toggleFaq(el){el.classList.toggle('open');}
+</script>
+</body>
+</html>
