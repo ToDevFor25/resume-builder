@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Interview Coach — StretchRole</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script async crossorigin="anonymous"
-  data-clerk-publishable-key="pk_test_aHVtb3JvdXMtcmFjZXItNjIuY2xlcmsuYWNjb3VudHMuZGV2JA"
-  src="https://humorous-racer-62.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL='https://kamrayznhsjkgjwiuebr.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthbXJheXpuaHNqa2dqd2l1ZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTMxMDAsImV4cCI6MjA5MTc2OTEwMH0.qiIzhIacRa9Xe6SgI6awEP5puu4Z1AuJGVKk7ZEEHr0';
+const{createClient}=supabase;window.sb=createClient(SUPABASE_URL,SUPABASE_ANON);
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -20,11 +21,16 @@
   --accent:#1B4FD8;--accent-light:#EEF2FF;
   --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
   --amber:#D97706;--amber-bg:#FFFBEB;
+  --red:#DC2626;--red-bg:#FEF2F2;
   --sidebar-width:232px;--topbar-height:60px;
   --radius:10px;--radius-sm:7px;--radius-lg:14px;
   --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow:0 2px 8px rgba(0,0,0,.07);
 }
 html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;}
+#auth-gate{position:fixed;inset:0;background:var(--off);display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .3s;}
+#auth-gate.hidden{opacity:0;pointer-events:none;}
+.gate-spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 .sidebar{width:var(--sidebar-width);min-height:100vh;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
 .sidebar-logo{padding:18px 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;text-decoration:none;}
 .logo-mark{width:30px;height:30px;background:var(--ink);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -32,7 +38,7 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink
 .logo-text{font-family:'Instrument Serif',serif;font-size:1.05rem;color:var(--ink);}
 .sidebar-section{padding:16px 10px 6px;}
 .sidebar-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);padding:0 8px;margin-bottom:4px;}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .13s;margin-bottom:1px;color:var(--muted);font-size:.82rem;text-decoration:none;border:1px solid transparent;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);transition:all .13s;margin-bottom:1px;color:var(--muted);font-size:.82rem;text-decoration:none;border:1px solid transparent;}
 .nav-item:hover{background:var(--off);color:var(--ink);}
 .nav-item.active{background:var(--green-bg);color:var(--green);border-color:rgba(22,163,74,.12);}
 .nav-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
@@ -43,10 +49,12 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink
 .sidebar-footer{margin-top:auto;padding:12px 10px;border-top:1px solid var(--border);}
 .user-card{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .13s;text-decoration:none;}
 .user-card:hover{border-color:var(--border2);background:var(--off);}
-.avatar{width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;color:white;flex-shrink:0;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;color:white;flex-shrink:0;}
 .user-info{flex:1;min-width:0;}
 .user-name{font-size:.78rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.user-plan{font-size:.68rem;color:var(--accent);}
+.user-plan-badge{font-size:.68rem;color:var(--accent);}
+.signout-btn{width:100%;padding:.5rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .13s;margin-top:.5rem;}
+.signout-btn:hover{color:var(--red);border-color:#FECACA;background:var(--red-bg);}
 .main{margin-left:var(--sidebar-width);display:flex;flex-direction:column;min-height:100vh;}
 .topbar{height:var(--topbar-height);background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.75rem;position:sticky;top:0;z-index:50;}
 .topbar-title{font-family:'Instrument Serif',serif;font-size:1.15rem;font-weight:400;color:var(--ink);}
@@ -61,8 +69,6 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink
 .page{display:none;}
 .page.active{display:block;animation:fadeUp .3s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
-/* Mode selection */
 .page-title{font-family:'Instrument Serif',serif;font-size:1.5rem;font-weight:400;color:var(--ink);margin-bottom:.3rem;}
 .page-sub{font-size:.85rem;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:1.75rem;}
 .mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.5rem;}
@@ -72,27 +78,18 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink
 .mode-card-title{font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:.4rem;line-height:1.3;}
 .mode-card-desc{font-size:.75rem;color:var(--muted);line-height:1.55;font-weight:300;margin-bottom:.65rem;}
 .mode-card-time{font-size:.68rem;color:var(--lighter);}
-
-/* Forms */
 .panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;box-shadow:var(--shadow-sm);margin-bottom:1rem;}
-.panel-title{font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.2rem;}
-.panel-sub{font-size:.72rem;color:var(--light);font-weight:300;margin-bottom:.85rem;}
-textarea{width:100%;padding:.75rem .9rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.83rem;color:var(--ink);background:var(--off);resize:vertical;min-height:140px;outline:none;transition:border-color .13s;line-height:1.65;}
-textarea:focus{border-color:var(--accent);background:var(--white);}
+textarea{width:100%;padding:.75rem .9rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.83rem;color:var(--ink);background:var(--off);resize:vertical;min-height:120px;outline:none;transition:border-color .13s;line-height:1.65;}
+textarea:focus{border-color:var(--green);background:var(--white);}
 .run-btn{width:100%;padding:.85rem;background:var(--green);color:white;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .15s;margin-top:1rem;}
 .run-btn:hover{background:#15803d;}
 .loader-wrap{text-align:center;padding:4rem 2rem;}
 .spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1.25rem;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* Quick prep questions */
 .question-item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:.75rem;box-shadow:var(--shadow-sm);}
 .q-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--lighter);margin-bottom:.35rem;}
 .q-text{font-size:.9rem;color:var(--ink);line-height:1.5;font-weight:500;margin-bottom:.5rem;}
 .q-framework{font-size:.78rem;color:var(--muted);line-height:1.6;font-weight:300;}
 .q-listen{font-size:.72rem;color:var(--accent);background:var(--accent-light);border-radius:var(--radius-sm);padding:.4rem .65rem;margin-top:.5rem;display:inline-block;}
-
-/* Chat */
 .chat-header{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;}
 .chat-progress-track{width:80px;height:4px;background:var(--off2);border-radius:99px;overflow:hidden;}
 .chat-progress-fill{height:100%;background:var(--green);border-radius:99px;transition:width .3s ease;}
@@ -102,36 +99,38 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
 .msg.user{align-self:flex-end;}
 .msg-bubble{padding:.75rem 1rem;border-radius:var(--radius);font-size:.83rem;line-height:1.6;}
 .msg.ai .msg-bubble{background:var(--off);border:1px solid var(--border);color:var(--ink);}
-.msg.user .msg-bubble{background:var(--accent);color:white;}
+.msg.user .msg-bubble{background:var(--green);color:white;}
 .msg-label{font-size:.62rem;color:var(--lighter);margin-bottom:.25rem;padding:0 .25rem;}
 .chat-input-row{display:flex;gap:.6rem;}
 .chat-input{flex:1;padding:.7rem .9rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.83rem;color:var(--ink);background:var(--white);outline:none;transition:border-color .13s;}
 .chat-input:focus{border-color:var(--green);}
 .chat-send-btn{padding:.7rem 1rem;background:var(--green);color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;transition:background .13s;}
 .chat-send-btn:hover{background:#15803d;}
-
-/* Session results */
 .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.25rem;}
 .score-mini{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;text-align:center;box-shadow:var(--shadow-sm);}
 .score-mini-num{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--green);line-height:1;margin-bottom:.2rem;}
 .score-mini-label{font-size:.67rem;color:var(--light);}
-
-/* Answer refiner */
 .refine-output{background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:1rem 1.1rem;font-size:.83rem;color:var(--ink);line-height:1.7;margin-bottom:.85rem;}
 .refine-why{background:var(--off);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;font-size:.78rem;color:var(--muted);line-height:1.65;font-weight:300;}
-
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:.55rem 1.25rem;border-radius:var(--radius-sm);font-size:.78rem;opacity:0;transition:all .25s;z-index:500;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.15);}
+.upsell-wall{max-width:480px;margin:3rem auto;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;text-align:center;box-shadow:var(--shadow);}
+.upsell-wall h3{font-family:'Instrument Serif',serif;font-size:1.3rem;font-weight:400;margin-bottom:.5rem;}
+.upsell-wall p{font-size:.83rem;color:var(--muted);line-height:1.65;margin-bottom:1.5rem;font-weight:300;}
+.upsell-options{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.85rem;}
+.upsell-option{padding:.9rem;background:var(--off);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;text-align:left;text-decoration:none;display:block;}
+.upsell-option:hover{border-color:var(--accent);background:var(--accent-light);}
+.upsell-option-name{font-size:.83rem;font-weight:500;color:var(--ink);}
+.upsell-option-price{font-family:'DM Mono',monospace;font-size:.88rem;color:var(--accent);margin:.15rem 0;}
+.upsell-option-desc{font-size:.7rem;color:var(--muted);}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:.55rem 1.25rem;border-radius:var(--radius-sm);font-size:.78rem;opacity:0;transition:all .25s;z-index:500;pointer-events:none;}
 .toast.show{opacity:1;}
 @media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;}.mode-grid{grid-template-columns:1fr;}.score-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
+<div id="auth-gate"><div class="gate-spinner"></div></div>
 <div style="display:flex;">
   <aside class="sidebar">
-    <a href="/homepage" class="sidebar-logo">
-      <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
-      <span class="logo-text">StretchRole</span>
-    </a>
+    <a href="/" class="sidebar-logo"><div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div><span class="logo-text">StretchRole</span></a>
     <div class="sidebar-section">
       <div class="sidebar-label">Overview</div>
       <a class="nav-item" href="/dashboard"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg></span>Dashboard</a>
@@ -149,50 +148,54 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
       <a class="nav-item" href="/pricing"><span class="nav-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M1 6h12"/></svg></span>Billing</a>
     </div>
     <div class="sidebar-footer">
-      <a href="/profile" class="user-card">
-        <div class="avatar" id="sidebar-avatar">?</div>
-        <div class="user-info"><div class="user-name" id="sidebar-name">Loading…</div><div class="user-plan" id="sidebar-plan">Free Plan</div></div>
-      </a>
+      <a href="/profile" class="user-card"><div class="user-avatar" id="sidebar-avatar">?</div><div class="user-info"><div class="user-name" id="sidebar-name">Loading…</div><div class="user-plan-badge" id="sidebar-plan">Free</div></div></a>
+      <button class="signout-btn" onclick="srSignOut()">Sign out</button>
     </div>
   </aside>
-
   <main class="main">
     <div class="topbar">
-      <div>
-        <div class="topbar-title">Interview Coach</div>
-        <div class="topbar-sub" id="session-context">Healthcare Operations · Executive Level</div>
-      </div>
-      <div class="topbar-right">
-        <a href="/dashboard" class="btn btn-ghost">← Dashboard</a>
-      </div>
+      <div><div class="topbar-title">Interview Coach</div><div class="topbar-sub" id="session-context">Healthcare Operations · Executive Level</div></div>
+      <div class="topbar-right"><a href="/dashboard" class="btn btn-ghost">← Dashboard</a></div>
     </div>
-
     <div class="content">
 
       <!-- MODE SELECTION -->
       <div class="page active" id="page-modes">
         <div class="page-title">How do you want to prepare?</div>
-        <p class="page-sub">Three modes built for healthcare operations professionals. Pick what you need right now.</p>
-
+        <p class="page-sub">Three modes built for healthcare operations professionals.</p>
         <div class="mode-grid">
-          <div class="mode-card" onclick="showPage('quick-setup')">
+          <div class="mode-card" onclick="checkAccessAndGo('quick-setup')">
             <div class="mode-card-tag" style="background:var(--accent-light);color:var(--accent);">⚡ Quick Prep</div>
             <div class="mode-card-title">Get the top questions with answer frameworks</div>
             <div class="mode-card-desc">The 10 most likely questions for your target role — what to say and what interviewers are really listening for.</div>
             <div class="mode-card-time">⏱ 5–10 minutes →</div>
           </div>
-          <div class="mode-card" onclick="showPage('practice-setup')">
+          <div class="mode-card" onclick="checkAccessAndGo('practice-setup')">
             <div class="mode-card-tag" style="background:var(--green-bg);color:var(--green);">🎭 Practice Session</div>
             <div class="mode-card-title">Simulated interview with an AI hiring manager</div>
-            <div class="mode-card-desc">Answer question by question — by voice or text — and get scored feedback when you finish.</div>
+            <div class="mode-card-desc">Answer question by question and get scored feedback when you finish.</div>
             <div class="mode-card-time">⏱ 20–30 minutes →</div>
           </div>
-          <div class="mode-card" onclick="showPage('refiner-setup')">
+          <div class="mode-card" onclick="checkAccessAndGo('refiner-setup')">
             <div class="mode-card-tag" style="background:var(--amber-bg);color:var(--amber);">✨ Answer Refiner</div>
             <div class="mode-card-title">VP-level rewrite of any answer you already have</div>
-            <div class="mode-card-desc">Paste any question and your draft answer. Get an instant rewrite with a full explanation of what makes it stronger.</div>
+            <div class="mode-card-desc">Paste any question and your draft answer. Get an instant rewrite with a full explanation.</div>
             <div class="mode-card-time">⏱ 2–3 minutes →</div>
           </div>
+        </div>
+      </div>
+
+      <!-- UPSELL (interview coach not in plan) -->
+      <div class="page" id="page-upsell">
+        <div class="upsell-wall">
+          <div style="font-size:1.75rem;margin-bottom:.75rem;">🎯</div>
+          <h3 id="upsell-title">Interview Coach requires an upgrade</h3>
+          <p id="upsell-body">Interview Coach is available on Active Search or as a standalone 30-day add-on.</p>
+          <div class="upsell-options">
+            <a href="/pricing" class="upsell-option"><div class="upsell-option-name">Interview Pack</div><div class="upsell-option-price">$47 once</div><div class="upsell-option-desc">30 days unlimited Interview Coach</div></a>
+            <a href="/pricing" class="upsell-option"><div class="upsell-option-name">Active Search</div><div class="upsell-option-price">$39/mo</div><div class="upsell-option-desc">Everything included — cancel when you land</div></a>
+          </div>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="showPage('modes')">← Back to modes</button>
         </div>
       </div>
 
@@ -200,9 +203,9 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
       <div class="page" id="page-quick-setup">
         <button class="btn btn-ghost" onclick="showPage('modes')" style="margin-bottom:1.25rem;">← Back to modes</button>
         <div class="panel">
-          <div class="panel-title">Quick Prep</div>
-          <div class="panel-sub">Paste the job description for role-specific questions, or leave blank for general executive-level healthcare ops questions.</div>
-          <textarea id="quick-jd" placeholder="Job description (optional — makes questions more specific to this role)…" style="min-height:120px;"></textarea>
+          <div style="font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.2rem;">Quick Prep</div>
+          <div style="font-size:.72rem;color:var(--light);margin-bottom:.85rem;">Paste the job description for role-specific questions, or leave blank for general executive-level questions.</div>
+          <textarea id="quick-jd" placeholder="Job description (optional)…" style="min-height:100px;"></textarea>
           <button class="run-btn" onclick="runQuickPrep()">⚡ Generate My Questions</button>
         </div>
       </div>
@@ -210,13 +213,10 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
       <!-- QUICK PREP RESULTS -->
       <div class="page" id="page-quick-results">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;">
-          <div>
-            <div style="font-family:'Instrument Serif',serif;font-size:1.25rem;color:var(--ink);">Top 10 Questions</div>
-            <div style="font-size:.75rem;color:var(--light);">Calibrated to your level</div>
-          </div>
+          <div><div style="font-family:'Instrument Serif',serif;font-size:1.25rem;color:var(--ink);">Top 10 Questions</div><div style="font-size:.75rem;color:var(--light);">Calibrated to your level</div></div>
           <div style="display:flex;gap:.6rem;">
             <button class="btn btn-ghost" onclick="runQuickPrep()">↺ Regenerate</button>
-            <button class="btn btn-green" onclick="showPage('practice-setup')">Practice these questions →</button>
+            <button class="btn btn-green" onclick="showPage('practice-setup')">Practice these →</button>
           </div>
         </div>
         <div id="questions-output"></div>
@@ -227,18 +227,18 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
       <div class="page" id="page-practice-setup">
         <button class="btn btn-ghost" onclick="showPage('modes')" style="margin-bottom:1.25rem;">← Back to modes</button>
         <div class="panel">
-          <div class="panel-title">Practice Session</div>
-          <div class="panel-sub">The AI will play a healthcare hiring manager conducting a real interview.</div>
-          <textarea id="practice-jd" placeholder="Job description (optional — makes questions more specific)…" style="min-height:100px;margin-bottom:.85rem;"></textarea>
+          <div style="font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.2rem;">Practice Session</div>
+          <div style="font-size:.72rem;color:var(--light);margin-bottom:.85rem;">The AI will play a healthcare hiring manager conducting a real interview.</div>
+          <textarea id="practice-jd" placeholder="Job description (optional)…" style="min-height:80px;margin-bottom:.85rem;"></textarea>
           <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.5rem;">Session length</div>
           <div style="display:flex;gap:.6rem;margin-bottom:1rem;">
-            <label style="flex:1;display:flex;align-items:flex-start;gap:.6rem;padding:.75rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .13s;" id="len-quick-label">
-              <input type="radio" name="session-len" value="5" style="margin-top:.15rem;" onchange="selectLen(this)"/> 
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--ink);">Quick — 5 questions</div><div style="font-size:.72rem;color:var(--muted);">~10–15 min. Great for a specific area.</div></div>
+            <label style="flex:1;display:flex;align-items:flex-start;gap:.6rem;padding:.75rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;" id="len-quick-label">
+              <input type="radio" name="session-len" value="5" style="margin-top:.15rem;" onchange="selectLen(this)"/>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--ink);">Quick — 5 questions</div><div style="font-size:.72rem;color:var(--muted);">~10–15 min</div></div>
             </label>
-            <label style="flex:1;display:flex;align-items:flex-start;gap:.6rem;padding:.75rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .13s;" id="len-full-label">
+            <label style="flex:1;display:flex;align-items:flex-start;gap:.6rem;padding:.75rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;" id="len-full-label">
               <input type="radio" name="session-len" value="10" style="margin-top:.15rem;" onchange="selectLen(this)"/>
-              <div><div style="font-size:.83rem;font-weight:500;color:var(--ink);">Full — 10 questions</div><div style="font-size:.72rem;color:var(--muted);">~25–30 min. Simulates a real interview.</div></div>
+              <div><div style="font-size:.83rem;font-weight:500;color:var(--ink);">Full — 10 questions</div><div style="font-size:.72rem;color:var(--muted);">~25–30 min</div></div>
             </label>
           </div>
           <button class="run-btn" onclick="startPractice()">🎭 Start Interview Session</button>
@@ -248,10 +248,7 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
       <!-- LIVE PRACTICE -->
       <div class="page" id="page-practice">
         <div class="chat-header">
-          <div>
-            <div style="font-size:.83rem;font-weight:500;color:var(--ink);">Live Interview Session</div>
-            <div style="font-size:.72rem;color:var(--light);" id="practice-subtitle">Healthcare Operations — Executive Level</div>
-          </div>
+          <div><div style="font-size:.83rem;font-weight:500;color:var(--ink);">Live Interview Session</div><div style="font-size:.72rem;color:var(--light);" id="practice-subtitle">Healthcare Operations</div></div>
           <div style="display:flex;align-items:center;gap:.75rem;">
             <div style="font-size:.72rem;color:var(--light);" id="q-counter">Q 1 / 5</div>
             <div class="chat-progress-track"><div class="chat-progress-fill" id="chat-progress" style="width:0%"></div></div>
@@ -284,10 +281,10 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
       <div class="page" id="page-refiner-setup">
         <button class="btn btn-ghost" onclick="showPage('modes')" style="margin-bottom:1.25rem;">← Back to modes</button>
         <div class="panel">
-          <div class="panel-title">Answer Refiner</div>
-          <div class="panel-sub">Paste an interview question and your current answer. Get a stronger, VP-level version with a full explanation.</div>
+          <div style="font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.2rem;">Answer Refiner</div>
+          <div style="font-size:.72rem;color:var(--light);margin-bottom:.85rem;">Paste an interview question and your current answer. Get a stronger, VP-level version.</div>
           <div style="font-size:.75rem;font-weight:500;color:var(--ink);margin-bottom:.35rem;">Interview Question</div>
-          <textarea id="refine-question" placeholder="e.g. Describe a time you managed P&L accountability across multiple markets." style="min-height:80px;margin-bottom:.75rem;"></textarea>
+          <textarea id="refine-question" placeholder="e.g. Describe a time you managed P&L accountability across multiple markets." style="min-height:60px;margin-bottom:.75rem;"></textarea>
           <div style="font-size:.75rem;font-weight:500;color:var(--ink);margin-bottom:.35rem;">Your Current Answer</div>
           <textarea id="refine-answer" placeholder="Paste your current answer here…"></textarea>
           <button class="run-btn" onclick="runRefiner()">✨ Refine My Answer</button>
@@ -322,21 +319,48 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
   </main>
 </div>
 <div class="toast" id="toast"></div>
-
 <script>
-let sessionQuestions=[];let sessionAnswers=[];let currentQ=0;let sessionLength=5;
-const profile=()=>JSON.parse(localStorage.getItem('arx_profile')||'{}');
-const resume=()=>localStorage.getItem('arx_master_resume_text')||'';
+const TOOL='interview_coach';
+const PLAN_LIMITS={free:{interview_coach:0},starter:{interview_coach:5},active:{interview_coach:Infinity}};
+let currentProfile=null, sessionQuestions=[], sessionAnswers=[], currentQ=0, sessionLength=5;
 
+function hideAuthGate(){const g=document.getElementById('auth-gate');g.classList.add('hidden');setTimeout(()=>g.style.display='none',350);}
+function srSignOut(){sb.auth.signOut().then(()=>window.location.replace('/login'));}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');}
 function selectLen(el){document.getElementById('len-quick-label').style.borderColor=el.value==='5'?'var(--green)':'var(--border)';document.getElementById('len-full-label').style.borderColor=el.value==='10'?'var(--green)':'var(--border)';}
+function getMonthKey(){const n=new Date();return`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;}
+function getLimit(){const plan=currentProfile?.plan||'free';const l=PLAN_LIMITS[plan]?.[TOOL];return l===undefined?0:l;}
+function getInterviewPackActive(){const u=currentProfile?.interview_pack_active_until;return u&&new Date(u)>new Date();}
+function hasAccess(){return getLimit()===Infinity||getInterviewPackActive();}
+let tt;function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2800);}
+
+(async()=>{
+  const{data:{session},error}=await sb.auth.getSession();
+  if(error||!session){window.location.replace('/login');return;}
+  const user=session.user;
+  const name=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'You';
+  const initials=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('sidebar-avatar').textContent=initials;
+  document.getElementById('sidebar-name').textContent=name;
+  const{data:profile}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  currentProfile=profile||{plan:'free',usage:{}};
+  document.getElementById('sidebar-plan').textContent=(currentProfile.plan||'free').charAt(0).toUpperCase()+(currentProfile.plan||'free').slice(1);
+  const p=currentProfile;
+  const ctx=[(p.current_level),(p.target_level)].filter(Boolean).join(' → ');
+  if(ctx) document.getElementById('session-context').textContent='Healthcare Operations · '+ctx;
+  hideAuthGate();
+})();
+
+function checkAccessAndGo(page){
+  if(!hasAccess()){showPage('upsell');return;}
+  showPage(page);
+}
 
 async function callAPI(prompt,maxTok=1200){
   const r=await fetch('/api/optimize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,max_tokens:maxTok,temperature:0.5})});
   if(!r.ok)throw new Error('API error');
   const d=await r.json();
-  let raw=d.result||'';
-  raw=raw.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+  let raw=(d.result||'').replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
   const a=raw.indexOf('{'),b=raw.lastIndexOf('}');
   if(a>=0&&b>a)raw=raw.substring(a,b+1);
   return JSON.parse(raw);
@@ -344,103 +368,69 @@ async function callAPI(prompt,maxTok=1200){
 
 async function runQuickPrep(){
   const jd=document.getElementById('quick-jd').value.trim();
-  const p=profile();
+  const p=currentProfile||{};
   document.getElementById('loader-text').textContent='Generating your questions…';
   showPage('loading');
   try{
-    const d=await callAPI(`You are an expert healthcare ops interview coach. Generate the 10 most likely interview questions for a candidate transitioning from ${p.currentLevel||'Leadership'} to ${p.targetLevel||'Executive'} in ${p.focus||'Operations'}.
+    const d=await callAPI(`You are an expert healthcare ops interview coach. Generate the 10 most likely interview questions for a candidate transitioning from ${p.current_level||'Leadership'} to ${p.target_level||'Executive'} in ${p.focus_area||'Operations'}.
 ${jd?'Job description:\n'+jd.slice(0,1500):''}
-${resume()?'Resume context:\n'+resume().slice(0,1000):''}
-Return JSON: {"questions":[{"question":"...","framework":"Answer framework using STAR or specific structure","listen":"What the interviewer is really assessing"}]}`);
+Return JSON: {"questions":[{"question":"...","framework":"Answer framework","listen":"What interviewer is really assessing"}]}`);
     sessionQuestions=d.questions||[];
-    renderQuickPrep();
+    document.getElementById('questions-output').innerHTML=sessionQuestions.map((q,i)=>`
+      <div class="question-item">
+        <div class="q-num">Question ${i+1} of ${sessionQuestions.length}</div>
+        <div class="q-text">${q.question}</div>
+        <div class="q-framework">${q.framework}</div>
+        ${q.listen?`<div class="q-listen">👂 ${q.listen}</div>`:''}
+      </div>`).join('');
     showPage('quick-results');
   }catch(e){showPage('quick-setup');showToast('Failed to generate questions. Try again.');}
-}
-
-function renderQuickPrep(){
-  document.getElementById('questions-output').innerHTML=sessionQuestions.map((q,i)=>`
-    <div class="question-item">
-      <div class="q-num">Question ${i+1} of ${sessionQuestions.length}</div>
-      <div class="q-text">${q.question}</div>
-      <div class="q-framework">${q.framework}</div>
-      ${q.listen?`<div class="q-listen">👂 ${q.listen}</div>`:''}
-    </div>
-  `).join('');
 }
 
 async function startPractice(){
   const jd=document.getElementById('practice-jd').value.trim();
   const lenEl=document.querySelector('input[name="session-len"]:checked');
   sessionLength=lenEl?parseInt(lenEl.value):5;
-  const p=profile();
-  document.getElementById('loader-text').textContent='Preparing your interview session…';
+  const p=currentProfile||{};
+  document.getElementById('loader-text').textContent='Preparing your session…';
   showPage('loading');
   try{
-    const d=await callAPI(`You are a senior healthcare operations hiring manager conducting a VP-level interview.
-Generate exactly ${sessionLength} interview questions for a candidate transitioning from ${p.currentLevel||'Leadership'} to ${p.targetLevel||'Executive'} in ${p.focus||'Operations'}.
-${jd?'Job description:\n'+jd.slice(0,1500):''}
+    const d=await callAPI(`You are a senior healthcare ops hiring manager. Generate exactly ${sessionLength} interview questions for a candidate: ${p.current_level||'Leadership'} → ${p.target_level||'Executive'} in ${p.focus_area||'Operations'}.
+${jd?'Job: '+jd.slice(0,1000):''}
 Return JSON: {"questions":["question 1","question 2",...]}`);
     sessionQuestions=d.questions||[];
-    sessionAnswers=[];
-    currentQ=0;
+    sessionAnswers=[];currentQ=0;
     document.getElementById('chat-messages').innerHTML='';
-    document.getElementById('practice-subtitle').textContent=`Healthcare Operations — ${(p.targetLevel||'Executive').charAt(0).toUpperCase()+(p.targetLevel||'executive').slice(1)} Level`;
+    document.getElementById('practice-subtitle').textContent=`Healthcare Operations · ${(p.target_level||'Executive')} Level`;
     updateChatProgress();
-    addMsg('ai','Welcome. I\'m the hiring manager for this role. Let\'s get started. '+sessionQuestions[0]);
+    addMsg('ai','Welcome. I\'m the hiring manager. Let\'s get started. '+sessionQuestions[0]);
     showPage('practice');
   }catch(e){showPage('practice-setup');showToast('Failed to start session. Try again.');}
 }
 
-function addMsg(role,text){
-  const msgs=document.getElementById('chat-messages');
-  const div=document.createElement('div');
-  div.className='msg '+role;
-  div.innerHTML=`<div class="msg-label">${role==='ai'?'Hiring Manager':'You'}</div><div class="msg-bubble">${text}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-function updateChatProgress(){
-  const pct=Math.round((currentQ/sessionLength)*100);
-  document.getElementById('chat-progress').style.width=pct+'%';
-  document.getElementById('q-counter').textContent=`Q ${currentQ+1} / ${sessionLength}`;
-}
+function addMsg(role,text){const msgs=document.getElementById('chat-messages');const div=document.createElement('div');div.className='msg '+role;div.innerHTML=`<div class="msg-label">${role==='ai'?'Hiring Manager':'You'}</div><div class="msg-bubble">${text}</div>`;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
+function updateChatProgress(){document.getElementById('chat-progress').style.width=Math.round((currentQ/sessionLength)*100)+'%';document.getElementById('q-counter').textContent=`Q ${currentQ+1} / ${sessionLength}`;}
 
 async function sendAnswer(){
   const input=document.getElementById('chat-input');
-  const text=input.value.trim();
-  if(!text)return;
-  input.value='';
-  addMsg('user',text);
+  const text=input.value.trim();if(!text)return;
+  input.value='';addMsg('user',text);
   sessionAnswers.push({q:sessionQuestions[currentQ],a:text});
   currentQ++;
-  if(currentQ>=sessionLength){
-    addMsg('ai','Thank you — that concludes our interview. Great conversation. I\'ll be reviewing your responses now.');
-    await new Promise(r=>setTimeout(r,1200));
-    await scoreSession();
-    return;
-  }
-  updateChatProgress();
-  addMsg('ai',sessionQuestions[currentQ]);
+  if(currentQ>=sessionLength){addMsg('ai','Thank you — that concludes our interview.');await new Promise(r=>setTimeout(r,1000));await scoreSession();return;}
+  updateChatProgress();addMsg('ai',sessionQuestions[currentQ]);
 }
 
 async function scoreSession(){
-  showPage('loading');
-  document.getElementById('loader-text').textContent='Scoring your session…';
+  showPage('loading');document.getElementById('loader-text').textContent='Scoring your session…';
   try{
-    const p=profile();
+    const p=currentProfile||{};
     const qa=sessionAnswers.map((x,i)=>`Q${i+1}: ${x.q}\nA: ${x.a}`).join('\n\n');
-    const d=await callAPI(`Score this healthcare ops executive interview session. Candidate: ${p.currentLevel||'Leadership'} → ${p.targetLevel||'Executive'}.
-Session Q&A:
-${qa}
-Return JSON: {"overall":82,"presence":78,"clarity":85,"feedback":"2-3 sentence overall assessment","improvements":["specific improvement 1","specific improvement 2"]}`);
+    const d=await callAPI(`Score this healthcare ops executive interview. Candidate: ${p.current_level||'Leadership'} → ${p.target_level||'Executive'}.\n${qa}\nReturn JSON: {"overall":82,"presence":78,"clarity":85,"feedback":"2-3 sentence assessment","improvements":["improvement 1","improvement 2"]}`);
     document.getElementById('score-overall').textContent=(d.overall||'—')+'%';
     document.getElementById('score-presence').textContent=(d.presence||'—')+'%';
     document.getElementById('score-clarity').textContent=(d.clarity||'—')+'%';
-    document.getElementById('session-feedback-panel').innerHTML=`
-      <div style="font-size:.82rem;color:var(--ink);line-height:1.7;margin-bottom:.85rem;">${d.feedback||''}</div>
-      ${(d.improvements||[]).map(i=>`<div style="display:flex;gap:.5rem;font-size:.78rem;color:var(--muted);line-height:1.5;padding:.4rem 0;border-bottom:1px solid var(--border)"><div style="width:6px;height:6px;background:var(--amber);border-radius:50%;margin-top:.45em;flex-shrink:0;"></div>${i}</div>`).join('')}`;
+    document.getElementById('session-feedback-panel').innerHTML=`<div style="font-size:.82rem;color:var(--ink);line-height:1.7;margin-bottom:.85rem;">${d.feedback||''}</div>${(d.improvements||[]).map(i=>`<div style="display:flex;gap:.5rem;font-size:.78rem;color:var(--muted);line-height:1.5;padding:.4rem 0;border-bottom:1px solid var(--border)"><div style="width:6px;height:6px;background:var(--amber);border-radius:50%;margin-top:.45em;flex-shrink:0;"></div>${i}</div>`).join('')}`;
     showPage('session-results');
   }catch(e){showPage('modes');showToast('Could not score session.');}
 }
@@ -451,35 +441,17 @@ async function runRefiner(){
   if(!q||!a){showToast('Please fill in both fields');return;}
   document.getElementById('loader-text').textContent='Refining your answer…';
   showPage('loading');
-  const p=profile();
+  const p=currentProfile||{};
   try{
-    const d=await callAPI(`You are an expert healthcare ops executive interview coach.
-Rewrite this interview answer at a VP/SVP level for a healthcare operations professional (${p.targetLevel||'Executive'} level, ${p.focus||'Operations'} focus).
+    const d=await callAPI(`You are an expert healthcare ops executive interview coach. Rewrite this answer at VP/SVP level for ${p.target_level||'Executive'} level, ${p.focus_area||'Operations'} focus.
 QUESTION: ${q}
 ORIGINAL ANSWER: ${a}
-Return JSON: {"refined":"the stronger rewritten answer","why":"2-3 sentences explaining what makes it stronger and more executive-level"}`);
+Return JSON: {"refined":"stronger rewritten answer","why":"2-3 sentences explaining what makes it stronger"}`);
     document.getElementById('refine-output').textContent=d.refined||'';
     document.getElementById('refine-why').textContent=d.why||'';
     showPage('refiner-results');
   }catch(e){showPage('refiner-setup');showToast('Failed to refine. Please try again.');}
 }
-
-let tt;function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2800);}
-
-window.addEventListener('load',async()=>{
-  try{
-    await window.__clerk_loaded;const clerk=window.Clerk;if(!clerk)return;await clerk.load();
-    if(!clerk.user){window.location.href='/login';return;}
-    const u=clerk.user;const name=u.firstName||'You';
-    const initials=(u.fullName||name).split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('sidebar-avatar').textContent=initials;
-    document.getElementById('sidebar-name').textContent=name;
-  }catch(e){}
-  const p=profile();
-  if(p.currentLevel||p.targetLevel){
-    document.getElementById('session-context').textContent=`Healthcare Operations · ${(p.targetLevel||'Executive').charAt(0).toUpperCase()+(p.targetLevel||'executive').slice(1)} Level`;
-  }
-});
 </script>
 </body>
 </html>
