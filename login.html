@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<!-- Supabase JS v2 -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -24,42 +23,12 @@
   --shadow:0 2px 8px rgba(0,0,0,.07),0 1px 3px rgba(0,0,0,.04);
   --shadow-lg:0 12px 40px rgba(0,0,0,.1),0 4px 12px rgba(0,0,0,.06);
 }
-html,body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--off);
-  color:var(--ink);
-  -webkit-font-smoothing:antialiased;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-/* ── LAYOUT ── */
-.shell{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:1fr 420px 1fr;
-  align-items:center;
-  justify-items:center;
-  padding:2rem;
-  gap:2rem;
-}
-
-/* ── BACK LINK ── */
-.back-link{
-  position:fixed;top:1.25rem;left:1.5rem;z-index:10;
-  display:flex;align-items:center;gap:.4rem;
-  font-size:.78rem;color:var(--light);text-decoration:none;
-  padding:.38rem .75rem;border-radius:var(--radius-sm);
-  border:1px solid transparent;transition:all .15s;
-}
+html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+.shell{min-height:100vh;display:grid;grid-template-columns:1fr 420px 1fr;align-items:center;justify-items:center;padding:2rem;gap:2rem;}
+.back-link{position:fixed;top:1.25rem;left:1.5rem;z-index:10;display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--light);text-decoration:none;padding:.38rem .75rem;border-radius:var(--radius-sm);border:1px solid transparent;transition:all .15s;}
 .back-link:hover{color:var(--ink);border-color:var(--border);background:var(--white);}
 .back-link svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-
-/* ── LEFT PANEL ── */
-.left-panel{
-  grid-column:1;justify-self:end;padding-right:3.5rem;max-width:320px;
-  opacity:0;animation:fadeLeft .5s .1s ease forwards;
-}
+.left-panel{grid-column:1;justify-self:end;padding-right:3.5rem;max-width:320px;opacity:0;animation:fadeLeft .5s .1s ease forwards;}
 @keyframes fadeLeft{from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:translateX(0);}}
 .left-logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-bottom:2.5rem;}
 .logo-mark{width:30px;height:30px;background:var(--ink);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -75,44 +44,18 @@ html,body{
 .feature-dot.green{background:var(--green);}
 .feature-dot.amber{background:#D97706;}
 .feature-dot.purple{background:#7C3AED;}
-
-/* ── LOGIN CARD ── */
-.login-card{
-  grid-column:2;width:100%;
-  background:var(--white);border:1px solid var(--border);
-  border-radius:var(--radius-lg);padding:2.25rem;
-  box-shadow:var(--shadow-lg);
-  opacity:0;animation:fadeUp .45s .05s ease forwards;
-}
+.login-card{grid-column:2;width:100%;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.25rem;box-shadow:var(--shadow-lg);opacity:0;animation:fadeUp .45s .05s ease forwards;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-
-.card-eyebrow{
-  display:inline-flex;align-items:center;gap:.4rem;
-  font-size:.67rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--accent);background:var(--accent-light);
-  border:1px solid rgba(27,79,216,.12);border-radius:99px;
-  padding:.28rem .75rem;margin-bottom:1rem;
-}
+.card-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.67rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-light);border:1px solid rgba(27,79,216,.12);border-radius:99px;padding:.28rem .75rem;margin-bottom:1rem;}
 .eyebrow-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;animation:pulse 2.2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
-
 .card-title{font-family:'Instrument Serif',serif;font-size:1.5rem;font-weight:400;color:var(--ink);letter-spacing:-.015em;margin-bottom:.3rem;line-height:1.2;}
 .card-sub{font-size:.82rem;color:var(--muted);line-height:1.55;font-weight:300;margin-bottom:1.75rem;}
-
-/* ── PROVIDER BUTTONS ── */
 .provider-btns{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem;}
-.provider-btn{
-  display:flex;align-items:center;gap:.9rem;width:100%;
-  padding:.85rem 1.1rem;background:var(--white);
-  border:1px solid var(--border);border-radius:var(--radius);
-  cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.85rem;
-  font-weight:400;color:var(--ink);text-decoration:none;
-  transition:all .16s;position:relative;
-}
+.provider-btn{display:flex;align-items:center;gap:.9rem;width:100%;padding:.85rem 1.1rem;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:400;color:var(--ink);text-decoration:none;transition:all .16s;position:relative;}
 .provider-btn:hover{background:var(--off);border-color:var(--border2);box-shadow:var(--shadow);transform:translateY(-1px);}
 .provider-btn:active{transform:translateY(0);box-shadow:none;}
 .provider-btn.loading{opacity:.6;pointer-events:none;}
-.provider-btn.loading .provider-label::after{content:'…';}
 .provider-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .provider-label{flex:1;text-align:left;}
 .provider-arrow{font-size:.75rem;color:var(--lighter);transition:transform .16s,color .16s;}
@@ -120,19 +63,9 @@ html,body{
 .provider-btn.google:hover{border-color:rgba(66,133,244,.2);background:#fafbff;}
 .provider-btn.linkedin:hover{border-color:rgba(10,102,194,.25);background:#f8faff;}
 .provider-btn.apple:hover{border-color:rgba(0,0,0,.15);background:var(--off);}
-
-/* ── ERROR BANNER ── */
-.error-banner{
-  display:none;background:var(--red-bg);border:1px solid #FECACA;
-  border-radius:var(--radius-sm);padding:.65rem 1rem;
-  font-size:.78rem;color:var(--red);line-height:1.5;margin-bottom:1rem;
-}
+.error-banner{display:none;background:var(--red-bg);border:1px solid #FECACA;border-radius:var(--radius-sm);padding:.65rem 1rem;font-size:.78rem;color:var(--red);line-height:1.5;margin-bottom:1rem;}
 .error-banner.show{display:block;}
-
-/* ── DIVIDER ── */
 .card-divider{height:1px;background:var(--border);margin:1.5rem 0;}
-
-/* ── CARD FOOTER ── */
 .card-footer{text-align:center;}
 .card-footer p{font-size:.72rem;color:var(--lighter);line-height:1.65;}
 .card-footer a{color:var(--muted);text-decoration:none;transition:color .13s;}
@@ -141,12 +74,7 @@ html,body{
 .trust-item{display:flex;align-items:center;gap:.3rem;font-size:.68rem;color:var(--lighter);}
 .trust-check{width:13px;height:13px;border-radius:50%;background:var(--green-bg);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .trust-check svg{width:7px;height:7px;stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
-
-/* ── RIGHT PANEL ── */
-.right-panel{
-  grid-column:3;justify-self:start;padding-left:3.5rem;max-width:280px;
-  opacity:0;animation:fadeRight .5s .15s ease forwards;
-}
+.right-panel{grid-column:3;justify-self:start;padding-left:3.5rem;max-width:280px;opacity:0;animation:fadeRight .5s .15s ease forwards;}
 @keyframes fadeRight{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
 .testimonial-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow);margin-bottom:.75rem;position:relative;}
 .testimonial-quote{position:absolute;top:.75rem;right:.9rem;font-family:'Instrument Serif',serif;font-size:2.5rem;color:var(--border);line-height:1;font-style:italic;}
@@ -164,17 +92,8 @@ html,body{
 .stat-mini-num.accent{color:var(--accent);}
 .stat-mini-num.green{color:var(--green);}
 .stat-mini-label{font-size:.63rem;color:var(--light);line-height:1.35;}
-
-/* ── MOBILE ── */
-@media(max-width:1060px){
-  .left-panel,.right-panel{display:none;}
-  .shell{grid-template-columns:1fr;justify-items:center;padding:5rem 1.5rem 2rem;}
-  .login-card{grid-column:1;max-width:400px;}
-}
-@media(max-width:480px){
-  .login-card{padding:1.75rem 1.25rem;}
-  .shell{padding:4rem 1rem 2rem;}
-}
+@media(max-width:1060px){.left-panel,.right-panel{display:none;}.shell{grid-template-columns:1fr;justify-items:center;padding:5rem 1.5rem 2rem;}.login-card{grid-column:1;max-width:400px;}}
+@media(max-width:480px){.login-card{padding:1.75rem 1.25rem;}.shell{padding:4rem 1rem 2rem;}}
 </style>
 </head>
 <body>
@@ -185,8 +104,6 @@ html,body{
 </a>
 
 <div class="shell">
-
-  <!-- LEFT PANEL -->
   <div class="left-panel">
     <a href="/" class="left-logo">
       <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
@@ -202,57 +119,29 @@ html,body{
     </div>
   </div>
 
-  <!-- LOGIN CARD -->
   <div class="login-card">
     <div class="card-eyebrow"><div class="eyebrow-dot"></div>Healthcare Career Platform</div>
     <div class="card-title">Sign in to StretchRole</div>
     <p class="card-sub">Choose how you'd like to continue. One click — no password needed.</p>
-
     <div class="error-banner" id="error-banner"></div>
-
     <div class="provider-btns">
-
-      <!-- Google -->
       <button class="provider-btn google" id="btn-google" onclick="signIn('google')">
-        <div class="provider-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-        </div>
+        <div class="provider-icon"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
         <span class="provider-label">Continue with Google</span>
         <span class="provider-arrow">→</span>
       </button>
-
-      <!-- LinkedIn -->
       <button class="provider-btn linkedin" id="btn-linkedin" onclick="signIn('linkedin_oidc')">
-        <div class="provider-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <rect width="24" height="24" rx="4" fill="#0A66C2"/>
-            <path d="M7.5 9.5h-2v7h2v-7zm-1-3.25a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM18.5 16.5h-2v-3.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v3.5h-2v-7h2v1.1c.5-.8 1.4-1.1 2.25-1.1 1.8 0 2.75 1.2 2.75 3v4z" fill="white"/>
-          </svg>
-        </div>
+        <div class="provider-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0A66C2"/><path d="M7.5 9.5h-2v7h2v-7zm-1-3.25a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM18.5 16.5h-2v-3.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v3.5h-2v-7h2v1.1c.5-.8 1.4-1.1 2.25-1.1 1.8 0 2.75 1.2 2.75 3v4z" fill="white"/></svg></div>
         <span class="provider-label">Continue with LinkedIn</span>
         <span class="provider-arrow">→</span>
       </button>
-
-      <!-- Apple -->
       <button class="provider-btn apple" id="btn-apple" onclick="signIn('apple')">
-        <div class="provider-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--ink)">
-            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-          </svg>
-        </div>
+        <div class="provider-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="var(--ink)"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></div>
         <span class="provider-label">Continue with Apple</span>
         <span class="provider-arrow">→</span>
       </button>
-
     </div>
-
     <div class="card-divider"></div>
-
     <div class="card-footer">
       <p>By continuing you agree to StretchRole's <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.<br/>Your data is never sold or shared with third parties.</p>
       <div class="trust-row">
@@ -263,7 +152,6 @@ html,body{
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div class="right-panel">
     <div class="testimonial-card">
       <div class="testimonial-quote">"</div>
@@ -279,66 +167,41 @@ html,body{
       <div class="stat-mini"><div class="stat-mini-num green">6</div><div class="stat-mini-label">Career tools</div></div>
     </div>
   </div>
-
 </div>
 
 <script>
-// ── SUPABASE INIT ────────────────────────────────────────────────────────────
-// These values are injected at runtime via Vercel env vars.
-// In local dev, replace with your actual values or use a .env loader.
 const SUPABASE_URL  = window.__SUPABASE_URL__  || 'https://kamrayznhsjkgjwiuebr.supabase.co';
 const SUPABASE_ANON = window.__SUPABASE_ANON__ || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthbXJheXpuaHNqa2dqd2l1ZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTMxMDAsImV4cCI6MjA5MTc2OTEwMH0.qiIzhIacRa9Xe6SgI6awEP5puu4Z1AuJGVKk7ZEEHr0';
-
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ── REDIRECT TARGET ──────────────────────────────────────────────────────────
-// Deterministic post-login destination. Always /app after successful auth.
-// Change this constant if the landing page ever changes.
-const POST_LOGIN_REDIRECT = '/app';
+const POST_LOGIN_REDIRECT = '/dashboard';
 
-// ── CHECK EXISTING SESSION ───────────────────────────────────────────────────
-// If already logged in, skip login page entirely.
 (async () => {
   try {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      window.location.replace(POST_LOGIN_REDIRECT);
-    }
+    if (session) window.location.replace(POST_LOGIN_REDIRECT);
   } catch (e) {
-    // If session check fails, stay on login page — not a fatal error
     console.warn('Session check failed:', e.message);
   }
 })();
 
-// ── SIGN IN ──────────────────────────────────────────────────────────────────
 async function signIn(provider) {
   const btn = document.getElementById('btn-' + (provider === 'linkedin_oidc' ? 'linkedin' : provider));
   const label = btn?.querySelector('.provider-label');
   const origLabel = label?.textContent;
-
   if (btn) btn.classList.add('loading');
   if (label) label.textContent = 'Connecting…';
   hideError();
-
   try {
-    // Supabase OAuth — redirect flow.
-    // redirectTo must match an allow-listed URL in your Supabase dashboard.
-    // After OAuth completes, Supabase sends the user to /sso-callback
-    // which handles session pickup and user record creation.
     const { error } = await sb.auth.signInWithOAuth({
       provider: provider,
       options: {
         redirectTo: window.location.origin + '/sso-callback',
-        // Request email scope explicitly so we have it in the user record
         scopes: provider === 'linkedin_oidc' ? 'openid email profile' : undefined,
       }
     });
-
     if (error) throw error;
-    // If no error, browser is now redirecting to the OAuth provider.
-    // No further JS runs here.
-
   } catch (err) {
     if (btn) btn.classList.remove('loading');
     if (label) label.textContent = origLabel;
@@ -346,14 +209,8 @@ async function signIn(provider) {
   }
 }
 
-function showError(msg) {
-  const el = document.getElementById('error-banner');
-  el.textContent = msg;
-  el.classList.add('show');
-}
-function hideError() {
-  document.getElementById('error-banner').classList.remove('show');
-}
+function showError(msg) { const el = document.getElementById('error-banner'); el.textContent = msg; el.classList.add('show'); }
+function hideError() { document.getElementById('error-banner').classList.remove('show'); }
 </script>
 </body>
 </html>
