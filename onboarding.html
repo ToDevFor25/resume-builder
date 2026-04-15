@@ -5,525 +5,306 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Welcome to StretchRole</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const SUPABASE_URL='https://kamrayznhsjkgjwiuebr.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthbXJheXpuaHNqa2dqd2l1ZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTMxMDAsImV4cCI6MjA5MTc2OTEwMH0.qiIzhIacRa9Xe6SgI6awEP5puu4Z1AuJGVKk7ZEEHr0';
+const{createClient}=supabase;window.sb=createClient(SUPABASE_URL,SUPABASE_ANON);
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --white:#fff;--off:#F9F9F8;--off2:#F4F4F2;
-  --ink:#111;--ink2:#1a1a1a;--muted:#525252;--light:#8a8a8a;--lighter:#c4c4c4;
+  --ink:#111;--muted:#525252;--light:#8a8a8a;--lighter:#c4c4c4;
   --border:#E5E5E5;--border2:#D4D4D4;
-  --accent:#1B4FD8;--accent-hover:#1540b8;--accent-light:#EEF2FF;
+  --accent:#1B4FD8;--accent-light:#EEF2FF;
   --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
   --radius:10px;--radius-sm:7px;--radius-lg:14px;
-  --shadow-sm:0 1px 3px rgba(0,0,0,.06);
-  --shadow:0 2px 8px rgba(0,0,0,.07);
-  --shadow-lg:0 12px 40px rgba(0,0,0,.1);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow-lg:0 12px 40px rgba(0,0,0,.1);
 }
 html,body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;}
-
-/* ── HEADER ── */
+#auth-gate{position:fixed;inset:0;background:var(--off);display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .3s;}
+#auth-gate.hidden{opacity:0;pointer-events:none;}
+.gate-spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 .header{height:60px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,4vw,2.5rem);}
 .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;}
 .logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
 .logo-mark svg{width:14px;height:14px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .logo-text{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--ink);}
 .header-step{font-size:.75rem;color:var(--light);font-family:'DM Mono',monospace;}
-
-/* ── PROGRESS ── */
-.progress-bar{height:3px;background:var(--border);position:relative;}
+.progress-bar{height:3px;background:var(--border);}
 .progress-fill{height:100%;background:var(--accent);transition:width .4s ease;border-radius:0 99px 99px 0;}
-
-/* ── SHELL ── */
 .shell{max-width:560px;margin:0 auto;padding:3rem 1.5rem 4rem;}
-
-/* ── STEP DOTS ── */
 .step-dots{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:2.5rem;}
 .step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all .25s;}
 .step-dot.active{background:var(--accent);width:20px;border-radius:99px;}
 .step-dot.done{background:var(--green);}
-
-/* ── STEP HEADER ── */
 .step-eyebrow{font-size:.67rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lighter);margin-bottom:.75rem;}
 .step-title{font-family:'Instrument Serif',serif;font-size:1.8rem;font-weight:400;line-height:1.15;letter-spacing:-.02em;color:var(--ink);margin-bottom:.5rem;}
 .step-title em{font-style:italic;color:var(--accent);}
 .step-sub{font-size:.85rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:2rem;}
-
-/* ── OPTION CARDS ── */
 .option-grid{display:flex;flex-direction:column;gap:.6rem;margin-bottom:2rem;}
 .option-card{display:flex;align-items:flex-start;gap:.9rem;padding:1rem 1.1rem;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;}
 .option-card:hover{border-color:var(--border2);background:var(--off);}
 .option-card.selected{border-color:var(--accent);background:var(--accent-light);}
 .option-icon{font-size:1.1rem;flex-shrink:0;margin-top:.05rem;}
-.option-text{}
 .option-label{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.15rem;}
 .option-desc{font-size:.75rem;color:var(--muted);font-weight:300;line-height:1.5;}
 .option-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .option-card.selected .option-check{background:var(--accent);border-color:var(--accent);}
 .option-check svg{width:9px;height:9px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;}
 .option-card.selected .option-check svg{opacity:1;}
-
-/* ── FOCUS GRID ── */
 .focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:2rem;}
 .focus-card{padding:.85rem 1rem;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.65rem;}
-.focus-card:hover{border-color:var(--border2);background:var(--off);}
+.focus-card:hover{border-color:var(--border2);}
 .focus-card.selected{border-color:var(--accent);background:var(--accent-light);}
-.focus-icon{font-size:.95rem;flex-shrink:0;}
-.focus-text{}
 .focus-label{font-size:.82rem;font-weight:500;color:var(--ink);}
 .focus-desc{font-size:.7rem;color:var(--muted);font-weight:300;}
-
-/* ── RESUME UPLOAD ── */
 .upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:2.5rem;text-align:center;cursor:pointer;transition:all .18s;background:var(--white);margin-bottom:1rem;}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light);}
 .upload-zone.has-file{border-style:solid;border-color:var(--green);background:var(--green-bg);}
-.upload-icon{width:40px;height:40px;background:var(--off2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;}
-.upload-icon svg{width:18px;height:18px;stroke:var(--light);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.upload-zone.has-file .upload-icon{background:var(--green-bg);}
-.upload-zone.has-file .upload-icon svg{stroke:var(--green);}
 .upload-title{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.3rem;}
-.upload-sub{font-size:.75rem;color:var(--muted);font-weight:300;}
-.upload-success{font-size:.82rem;font-weight:500;color:var(--green);margin-bottom:.2rem;}
-.upload-filename{font-size:.75rem;color:var(--green);font-weight:300;}
+.upload-sub{font-size:.75rem;color:var(--muted);}
 .skip-link{display:block;text-align:center;font-size:.75rem;color:var(--lighter);cursor:pointer;transition:color .13s;margin-bottom:1.5rem;}
 .skip-link:hover{color:var(--muted);}
-
-/* ── SUMMARY STEP ── */
 .summary-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm);}
 .summary-row{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border);}
 .summary-row:last-child{border-bottom:none;}
 .summary-icon{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--off2);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
 .summary-label{font-size:.72rem;color:var(--light);font-weight:500;text-transform:uppercase;letter-spacing:.06em;width:100px;flex-shrink:0;}
-.summary-value{font-size:.83rem;color:var(--ink);font-weight:400;}
+.summary-value{font-size:.83rem;color:var(--ink);}
 .summary-value.empty{color:var(--lighter);font-style:italic;}
-
 .tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:2rem;}
 .tool-item{display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);}
-.tool-icon-wrap{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;}
-.tool-name{font-size:.75rem;color:var(--muted);font-weight:400;}
+.tool-name{font-size:.75rem;color:var(--muted);}
 .tool-badge{margin-left:auto;font-size:.6rem;font-weight:600;padding:.15rem .4rem;border-radius:99px;}
 .tool-badge.live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
 .tool-badge.soon{background:var(--off2);color:var(--lighter);border:1px solid var(--border);}
-
-/* ── NAV BUTTONS ── */
 .step-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;}
 .btn-back{display:flex;align-items:center;gap:.4rem;font-size:.83rem;color:var(--muted);background:transparent;border:1px solid var(--border);padding:.65rem 1.1rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .13s;font-family:'DM Sans',sans-serif;}
 .btn-back:hover{color:var(--ink);border-color:var(--border2);}
 .btn-back svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .btn-next{display:flex;align-items:center;gap:.4rem;font-size:.88rem;font-weight:500;color:white;background:var(--accent);border:none;padding:.7rem 1.5rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;flex:1;justify-content:center;}
-.btn-next:hover{background:var(--accent-hover);}
-.btn-next svg{width:13px;height:13px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.btn-next:hover{background:#1540b8;}
 .btn-next:disabled{opacity:.45;pointer-events:none;}
-
+.btn-next svg{width:13px;height:13px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .pricing-note{text-align:center;margin-top:.85rem;}
-.pricing-note a{font-size:.73rem;color:var(--light);text-decoration:none;transition:color .13s;}
+.pricing-note a{font-size:.73rem;color:var(--light);text-decoration:none;}
 .pricing-note a:hover{color:var(--muted);}
-
-/* ── STEPS ── */
 .step{display:none;}
 .step.active{display:block;animation:fadeUp .35s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
-
+<div id="auth-gate"><div class="gate-spinner"></div></div>
 <div class="header">
-  <a href="/homepage" class="logo">
+  <a href="/" class="logo">
     <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M2 12L8 4L14 12" stroke-linejoin="round"/><path d="M5 12L8 8L11 12"/></svg></div>
     <span class="logo-text">StretchRole</span>
   </a>
   <span class="header-step" id="header-step">Step 1 of 4</span>
 </div>
-
-<div class="progress-bar">
-  <div class="progress-fill" id="progress-fill" style="width:25%"></div>
-</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
 
 <div class="shell">
-
-  <div class="step-dots" id="step-dots">
+  <div class="step-dots">
     <div class="step-dot active" id="dot-1"></div>
     <div class="step-dot" id="dot-2"></div>
     <div class="step-dot" id="dot-3"></div>
     <div class="step-dot" id="dot-4"></div>
   </div>
 
-  <!-- STEP 1: Current level -->
+  <!-- STEP 1 -->
   <div class="step active" id="step-1">
     <div class="step-eyebrow">Step 1 of 4 — Profile Setup</div>
     <div class="step-title">Where are you <em>right now?</em></div>
-    <p class="step-sub">Calibrates every tool to your actual career stage — resume language, interview questions, salary benchmarks.</p>
-
-    <div class="option-grid" id="level-options">
-      <div class="option-card" onclick="selectOption('currentLevel','entry',this)">
-        <div class="option-icon">🌱</div>
-        <div class="option-text">
-          <div class="option-label">Entry Level</div>
-          <div class="option-desc">CNA, Medical Assistant, Patient Care Tech, Coordinator I</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('currentLevel','mid',this)">
-        <div class="option-icon">📈</div>
-        <div class="option-text">
-          <div class="option-label">Mid Level</div>
-          <div class="option-desc">Charge Nurse, Specialist, Supervisor, Coordinator II, Team Lead</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('currentLevel','senior',this)">
-        <div class="option-icon">⭐</div>
-        <div class="option-text">
-          <div class="option-label">Senior Level</div>
-          <div class="option-desc">Senior Specialist, Clinical Lead, Department Supervisor, Program Manager</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('currentLevel','leadership',this)">
-        <div class="option-icon">🎯</div>
-        <div class="option-text">
-          <div class="option-label">Leadership</div>
-          <div class="option-desc">Manager, Director, Department Head, Assistant VP, Clinical Manager</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('currentLevel','executive',this)">
-        <div class="option-icon">🏆</div>
-        <div class="option-text">
-          <div class="option-label">Executive</div>
-          <div class="option-desc">VP, SVP, CNO, COO, CFO, CEO, C-Suite, System-Level Leader</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
+    <p class="step-sub">Calibrates every tool to your actual career stage.</p>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption('currentLevel','entry',this)"><div class="option-icon">🌱</div><div><div class="option-label">Entry Level</div><div class="option-desc">CNA, Medical Assistant, Patient Care Tech, Coordinator I</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('currentLevel','mid',this)"><div class="option-icon">📈</div><div><div class="option-label">Mid Level</div><div class="option-desc">Charge Nurse, Specialist, Supervisor, Coordinator II</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('currentLevel','senior',this)"><div class="option-icon">⭐</div><div><div class="option-label">Senior Level</div><div class="option-desc">Senior Specialist, Clinical Lead, Program Manager</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('currentLevel','leadership',this)"><div class="option-icon">🎯</div><div><div class="option-label">Leadership</div><div class="option-desc">Manager, Director, Department Head, Assistant VP</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('currentLevel','executive',this)"><div class="option-icon">🏆</div><div><div class="option-label">Executive</div><div class="option-desc">VP, SVP, CNO, COO, CFO, CEO, C-Suite</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
     </div>
-
-    <div class="step-nav">
-      <div></div>
-      <button class="btn-next" id="next-1" onclick="goStep(2)" disabled>
-        Continue
-        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
-      </button>
-    </div>
+    <div class="step-nav"><div></div><button class="btn-next" id="next-1" onclick="goStep(2)" disabled>Continue<svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg></button></div>
   </div>
 
-  <!-- STEP 2: Target & focus -->
+  <!-- STEP 2 -->
   <div class="step" id="step-2">
     <div class="step-eyebrow">Step 2 of 4 — Your Goal</div>
     <div class="step-title">Where are you <em>headed?</em></div>
-    <p class="step-sub">Select your target level and primary focus. Every tool calibrates to this specific transition.</p>
-
+    <p class="step-sub">Every tool calibrates to this specific transition.</p>
     <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.65rem;">Target level</div>
-    <div class="option-grid" id="target-options" style="margin-bottom:1.5rem;">
-      <div class="option-card" onclick="selectOption('targetLevel','mid',this)">
-        <div class="option-icon">📈</div>
-        <div class="option-text">
-          <div class="option-label">Mid Level</div>
-          <div class="option-desc">Charge Nurse, Specialist, Supervisor, Coordinator II</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('targetLevel','senior',this)">
-        <div class="option-icon">⭐</div>
-        <div class="option-text">
-          <div class="option-label">Senior Level</div>
-          <div class="option-desc">Senior Specialist, Clinical Lead, Program Manager</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('targetLevel','leadership',this)">
-        <div class="option-icon">🎯</div>
-        <div class="option-text">
-          <div class="option-label">Leadership</div>
-          <div class="option-desc">Manager, Director, Department Head, Assistant VP</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
-      <div class="option-card" onclick="selectOption('targetLevel','executive',this)">
-        <div class="option-icon">🏆</div>
-        <div class="option-text">
-          <div class="option-label">Executive</div>
-          <div class="option-desc">VP, SVP, CNO, COO, CFO, CEO, C-Suite</div>
-        </div>
-        <div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div>
-      </div>
+    <div class="option-grid" style="margin-bottom:1.5rem;">
+      <div class="option-card" onclick="selectOption('targetLevel','mid',this)"><div class="option-icon">📈</div><div><div class="option-label">Mid Level</div><div class="option-desc">Charge Nurse, Specialist, Supervisor</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('targetLevel','senior',this)"><div class="option-icon">⭐</div><div><div class="option-label">Senior Level</div><div class="option-desc">Senior Specialist, Clinical Lead, Program Manager</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('targetLevel','leadership',this)"><div class="option-icon">🎯</div><div><div class="option-label">Leadership</div><div class="option-desc">Manager, Director, Department Head</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
+      <div class="option-card" onclick="selectOption('targetLevel','executive',this)"><div class="option-icon">🏆</div><div><div class="option-label">Executive</div><div class="option-desc">VP, SVP, CNO, COO, CEO, C-Suite</div></div><div class="option-check"><svg viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4"/></svg></div></div>
     </div>
-
     <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.65rem;">Primary focus area</div>
-    <div class="focus-grid" id="focus-options">
-      <div class="focus-card" onclick="selectFocus('operations',this)">
-        <div class="focus-icon">⚙️</div>
-        <div class="focus-text">
-          <div class="focus-label">Operations</div>
-          <div class="focus-desc">Throughput, efficiency, ops</div>
-        </div>
-      </div>
-      <div class="focus-card" onclick="selectFocus('nursing',this)">
-        <div class="focus-icon">🏥</div>
-        <div class="focus-text">
-          <div class="focus-label">Nursing</div>
-          <div class="focus-desc">Clinical nursing leadership</div>
-        </div>
-      </div>
-      <div class="focus-card" onclick="selectFocus('finance',this)">
-        <div class="focus-icon">📊</div>
-        <div class="focus-text">
-          <div class="focus-label">Finance</div>
-          <div class="focus-desc">Revenue cycle, budgets</div>
-        </div>
-      </div>
-      <div class="focus-card" onclick="selectFocus('quality',this)">
-        <div class="focus-icon">✅</div>
-        <div class="focus-text">
-          <div class="focus-label">Quality</div>
-          <div class="focus-desc">Compliance, safety</div>
-        </div>
-      </div>
-      <div class="focus-card" onclick="selectFocus('strategy',this)">
-        <div class="focus-icon">🎯</div>
-        <div class="focus-text">
-          <div class="focus-label">Strategy</div>
-          <div class="focus-desc">Growth, planning, innovation</div>
-        </div>
-      </div>
-      <div class="focus-card" onclick="selectFocus('other',this)">
-        <div class="focus-icon">➕</div>
-        <div class="focus-text">
-          <div class="focus-label">Other</div>
-          <div class="focus-desc">IT, HR, supply chain</div>
-        </div>
-      </div>
+    <div class="focus-grid">
+      <div class="focus-card" onclick="selectFocus('operations',this)"><span>⚙️</span><div><div class="focus-label">Operations</div><div class="focus-desc">Throughput, efficiency, ops</div></div></div>
+      <div class="focus-card" onclick="selectFocus('nursing',this)"><span>🏥</span><div><div class="focus-label">Nursing</div><div class="focus-desc">Clinical nursing leadership</div></div></div>
+      <div class="focus-card" onclick="selectFocus('finance',this)"><span>📊</span><div><div class="focus-label">Finance</div><div class="focus-desc">Revenue cycle, budgets</div></div></div>
+      <div class="focus-card" onclick="selectFocus('quality',this)"><span>✅</span><div><div class="focus-label">Quality</div><div class="focus-desc">Compliance, safety</div></div></div>
+      <div class="focus-card" onclick="selectFocus('strategy',this)"><span>🎯</span><div><div class="focus-label">Strategy</div><div class="focus-desc">Growth, planning</div></div></div>
+      <div class="focus-card" onclick="selectFocus('other',this)"><span>➕</span><div><div class="focus-label">Other</div><div class="focus-desc">IT, HR, supply chain</div></div></div>
     </div>
-
     <div class="step-nav">
-      <button class="btn-back" onclick="goStep(1)">
-        <svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>
-        Back
-      </button>
-      <button class="btn-next" id="next-2" onclick="goStep(3)" disabled>
-        Continue
-        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
-      </button>
+      <button class="btn-back" onclick="goStep(1)"><svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>Back</button>
+      <button class="btn-next" id="next-2" onclick="goStep(3)" disabled>Continue<svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg></button>
     </div>
   </div>
 
-  <!-- STEP 3: Resume upload -->
+  <!-- STEP 3 -->
   <div class="step" id="step-3">
     <div class="step-eyebrow">Step 3 of 4 — Master Resume</div>
     <div class="step-title">Upload your <em>master resume.</em></div>
-    <p class="step-sub">Upload once — every tool uses it automatically. SeeThrough gets real match scores, Interview Coach knows your background, Reference Writer knows your accomplishments.</p>
-
-    <div class="upload-zone" id="upload-zone"
-      onclick="document.getElementById('resume-file').click()"
-      ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave()">
-      <div class="upload-icon">
-        <svg viewBox="0 0 18 18"><path d="M3 13v2a1 1 0 001 1h10a1 1 0 001-1v-2M9 3v9M6 6l3-3 3 3"/></svg>
-      </div>
+    <p class="step-sub">Upload once — every tool uses it automatically.</p>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('resume-file').click()" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave()">
       <div class="upload-title" id="upload-title">Drop your resume here or click to browse</div>
       <div class="upload-sub" id="upload-sub">PDF · DOCX · TXT · RTF</div>
     </div>
-
     <input type="file" id="resume-file" accept=".pdf,.docx,.txt,.rtf" style="display:none" onchange="onFileChange(event)"/>
-
-    <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;font-size:.75rem;color:var(--muted);line-height:1.6;font-weight:300;margin-bottom:1.25rem;">
-      Your resume stays private. Stored securely in your account. Used only to personalize your results. Update or delete anytime from your Profile.
-    </div>
-
-    <div class="skip-link" onclick="goStep(4)">Not ready? Skip for now — add your master resume anytime from your Profile</div>
-
+    <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;font-size:.75rem;color:var(--muted);line-height:1.6;font-weight:300;margin-bottom:1.25rem;">Your resume stays private. Used only to personalize your results. Never shared with employers or third parties.</div>
+    <div class="skip-link" onclick="goStep(4)">Not ready? Skip for now — add from Profile anytime</div>
     <div class="step-nav">
-      <button class="btn-back" onclick="goStep(2)">
-        <svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>
-        Back
-      </button>
-      <button class="btn-next" id="next-3" onclick="goStep(4)" disabled>
-        Continue
-        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
-      </button>
+      <button class="btn-back" onclick="goStep(2)"><svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>Back</button>
+      <button class="btn-next" id="next-3" onclick="goStep(4)" disabled>Continue<svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg></button>
     </div>
   </div>
 
-  <!-- STEP 4: All set -->
+  <!-- STEP 4 -->
   <div class="step" id="step-4">
     <div class="step-eyebrow">Step 4 of 4 — Ready</div>
     <div class="step-title">You're all <em>set.</em></div>
-    <p class="step-sub">Your platform is ready. Here's your setup — update anything anytime from your Profile.</p>
-
+    <p class="step-sub">Your platform is ready. Update anything anytime from your Profile.</p>
     <div class="summary-card">
-      <div class="summary-row">
-        <div class="summary-icon">📍</div>
-        <div class="summary-label">Current</div>
-        <div class="summary-value" id="sum-current">—</div>
-      </div>
-      <div class="summary-row">
-        <div class="summary-icon">🎯</div>
-        <div class="summary-label">Target</div>
-        <div class="summary-value" id="sum-target">—</div>
-      </div>
-      <div class="summary-row">
-        <div class="summary-icon">⚡</div>
-        <div class="summary-label">Focus</div>
-        <div class="summary-value" id="sum-focus">—</div>
-      </div>
-      <div class="summary-row">
-        <div class="summary-icon">📋</div>
-        <div class="summary-label">Resume</div>
-        <div class="summary-value" id="sum-resume">Not uploaded — add from Profile</div>
-      </div>
+      <div class="summary-row"><div class="summary-icon">📍</div><div class="summary-label">Current</div><div class="summary-value" id="sum-current">—</div></div>
+      <div class="summary-row"><div class="summary-icon">🎯</div><div class="summary-label">Target</div><div class="summary-value" id="sum-target">—</div></div>
+      <div class="summary-row"><div class="summary-icon">⚡</div><div class="summary-label">Focus</div><div class="summary-value" id="sum-focus">—</div></div>
+      <div class="summary-row"><div class="summary-icon">📋</div><div class="summary-label">Resume</div><div class="summary-value" id="sum-resume">Not uploaded</div></div>
     </div>
-
     <div style="font-size:.78rem;font-weight:500;color:var(--ink);margin-bottom:.65rem;">Your tools</div>
     <div class="tools-grid">
-      <div class="tool-item">
-        <div class="tool-icon-wrap" style="background:#EEF2FF;color:#1B4FD8;font-size:.7rem;">📄</div>
-        <div class="tool-name">Resume Optimizer</div>
-        <span class="tool-badge live">Live</span>
-      </div>
-      <div class="tool-item">
-        <div class="tool-icon-wrap" style="background:#ECFEFF;color:#0891B2;font-size:.7rem;">👁</div>
-        <div class="tool-name">SeeThrough</div>
-        <span class="tool-badge live">Live</span>
-      </div>
-      <div class="tool-item">
-        <div class="tool-icon-wrap" style="background:#F0FDF4;color:#16A34A;font-size:.7rem;">🎯</div>
-        <div class="tool-name">Interview Coach</div>
-        <span class="tool-badge live">Live</span>
-      </div>
-      <div class="tool-item">
-        <div class="tool-icon-wrap" style="background:#FFF1F2;color:#E11D48;font-size:.7rem;">✉️</div>
-        <div class="tool-name">Reference Writer</div>
-        <span class="tool-badge live">Live</span>
-      </div>
-      <div class="tool-item">
-        <div class="tool-icon-wrap" style="background:#FFFBEB;color:#D97706;font-size:.7rem;">💰</div>
-        <div class="tool-name">Salary Simulator</div>
-        <span class="tool-badge soon">Soon</span>
-      </div>
-      <div class="tool-item">
-        <div class="tool-icon-wrap" style="background:#F5F3FF;color:#7C3AED;font-size:.7rem;">🚀</div>
-        <div class="tool-name">Promo Package</div>
-        <span class="tool-badge soon">Soon</span>
-      </div>
+      <div class="tool-item"><span style="font-size:.75rem;">📄</span><div class="tool-name">Resume Optimizer</div><span class="tool-badge live">Live</span></div>
+      <div class="tool-item"><span style="font-size:.75rem;">👁</span><div class="tool-name">SeeThrough</div><span class="tool-badge live">Live</span></div>
+      <div class="tool-item"><span style="font-size:.75rem;">🎯</span><div class="tool-name">Interview Coach</div><span class="tool-badge live">Live</span></div>
+      <div class="tool-item"><span style="font-size:.75rem;">✉️</span><div class="tool-name">Reference Writer</div><span class="tool-badge live">Live</span></div>
+      <div class="tool-item"><span style="font-size:.75rem;">💰</span><div class="tool-name">Salary Simulator</div><span class="tool-badge soon">Soon</span></div>
+      <div class="tool-item"><span style="font-size:.75rem;">🚀</span><div class="tool-name">Promo Package</div><span class="tool-badge soon">Soon</span></div>
     </div>
-
     <div class="step-nav">
-      <button class="btn-back" onclick="goStep(3)">
-        <svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>
-        Back
-      </button>
-      <button class="btn-next" onclick="finish()">
-        Enter StretchRole
-        <svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
-      </button>
+      <button class="btn-back" onclick="goStep(3)"><svg viewBox="0 0 13 13"><path d="M10 6.5H3M6 3L2.5 6.5 6 10"/></svg>Back</button>
+      <button class="btn-next" id="finish-btn" onclick="finish()">Enter StretchRole<svg viewBox="0 0 13 13"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg></button>
     </div>
-
-    <div class="pricing-note">
-      <a href="/pricing">View pricing →</a>
-    </div>
+    <div class="pricing-note"><a href="/pricing">View pricing →</a></div>
   </div>
-
 </div>
 
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const LEVEL_LABELS={entry:'Entry Level',mid:'Mid Level',senior:'Senior Level',leadership:'Leadership',executive:'Executive'};
+const FOCUS_LABELS={operations:'Operations',nursing:'Nursing',finance:'Finance',quality:'Quality',strategy:'Strategy',other:'Other'};
+let currentStep=1, currentUser=null;
+const profile={};
+let resumeText='', resumeName='';
 
-const profile = JSON.parse(localStorage.getItem('arx_profile')||'{}');
-let currentStep = 1;
+function hideAuthGate(){const g=document.getElementById('auth-gate');g.classList.add('hidden');setTimeout(()=>g.style.display='none',350);}
 
-const levelLabels = {entry:'Entry Level',mid:'Mid Level',senior:'Senior Level',leadership:'Leadership',executive:'Executive'};
-const focusLabels = {operations:'Operations',nursing:'Nursing',finance:'Finance',quality:'Quality',strategy:'Strategy',other:'Other'};
+(async()=>{
+  const{data:{session},error}=await sb.auth.getSession();
+  if(error||!session){window.location.replace('/login');return;}
+  currentUser=session.user;
+  hideAuthGate();
+})();
 
 function goStep(n){
   document.getElementById('step-'+currentStep).classList.remove('active');
-  currentStep = n;
+  currentStep=n;
   document.getElementById('step-'+n).classList.add('active');
-  // Progress
-  const pcts = {1:25,2:50,3:75,4:100};
-  document.getElementById('progress-fill').style.width = pcts[n]+'%';
-  document.getElementById('header-step').textContent = `Step ${n} of 4`;
-  // Dots
-  for(let i=1;i<=4;i++){
-    const d = document.getElementById('dot-'+i);
-    d.className = 'step-dot' + (i<n?' done':i===n?' active':'');
-  }
-  if(n===4) renderSummary();
+  const pcts={1:25,2:50,3:75,4:100};
+  document.getElementById('progress-fill').style.width=pcts[n]+'%';
+  document.getElementById('header-step').textContent=`Step ${n} of 4`;
+  for(let i=1;i<=4;i++){const d=document.getElementById('dot-'+i);d.className='step-dot'+(i<n?' done':i===n?' active':'');}
+  if(n===4)renderSummary();
   window.scrollTo(0,0);
 }
 
-function selectOption(field, value, el){
-  const container = el.parentElement;
-  container.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
+function selectOption(field,value,el){
+  el.parentElement.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
-  profile[field] = value;
-  localStorage.setItem('arx_profile', JSON.stringify(profile));
-  // Enable next button
+  profile[field]=value;
   if(field==='currentLevel') document.getElementById('next-1').disabled=false;
-  if(field==='targetLevel') checkStep2();
+  if(field==='targetLevel')  checkStep2();
 }
 
-function selectFocus(value, el){
+function selectFocus(value,el){
   document.querySelectorAll('.focus-card').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
-  profile.focus = value;
-  localStorage.setItem('arx_profile', JSON.stringify(profile));
+  profile.focus=value;
   checkStep2();
 }
 
-function checkStep2(){
-  document.getElementById('next-2').disabled = !(profile.targetLevel && profile.focus);
-}
+function checkStep2(){document.getElementById('next-2').disabled=!(profile.targetLevel&&profile.focus);}
 
 function renderSummary(){
-  document.getElementById('sum-current').textContent = levelLabels[profile.currentLevel]||'—';
-  document.getElementById('sum-target').textContent = levelLabels[profile.targetLevel]||'—';
-  document.getElementById('sum-focus').textContent = focusLabels[profile.focus]||'—';
-  const hasResume = !!localStorage.getItem('arx_master_resume_text');
-  const el = document.getElementById('sum-resume');
-  if(hasResume){
-    el.textContent = 'Uploaded ✓';
-    el.style.color = 'var(--green)';
-  } else {
-    el.textContent = 'Not uploaded — add from Profile';
-    el.style.color = 'var(--lighter)';
-  }
+  document.getElementById('sum-current').textContent=LEVEL_LABELS[profile.currentLevel]||'—';
+  document.getElementById('sum-target').textContent=LEVEL_LABELS[profile.targetLevel]||'—';
+  document.getElementById('sum-focus').textContent=FOCUS_LABELS[profile.focus]||'—';
+  const el=document.getElementById('sum-resume');
+  if(resumeText){el.textContent='Uploaded — '+resumeName;el.style.color='var(--green)';}
+  else{el.textContent='Not uploaded — add from Profile';el.style.color='var(--lighter)';}
 }
 
-// File upload
 function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files[0];if(f)processFile(f);}
 function onDragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag');}
 function onDragLeave(){document.getElementById('upload-zone').classList.remove('drag');}
 function onFileChange(e){if(e.target.files[0])processFile(e.target.files[0]);}
 
 async function processFile(f){
-  const ext = f.name.split('.').pop().toLowerCase();
-  let text = '';
+  const ext=f.name.split('.').pop().toLowerCase();
   try{
-    if(ext==='docx'){const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});text=r.value;}
-    else if(ext==='pdf'){const ab=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n';}}
-    else{text=await f.text();}
-    localStorage.setItem('arx_master_resume_text',text);
-    localStorage.setItem('arx_master_resume_name',f.name);
-    const zone = document.getElementById('upload-zone');
-    zone.classList.add('has-file');
-    document.getElementById('upload-title').innerHTML = '<span style="color:var(--green);font-weight:500;">✓ Resume uploaded successfully</span>';
-    document.getElementById('upload-sub').textContent = f.name;
-    document.getElementById('next-3').disabled = false;
+    if(ext==='docx'){const ab=await f.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});resumeText=r.value;}
+    else if(ext==='pdf'){const ab=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;resumeText='';for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();resumeText+=c.items.map(x=>x.str).join(' ')+'\n';}}
+    else{resumeText=await f.text();}
+    resumeName=f.name;
+    const uz=document.getElementById('upload-zone');
+    uz.classList.add('has-file');
+    document.getElementById('upload-title').innerHTML='<span style="color:var(--green);font-weight:500;">✓ Resume uploaded</span>';
+    document.getElementById('upload-sub').textContent=f.name;
+    document.getElementById('next-3').disabled=false;
   }catch(e){alert('Could not read this file. Try a different format.');}
 }
 
 async function finish(){
-  profile.onboarded = true;
-  localStorage.setItem('arx_profile',JSON.stringify(profile));
-  // Mark onboarded in Clerk if available
+  const btn=document.getElementById('finish-btn');
+  btn.disabled=true;
+  btn.textContent='Saving…';
   try{
-    await window.__clerk_loaded;
-    const clerk = window.Clerk;
-    if(clerk&&clerk.user){
-      await clerk.user.update({publicMetadata:{...clerk.user.publicMetadata,onboarded:true,currentLevel:profile.currentLevel,targetLevel:profile.targetLevel,focus:profile.focus}});
-    }
-  }catch(e){}
-  window.location.href='/dashboard';
+    // Save career profile + onboarded flag to Supabase
+    const updates={
+      current_level: profile.currentLevel||null,
+      target_level:  profile.targetLevel||null,
+      focus_area:    profile.focus||null,
+      onboarded:     true,
+      updated_at:    new Date().toISOString(),
+    };
+    // Store resume text if uploaded (basic — Phase 3 will use storage bucket)
+    if(resumeText) updates.master_resume_text=resumeText.slice(0,50000);
+
+    await sb.from('profiles').update(updates).eq('id',currentUser.id);
+    window.location.replace('/dashboard');
+  }catch(e){
+    btn.disabled=false;
+    btn.textContent='Enter StretchRole';
+    alert('Could not save your profile. Please try again.');
+  }
 }
 </script>
 </body>
