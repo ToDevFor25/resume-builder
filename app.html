@@ -245,7 +245,7 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
           <div class="user-plan-badge" id="sidebar-plan">Free</div>
         </div>
       </a>
-      <button class="signout-btn" onclick="signOut()">Sign out</button>
+      <button class="signout-btn" onclick="srSignOut()">Sign out</button>
     </div>
   </aside>
 
@@ -319,8 +319,8 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
         </div>
 
         <div class="integrity-box">
-          <strong>🔒 Trust & Safety — hard rules on every output</strong>
-          The AI never invents companies, titles, dates, degrees, certifications, or metrics not in your original resume.
+          <strong>🔒 Trust &amp; Safety</strong>
+          Our AI is instructed to strengthen what's real, never invent what isn't — no fabricated companies, titles, dates, or metrics. If you ever spot something that wasn't in your original, let us know at hello@stretchrole.com.
         </div>
 
         <button class="run-btn" id="run-btn" onclick="runOptimization()">
@@ -364,7 +364,7 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
         </div>
         <div class="result-tab-content active" id="tab-rewrite">
           <div class="panel" style="margin-bottom:1rem;"><div id="resume-output" style="font-size:.82rem;color:var(--ink);line-height:1.75;white-space:pre-wrap;"></div></div>
-          <div class="integrity-verified">✓ <strong style="font-weight:500;">Integrity check passed.</strong> Nothing was invented. Everything was elevated.</div>
+          <div class="integrity-verified">🔒 <strong style="font-weight:500;">Trust &amp; Safety</strong> Our AI strengthens what's real, never invents what isn't. Spot something that wasn't in your original? <a href="mailto:hello@stretchrole.com" style="color:var(--green);">hello@stretchrole.com</a></div>
           <div class="download-row">
             <button class="btn btn-primary" onclick="downloadResult()">↓ Download TXT</button>
             <button class="btn btn-ghost" onclick="showPage('input')">Run another</button>
@@ -421,8 +421,8 @@ textarea:focus{border-color:var(--accent);background:var(--white);}
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 // ── SUPABASE INIT ────────────────────────────────────────────────────────────
-const SUPABASE_URL  = window.__SUPABASE_URL__  || 'https://kamrayznhsjkgjwiuebr.supabase.co';
-const SUPABASE_ANON = window.__SUPABASE_ANON__ || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthbXJheXpuaHNqa2dqd2l1ZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTMxMDAsImV4cCI6MjA5MTc2OTEwMH0.qiIzhIacRa9Xe6SgI6awEP5puu4Z1AuJGVKk7ZEEHr0';
+const SUPABASE_URL  = window.__SUPABASE_URL__  || 'REPLACE_WITH_SUPABASE_URL';
+const SUPABASE_ANON = window.__SUPABASE_ANON__ || 'REPLACE_WITH_SUPABASE_ANON_KEY';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -647,7 +647,7 @@ function checkAccess(tool = TOOL) {
 }
 
 // ── SIGN OUT ─────────────────────────────────────────────────────────────────
-async function signOut() {
+async function srSignOut() {
   await sb.auth.signOut();
   window.location.replace('/login');
 }
