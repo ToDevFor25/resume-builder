@@ -3,1101 +3,169 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>StretchRole — Know Exactly What's Missing</title>
-<meta name="description" content="See how close you are to your next role—and exactly what's missing to get there. A career positioning system for professionals ready to move up."/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>StretchRole</title>
+<meta name="description" content="StretchRole was created to explore better ways to help professionals position themselves for growth, leadership, and career transitions. The project is currently paused."/>
+<meta name="robots" content="noindex"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 
 :root{
   --white:#ffffff;
-  --off:#FAFAFA;
   --ink:#111111;
   --muted:#525252;
   --light:#A3A3A3;
   --border:#E5E5E5;
   --accent:#1B4FD8;
-  --accent-light:#EEF2FF;
-  --dark-card:#0F1117;
-  --dark-card-2:#161B27;
-  --dark-border:rgba(255,255,255,0.08);
-  --green:#16A34A;
-  --amber:#D97706;
 }
 
 html,body{
-  font-family:'DM Sans',sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   background:var(--white);
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  min-height:100vh;
 }
 
-body::after{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:0;
+body{
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
 }
 
-/* ── NAV ── */
-nav{
-  position:sticky;
-  top:0;
-  z-index:200;
-  background:rgba(255,255,255,.94);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
-  height:58px;
+main{
+  flex:1;
   display:flex;
   align-items:center;
+  justify-content:center;
+  padding:3rem clamp(1.5rem,5vw,2.5rem);
+}
+
+.card{
+  max-width:520px;
+  width:100%;
+  text-align:center;
 }
 
 .logo{
-  display:flex;
+  display:inline-flex;
   align-items:center;
-  gap:.5rem;
-  text-decoration:none;
+  gap:.55rem;
+  margin-bottom:2.25rem;
 }
 
 .logo-mark{
-  width:30px;
-  height:30px;
+  width:34px;
+  height:34px;
   background:var(--ink);
-  border-radius:7px;
+  border-radius:8px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
 .logo-mark svg{
-  width:16px;height:16px;
+  width:18px;height:18px;
   fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
 }
 
-.logo-text{
-  font-family:'Instrument Serif',serif;
-  font-size:1.1rem;
-  color:var(--ink);
-  letter-spacing:-.01em;
-}
-
-.nav-pill{
-  font-size:.7rem;
-  font-weight:600;
-  letter-spacing:.07em;
-  text-transform:uppercase;
-  color:var(--ink);
-  background:var(--off);
-  border:1px solid #D1D5DB;
-  padding:.3rem .85rem;
-  border-radius:99px;
-}
-
-/* ── NAV INNER ── */
-.nav-inner{max-width:940px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
-
-/* ── MAIN WRAPPER ── */
-.wrap{
-  max-width:940px;
-  margin:0 auto;
-  padding:0 clamp(1.5rem,5vw,2.5rem);
-  position:relative;
-  z-index:1;
-}
-
-/* ── HERO ── */
-.hero{
-  padding:4rem 0 3rem;
-  max-width:680px;
-}
-
-.category-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:.45rem;
-  font-size:.7rem;
-  font-weight:500;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:1.75rem;
-  opacity:0;
-  animation:fadeUp .45s .05s ease forwards;
-}
-
-.category-tag-dot{
-  width:5px;height:5px;
-  background:var(--accent);
-  border-radius:50%;
-  animation:pulse 2.2s infinite;
-}
-
-@keyframes pulse{
-  0%,100%{opacity:1;transform:scale(1);}
-  50%{opacity:.35;transform:scale(.75);}
-}
-
 h1{
-  font-family:'Instrument Serif',serif;
-  font-size:clamp(2.6rem,5.5vw,4.2rem);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.4rem,5vw,3.2rem);
   font-weight:400;
-  line-height:1.08;
-  letter-spacing:-.025em;
+  line-height:1.1;
+  letter-spacing:-.02em;
   color:var(--ink);
-  margin-bottom:1.1rem;
-  opacity:0;
-  animation:fadeUp .55s .15s ease forwards;
+  margin-bottom:1.75rem;
 }
 
-h1 em{
-  font-style:italic;
-  color:var(--accent);
-}
-
-.emotional-hook{
-  font-size:clamp(.95rem,1.8vw,1.1rem);
-  font-weight:400;
-  font-style:italic;
-  color:var(--muted);
-  line-height:1.55;
-  margin-bottom:1.1rem;
-  opacity:0;
-  animation:fadeUp .55s .25s ease forwards;
-}
-
-.subhead{
-  font-size:clamp(.95rem,1.8vw,1.1rem);
+p{
+  font-size:clamp(.98rem,1.6vw,1.05rem);
   font-weight:300;
   color:var(--muted);
   line-height:1.65;
-  margin-bottom:.3rem;
-  opacity:0;
-  animation:fadeUp .55s .3s ease forwards;
+  margin-bottom:1.1rem;
 }
 
-.subhead-niche{
-  font-size:.85rem;
-  color:var(--light);
-  line-height:1.6;
-  opacity:0;
-  animation:fadeUp .5s .38s ease forwards;
-}
-.subhead-niche+.subhead-niche{
-  margin-bottom:2.25rem;
-}
-
-/* ── CAPTURE ── */
-.capture-wrap{
-  opacity:0;
-  animation:fadeUp .55s .45s ease forwards;
-}
-
-.capture-row{
-  display:flex;
-  gap:.45rem;
-  max-width:500px;
-  margin-bottom:.5rem;
-}
-
-.capture-input{
-  flex:1;
-  height:50px;
-  padding:0 1.1rem;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  font-family:'DM Sans',sans-serif;
-  font-size:.88rem;
+p.thanks{
   color:var(--ink);
-  background:var(--white);
-  outline:none;
-  transition:border-color .2s,box-shadow .2s;
-  min-width:0;
+  font-weight:400;
+  margin-top:1.5rem;
 }
 
-.capture-input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(27,79,216,.07);
-}
-
-.capture-input::placeholder{color:var(--light);}
-
-.capture-btn{
-  height:50px;
-  padding:0 1.35rem;
-  background:var(--ink);
-  color:white;
-  border:none;
-  border-radius:10px;
-  font-family:'DM Sans',sans-serif;
-  font-size:.85rem;
-  font-weight:500;
-  cursor:pointer;
-  white-space:nowrap;
-  display:flex;
-  align-items:center;
-  gap:.35rem;
-  transition:all .18s;
-  flex-shrink:0;
-}
-
-.capture-btn:hover{background:#2a2a2a;transform:translateY(-1px);}
-.capture-btn:active{transform:none;}
-
-.capture-btn svg{
-  width:13px;height:13px;
-  stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-  transition:transform .18s;
-}
-
-.capture-btn:hover svg{transform:translateX(2px);}
-
-.extra-fields{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:.45rem;
-  max-width:520px;
-  margin-bottom:.6rem;
-}
-
-.capture-select{
-  height:42px;
-  padding:0 2.25rem 0 .9rem;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  font-family:'DM Sans',sans-serif;
-  font-size:.82rem;
-  color:var(--light);
-  background:var(--white);
-  outline:none;
-  cursor:pointer;
-  transition:border-color .2s;
-  appearance:none;
-  -webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 11 11'%3E%3Cpath fill='none' stroke='%23A3A3A3' stroke-width='1.5' stroke-linecap='round' d='M1.5 3.5l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right .8rem center;
-}
-
-.capture-select:focus{border-color:var(--accent);}
-.capture-select.has-value{color:var(--ink);}
-
-.urgency-line{
-  font-size:.75rem;
-  color:var(--light);
-  display:flex;
-  align-items:center;
-  gap:.4rem;
-  margin-bottom:.45rem;
-}
-
-.urgency-dot{
-  width:5px;height:5px;
-  background:#E11D48;
-  border-radius:50%;
-  flex-shrink:0;
-  animation:pulse 1.8s infinite;
-}
-
-.capture-note{
-  font-size:.73rem;
-  color:var(--light);
-  display:flex;
-  align-items:center;
-  gap:.35rem;
-}
-
-.capture-note svg{
-  width:11px;height:11px;
-  stroke:var(--light);fill:none;stroke-width:2;flex-shrink:0;
-}
-
-/* Success state */
-.capture-success{
-  display:none;
-  align-items:center;
-  gap:.75rem;
-  padding:1rem 1.2rem;
-  background:var(--accent-light);
-  border:1px solid rgba(27,79,216,.15);
-  border-radius:10px;
-  max-width:520px;
-  margin-bottom:.6rem;
-}
-
-.capture-success.show{display:flex;}
-.capture-form-inner.hide{display:none;}
-
-.success-icon{
-  width:30px;height:30px;
-  background:var(--accent);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-
-.success-icon svg{
-  width:13px;height:13px;
-  stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
-}
-
-.success-text strong{display:block;font-size:.86rem;color:var(--accent);font-weight:500;margin-bottom:.1rem;}
-.success-text span{font-size:.76rem;color:var(--muted);}
-
-/* ── 3-STEP SECTION ── */
-.steps-section{
-  padding:3.5rem 0;
-  border-top:1px solid var(--border);
-}
-
-.section-eyebrow{
-  font-size:.68rem;
-  font-weight:600;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--light);
-  margin-bottom:1.5rem;
-}
-
-.steps-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1.5rem;
-}
-
-.step-card{
-  padding:1.5rem;
-  background:var(--off);
-  border:1px solid var(--border);
-  border-radius:12px;
-  position:relative;
-}
-
-.step-num{
-  font-family:'DM Mono',monospace;
-  font-size:.68rem;
-  color:var(--accent);
-  font-weight:500;
-  letter-spacing:.05em;
-  margin-bottom:.65rem;
-  display:block;
-}
-
-.step-title{
-  font-family:'Instrument Serif',serif;
-  font-size:1.05rem;
-  color:var(--ink);
-  margin-bottom:.4rem;
-  line-height:1.3;
-}
-
-.step-desc{
-  font-size:.8rem;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-/* ── PRODUCT PREVIEW ── */
-.preview-section{
-  padding:3rem 0 4rem;
-}
-
-.preview-label{
-  font-size:.68rem;
-  font-weight:600;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--light);
-  margin-bottom:1.25rem;
-  display:flex;
-  align-items:center;
-  gap:.6rem;
-}
-
-.preview-label::after{
-  content:'';
-  flex:1;
+.divider{
+  width:40px;
   height:1px;
   background:var(--border);
+  margin:2.25rem auto;
 }
 
-.preview-card{
-  background:var(--dark-card);
-  border-radius:16px;
-  padding:2rem 2.25rem;
-  border:1px solid rgba(255,255,255,.06);
-  position:relative;
-  overflow:hidden;
-}
-
-.preview-card::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(27,79,216,.6),transparent);
-}
-
-/* Subtle glow */
-.preview-card::after{
-  content:'';
-  position:absolute;
-  top:-80px;right:-80px;
-  width:280px;height:280px;
-  background:radial-gradient(circle,rgba(27,79,216,.12) 0%,transparent 70%);
-  pointer-events:none;
-}
-
-.preview-header{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  margin-bottom:1.75rem;
-  gap:1rem;
-}
-
-.preview-role{
-  flex:1;
-}
-
-.preview-role-title{
-  font-family:'Instrument Serif',serif;
-  font-size:1.2rem;
-  color:white;
-  margin-bottom:.2rem;
-}
-
-.preview-role-sub{
-  font-size:.75rem;
-  color:rgba(255,255,255,.4);
-  letter-spacing:.02em;
-}
-
-.preview-score-wrap{
-  text-align:center;
-  flex-shrink:0;
-}
-
-.preview-score-ring{
-  position:relative;
-  width:72px;height:72px;
-  margin:0 auto .3rem;
-}
-
-.preview-score-ring svg{
-  width:72px;height:72px;
-  transform:rotate(-90deg);
-}
-
-.score-ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:5;}
-.score-ring-fill{fill:none;stroke:#3B82F6;stroke-width:5;stroke-linecap:round;stroke-dasharray:213.6;stroke-dashoffset:46.99;} /* 78% */
-
-.preview-score-center{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
-
-.preview-score-num{
-  font-family:'DM Mono',monospace;
-  font-size:1.25rem;
+.contact-label{
+  font-size:.7rem;
   font-weight:500;
-  color:white;
-  line-height:1;
-}
-
-.preview-score-lbl{
-  font-size:.55rem;
-  color:rgba(255,255,255,.4);
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  margin-top:.1rem;
-}
-
-.preview-score-verdict{
-  font-size:.7rem;
-  color:rgba(255,255,255,.5);
-  text-align:center;
-  max-width:80px;
-  line-height:1.4;
-}
-
-/* Category bars */
-.preview-categories{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:.65rem;
-  margin-bottom:1.5rem;
-}
-
-.cat-row{
-  display:flex;
-  flex-direction:column;
-  gap:.3rem;
-}
-
-.cat-label-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.cat-name{
-  font-size:.72rem;
-  color:rgba(255,255,255,.55);
-  letter-spacing:.02em;
-}
-
-.cat-pct{
-  font-family:'DM Mono',monospace;
-  font-size:.7rem;
-  color:rgba(255,255,255,.7);
-}
-
-.cat-track{
-  height:3px;
-  background:rgba(255,255,255,.08);
-  border-radius:99px;
-  overflow:hidden;
-}
-
-.cat-fill{
-  height:100%;
-  border-radius:99px;
-}
-
-.cat-fill.high{background:#3B82F6;}
-.cat-fill.mid{background:#F59E0B;}
-.cat-fill.low{background:#EF4444;}
-
-/* Divider */
-.preview-divider{
-  height:1px;
-  background:rgba(255,255,255,.07);
-  margin:1.25rem 0;
-}
-
-/* Gaps */
-.preview-gaps-label{
-  font-size:.65rem;
-  font-weight:600;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.3);
-  margin-bottom:.75rem;
-}
-
-.gap-items{
-  display:flex;
-  flex-direction:column;
-  gap:.5rem;
-  margin-bottom:1.25rem;
-}
-
-.gap-item{
-  display:flex;
-  align-items:flex-start;
-  gap:.6rem;
-  font-size:.78rem;
-  color:rgba(255,255,255,.6);
-  line-height:1.45;
-}
-
-.gap-dot{
-  width:5px;height:5px;
-  background:#F59E0B;
-  border-radius:50%;
-  flex-shrink:0;
-  margin-top:.42em;
-}
-
-/* Before / After */
-.preview-ba-label{
-  font-size:.65rem;
-  font-weight:600;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.3);
-  margin-bottom:.65rem;
-}
-
-.ba-row{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  gap:.65rem;
-  align-items:center;
-}
-
-.ba-before{
-  padding:.65rem .75rem;
-  background:rgba(239,68,68,.07);
-  border:1px solid rgba(239,68,68,.15);
-  border-radius:8px;
-  font-size:.74rem;
-  color:rgba(255,255,255,.4);
-  line-height:1.5;
-}
-
-.ba-arrow{
-  font-size:.8rem;
-  color:rgba(255,255,255,.2);
-  text-align:center;
-  flex-shrink:0;
-}
-
-.ba-after{
-  padding:.65rem .75rem;
-  background:rgba(59,130,246,.07);
-  border:1px solid rgba(59,130,246,.18);
-  border-radius:8px;
-  font-size:.74rem;
-  color:rgba(255,255,255,.75);
-  line-height:1.5;
-}
-
-.ba-tag{
-  display:inline-block;
-  font-size:.6rem;
-  font-weight:600;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  padding:.1rem .4rem;
-  border-radius:4px;
-  margin-top:.3rem;
-}
-
-.ba-tag.grounded{
-  background:rgba(34,197,94,.1);
-  color:#4ADE80;
-  border:1px solid rgba(34,197,94,.2);
-}
-
-/* ── PROOF PILLARS ── */
-.pillars-section{
-  padding:2.5rem 0;
-  border-top:1px solid var(--border);
-}
-
-.pillars-grid{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:1.5rem;
-}
-
-.pillar{
-  display:flex;
-  flex-direction:column;
-  gap:.2rem;
-}
-
-.pillar-label{
-  font-size:.65rem;
-  font-weight:600;
-  letter-spacing:.09em;
+  letter-spacing:.12em;
   text-transform:uppercase;
   color:var(--light);
+  margin-bottom:.55rem;
 }
 
-.pillar-value{
-  font-family:'Instrument Serif',serif;
+.contact-email{
   font-size:1rem;
   color:var(--ink);
+  text-decoration:none;
+  border-bottom:1px solid var(--border);
+  padding-bottom:2px;
+  transition:border-color .2s,color .2s;
 }
 
-.credibility-line{
-  margin-left:auto;
-  font-size:.78rem;
-  color:var(--light);
-  font-style:italic;
-  max-width:280px;
-  text-align:right;
-  line-height:1.5;
+.contact-email:hover{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
 }
 
-/* ── FOOTER ── */
 footer{
+  padding:1.5rem;
+  text-align:center;
+  font-size:.75rem;
+  color:var(--light);
   border-top:1px solid var(--border);
-  padding:1.5rem 0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:.75rem;
-}
-
-.footer-left{font-size:.73rem;color:var(--light);}
-
-.footer-right{
-  display:flex;align-items:center;gap:1.5rem;
-}
-
-.footer-right a{
-  font-size:.73rem;color:var(--light);text-decoration:none;transition:color .2s;
-}
-
-.footer-right a:hover{color:var(--muted);}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(14px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-.reveal{
-  opacity:1;
-  transform:none;
-  transition:opacity .55s ease,transform .55s ease;
-}
-
-.reveal.visible{opacity:1;transform:none;}
-
-/* ── MOBILE ── */
-@media(max-width:720px){
-  .hero{padding:3rem 0 2.5rem;}
-  .steps-grid{grid-template-columns:1fr;}
-  .preview-categories{grid-template-columns:1fr;}
-  .preview-header{flex-direction:column;gap:1rem;}
-  .preview-score-wrap{display:flex;align-items:center;gap:1rem;}
-  .preview-score-ring{margin:0;}
-  .preview-score-verdict{max-width:none;text-align:left;}
-  .ba-row{grid-template-columns:1fr;gap:.4rem;}
-  .ba-arrow{transform:rotate(90deg);}
-  .capture-row{flex-direction:column;}
-  .capture-btn{height:48px;justify-content:center;}
-  .extra-fields{grid-template-columns:1fr;}
-  .pillars-grid{gap:1.5rem;}
-  .credibility-line{margin-left:0;text-align:left;max-width:none;}
-  .preview-card{padding:1.5rem;}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div style="max-width:940px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,2.5rem);">
-    <a href="/" class="logo">
+<main>
+  <div class="card">
+
+    <div class="logo" aria-label="StretchRole">
       <div class="logo-mark">
-        <svg viewBox="0 0 16 16">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
           <path d="M2 12L8 4L14 12" stroke-linejoin="round"/>
           <path d="M5 12L8 8L11 12"/>
         </svg>
       </div>
-      <span class="logo-text">StretchRole</span>
-    </a>
-    <span class="nav-pill">Coming Soon</span>
+    </div>
+
+    <h1>StretchRole</h1>
+
+    <p>
+      StretchRole was created to explore better ways to help professionals position themselves for growth, leadership, and career transitions.
+    </p>
+
+    <p>
+      The project is currently paused while new initiatives are being developed.
+    </p>
+
+    <p class="thanks">Thank you for visiting.</p>
+
+    <div class="divider" role="presentation"></div>
+
+    <div class="contact-label">Contact</div>
+    <a class="contact-email" href="mailto:hello@stretchrole.com">hello@stretchrole.com</a>
+
   </div>
-</nav>
+</main>
 
-<div class="wrap">
-
-  <!-- HERO -->
-  <section class="hero">
-
-    <div class="category-tag">
-      <div class="category-tag-dot"></div>
-      A career positioning system for professionals ready to move up
-    </div>
-
-    <h1>Turn your stretch role<br>into your <em>next</em> role.</h1>
-
-    <p class="emotional-hook">
-      If you're getting close—but not landing the role above you—this shows you why.
-    </p>
-
-    <p class="subhead">
-      See how close you are to your next role—and exactly what's missing to get there.
-    </p>
-
-    <p class="subhead-niche">Starting with healthcare leaders moving into their next level.</p>
-
-    <!-- EMAIL CAPTURE -->
-    <div class="capture-wrap">
-      <div id="capture-form-inner" class="capture-form-inner">
-
-<div class="capture-row">
-          <input
-            type="email"
-            class="capture-input"
-            id="email-input"
-            placeholder="Your email address"
-            autocomplete="email"
-          />
-          <button class="capture-btn" onclick="handleSubmit()">
-            Get early access
-            <svg viewBox="0 0 13 13"><path d="M1.5 6.5h10M7.5 2.5l4 4-4 4"/></svg>
-          </button>
-        </div>
-
-        <div class="extra-fields">
-          <select class="capture-select" id="industry-select" onchange="this.classList.add('has-value')">
-            <option value="" disabled selected>Industry (optional)</option>
-            <option value="Healthcare Operations">Healthcare Operations</option>
-            <option value="Healthcare Clinical">Healthcare Clinical</option>
-            <option value="Technology">Technology</option>
-            <option value="Finance">Finance</option>
-            <option value="Legal">Legal</option>
-            <option value="Education">Education</option>
-            <option value="Other">Other</option>
-          </select>
-          <select class="capture-select" id="role-select" onchange="this.classList.add('has-value')">
-            <option value="" disabled selected>Role level (optional)</option>
-            <option value="Individual Contributor">Individual Contributor</option>
-            <option value="Manager">Manager</option>
-            <option value="Director">Director</option>
-            <option value="VP">VP</option>
-            <option value="C-Suite">C-Suite</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <p class="capture-note">
-          <svg viewBox="0 0 12 12"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zm0 3.5v3m0-4.5v.5"/></svg>
-          No spam. No hallucinations. Every output grounded in your real experience.
-        </p>
-
-      </div>
-
-      <div class="capture-success" id="capture-success">
-        <div class="success-icon">
-          <svg viewBox="0 0 13 13"><path d="M2 6.5l3 3 6-6"/></svg>
-        </div>
-        <div class="success-text">
-          <strong>You're on the list.</strong>
-          <span>We'll be in touch before launch. Watch your inbox.</span>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- 3-STEP SECTION -->
-  <section class="steps-section reveal">
-    <div class="section-eyebrow">How it works</div>
-    <div class="steps-grid">
-      <div class="step-card">
-        <span class="step-num">01</span>
-        <div class="step-title">Upload your resume + target role</div>
-        <p class="step-desc">Paste a job description and upload your resume. StretchRole reads both and starts building your picture.</p>
-      </div>
-      <div class="step-card">
-        <span class="step-num">02</span>
-        <div class="step-title">See your Role Fit Score and what's holding you back</div>
-        <p class="step-desc">Get a structured score across four dimensions — with a clear breakdown of the gaps between where you are and where you want to be.</p>
-      </div>
-      <div class="step-card">
-        <span class="step-num">03</span>
-        <div class="step-title">Get exact edits to position you for the next role</div>
-        <p class="step-desc">Line-by-line resume improvements, grounded entirely in your real experience. Nothing invented. Everything elevated.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRODUCT PREVIEW -->
-  <section class="preview-section reveal">
-
-    <div class="preview-label">Example StretchRole Output</div>
-
-    <div class="preview-card">
-
-      <!-- Header: Role + Score Ring -->
-      <div class="preview-header">
-        <div class="preview-role">
-          <div class="preview-role-title">VP of Operations — Health System</div>
-          <div class="preview-role-sub">Based on your resume · Tulsa, OK market · Target level: SVP</div>
-        </div>
-        <div class="preview-score-wrap">
-          <div class="preview-score-ring">
-            <svg viewBox="0 0 72 72">
-              <circle class="score-ring-bg" cx="36" cy="36" r="34"/>
-              <circle class="score-ring-fill" cx="36" cy="36" r="34"/>
-            </svg>
-            <div class="preview-score-center">
-              <div class="preview-score-num">78%</div>
-              <div class="preview-score-lbl">fit</div>
-            </div>
-          </div>
-          <div class="preview-score-verdict">Strong fit with meaningful gaps</div>
-        </div>
-      </div>
-
-      <!-- Category Breakdown -->
-      <div class="preview-categories">
-        <div class="cat-row">
-          <div class="cat-label-row">
-            <span class="cat-name">Scope &amp; Scale</span>
-            <span class="cat-pct">82%</span>
-          </div>
-          <div class="cat-track"><div class="cat-fill high" style="width:82%"></div></div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-label-row">
-            <span class="cat-name">Financial Ownership</span>
-            <span class="cat-pct">65%</span>
-          </div>
-          <div class="cat-track"><div class="cat-fill mid" style="width:65%"></div></div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-label-row">
-            <span class="cat-name">Leadership Depth</span>
-            <span class="cat-pct">88%</span>
-          </div>
-          <div class="cat-track"><div class="cat-fill high" style="width:88%"></div></div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-label-row">
-            <span class="cat-name">Strategic Impact</span>
-            <span class="cat-pct">72%</span>
-          </div>
-          <div class="cat-track"><div class="cat-fill mid" style="width:72%"></div></div>
-        </div>
-      </div>
-
-      <div class="preview-divider"></div>
-
-      <!-- Top Gaps -->
-      <div class="preview-gaps-label">What's holding you back</div>
-      <div class="gap-items">
-        <div class="gap-item">
-          <div class="gap-dot"></div>
-          Limited multi-market P&amp;L ownership — the role requires demonstrated EBITDA accountability across 3+ markets
-        </div>
-        <div class="gap-item">
-          <div class="gap-dot"></div>
-          No explicit de novo market launch experience visible in your resume — add any expansion roles, even informal
-        </div>
-        <div class="gap-item">
-          <div class="gap-dot"></div>
-          Board and C-suite communication not evidenced — strengthen with specific examples of executive-level reporting
-        </div>
-      </div>
-
-      <div class="preview-divider"></div>
-
-      <!-- Before / After -->
-      <div class="preview-ba-label">Resume improvement — line by line</div>
-      <div class="ba-row">
-        <div class="ba-before">
-          Managed operations across multiple departments and helped improve patient throughput metrics.
-        </div>
-        <div class="ba-arrow">→</div>
-        <div>
-          <div class="ba-after">
-            Directed cross-functional operations across 4 service lines, implementing capacity workflows that reduced patient throughput time 22% while sustaining 97% satisfaction scores across 3 markets.
-          </div>
-          <span class="ba-tag grounded">✓ From your experience</span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PROOF PILLARS -->
-  <section class="pillars-section reveal">
-    <div class="pillars-grid">
-      <div class="pillar">
-        <span class="pillar-label">Launching first for</span>
-        <span class="pillar-value">Healthcare Operations</span>
-      </div>
-      <div class="pillar">
-        <span class="pillar-label">Core feature</span>
-        <span class="pillar-value">Role Fit Scoring</span>
-      </div>
-      <div class="pillar">
-        <span class="pillar-label">Commitment</span>
-        <span class="pillar-value">No Hallucinations</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <span class="footer-left">© 2026 StretchRole. All rights reserved.</span>
-    <div class="footer-right">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="mailto:hello@stretchrole.com">hello@stretchrole.com</a>
-    </div>
-  </footer>
-
-</div><!-- /wrap -->
-
-<script>
-// ── SCROLL REVEAL ──────────────────────────────────────────────────────────────
-const observer = new IntersectionObserver(
-  (entries) => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }),
-  { threshold: 0.01, rootMargin: '0px 0px 0px 0px' }
-);
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// Also trigger on load for anything already in viewport
-window.addEventListener('load', () => {
-  document.querySelectorAll('.reveal').forEach(el => {
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight) el.classList.add('visible');
-  });
-});
-
-// ── FORM SUBMIT ────────────────────────────────────────────────────────────────
-async function handleSubmit() {
-  const emailInput = document.getElementById('email-input');
-  const email = emailInput.value.trim();
-  const industry = document.getElementById('industry-select').value || '';
-  const roleLevel = document.getElementById('role-select').value || '';
-
-  if (!email || !email.includes('@') || !email.includes('.')) {
-    emailInput.style.borderColor = '#EF4444';
-    emailInput.focus();
-    setTimeout(() => emailInput.style.borderColor = '', 2000);
-    return;
-  }
-
-  const btn = document.querySelector('.capture-btn');
-  btn.innerHTML = 'Submitting…';
-  btn.disabled = true;
-
-  try {
-    const response = await fetch('/api/waitlist', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, industry, roleLevel })
-    });
-
-    const data = await response.json();
-
-    // Save locally as backup regardless
-    const existing = JSON.parse(localStorage.getItem('sr_waitlist') || '[]');
-    existing.push({ email, industry, roleLevel, source: 'coming-soon', date: new Date().toISOString() });
-    localStorage.setItem('sr_waitlist', JSON.stringify(existing));
-
-    showSuccess();
-
-  } catch(e) {
-    // Save locally if API call fails
-    const existing = JSON.parse(localStorage.getItem('sr_waitlist') || '[]');
-    existing.push({ email, industry, roleLevel, source: 'coming-soon', date: new Date().toISOString() });
-    localStorage.setItem('sr_waitlist', JSON.stringify(existing));
-    showSuccess();
-    console.error('Waitlist error:', e);
-  }
-}
-
-function showSuccess() {
-  document.getElementById('capture-form-inner').classList.add('hide');
-  document.getElementById('capture-success').classList.add('show');
-  // Scroll success into view
-  document.getElementById('capture-success').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-// Enter key submit
-document.getElementById('email-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') handleSubmit();
-});
-</script>
+<footer>© 2026 StretchRole</footer>
 
 </body>
 </html>
